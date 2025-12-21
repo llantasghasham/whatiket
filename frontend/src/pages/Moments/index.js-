@@ -1,0 +1,275 @@
+import React, { useContext } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import { Grid, Paper, Hidden, Box, Typography } from "@material-ui/core";
+import MomentsUser from "../../components/MomentsUser";
+import MainHeader from "../../components/MainHeader";
+import Title from "../../components/Title";
+import ForbiddenPage from "../../components/ForbiddenPage";
+import { AuthContext } from "../../context/Auth/AuthContext";
+import DashboardIcon from "@material-ui/icons/Dashboard";
+import AccessTimeIcon from "@material-ui/icons/AccessTime";
+import moment from "moment";
+
+const useStyles = makeStyles((theme) => ({
+  // ===== LAYOUT PRINCIPAL =====
+  root: {
+    minHeight: "100vh",
+    backgroundColor: "#f8fafc",
+    padding: theme.spacing(3),
+    fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+  },
+
+  container: {
+    maxWidth: "1400px",
+    margin: "0 auto",
+  },
+
+  // ===== CABEÇALHO CORPORATIVO =====
+  header: {
+    background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)",
+    borderRadius: "20px",
+    padding: theme.spacing(4, 5),
+    marginBottom: theme.spacing(4),
+    boxShadow: "0 4px 20px rgba(0, 0, 0, 0.08)",
+    border: "1px solid rgba(226, 232, 240, 0.6)",
+    position: "relative",
+    overflow: "hidden",
+    
+    "&::before": {
+      content: '""',
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "4px",
+      background: "linear-gradient(90deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%)",
+    },
+  },
+
+  headerTitle: {
+    fontSize: "32px",
+    fontWeight: 700,
+    color: "#0f172a",
+    marginBottom: theme.spacing(1),
+    display: "flex",
+    alignItems: "center",
+    gap: theme.spacing(1.5),
+    letterSpacing: "-0.025em",
+  },
+
+  headerIcon: {
+    fontSize: "36px",
+    color: "#1e40af",
+    filter: "drop-shadow(0 2px 4px rgba(30, 64, 175, 0.2))",
+  },
+
+  headerSubtitle: {
+    fontSize: "16px",
+    color: "#64748b",
+    fontWeight: 500,
+    letterSpacing: "0.025em",
+    display: "flex",
+    alignItems: "center",
+    gap: theme.spacing(1),
+  },
+
+  // ===== SEÇÃO CORPORATIVA =====
+  corporateSection: {
+    backgroundColor: "white",
+    borderRadius: "20px",
+    padding: theme.spacing(4),
+    border: "1px solid rgba(226, 232, 240, 0.6)",
+    boxShadow: "0 4px 20px rgba(0, 0, 0, 0.08)",
+    position: "relative",
+    minHeight: "calc(100vh - 300px)",
+    
+    "&::before": {
+      content: '""',
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "4px",
+      background: "linear-gradient(90deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%)",
+      borderRadius: "20px 20px 0 0",
+    },
+  },
+
+  sectionHeader: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: theme.spacing(4),
+    paddingBottom: theme.spacing(2),
+    borderBottom: "2px solid #f1f5f9",
+  },
+
+  sectionTitle: {
+    fontSize: "24px",
+    fontWeight: 700,
+    color: "#0f172a",
+    display: "flex",
+    alignItems: "center",
+    gap: theme.spacing(1.5),
+    letterSpacing: "-0.025em",
+    
+    "& svg": {
+      fontSize: "28px",
+      color: "#1e40af",
+    }
+  },
+
+  contentWrapper: {
+    position: "relative",
+    borderRadius: "16px",
+    overflow: "hidden",
+    background: "linear-gradient(135deg, #f8fafc 0%, #ffffff 100%)",
+    border: "1px solid rgba(226, 232, 240, 0.6)",
+    minHeight: "500px",
+    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.04)",
+    
+    "&::before": {
+      content: '""',
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      background: "linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%)",
+      opacity: 0.5,
+      pointerEvents: "none",
+    },
+  },
+
+  momentsContainer: {
+    padding: theme.spacing(3),
+    position: "relative",
+    zIndex: 1,
+    height: "100%",
+    
+    "& > *": {
+      borderRadius: "12px !important",
+      boxShadow: "0 2px 12px rgba(0, 0, 0, 0.08) !important",
+      border: "1px solid rgba(226, 232, 240, 0.6) !important",
+      overflow: "hidden !important",
+    },
+  },
+
+  // ===== RESPONSIVIDADE =====
+  "@media (max-width: 768px)": {
+    root: {
+      padding: theme.spacing(2),
+    },
+    
+    header: {
+      padding: theme.spacing(3),
+    },
+    
+    headerTitle: {
+      fontSize: "24px",
+    },
+    
+    corporateSection: {
+      padding: theme.spacing(2.5),
+    },
+    
+    sectionTitle: {
+      fontSize: "20px",
+    },
+    
+    momentsContainer: {
+      padding: theme.spacing(2),
+    },
+  },
+
+  // ===== ANIMAÇÕES =====
+  fadeIn: {
+    animation: "$fadeIn 0.6s ease-out",
+  },
+
+  "@keyframes fadeIn": {
+    "0%": {
+      opacity: 0,
+      transform: "translateY(20px)",
+    },
+    "100%": {
+      opacity: 1,
+      transform: "translateY(0)",
+    },
+  },
+
+  slideIn: {
+    animation: "$slideIn 0.8s ease-out",
+  },
+
+  "@keyframes slideIn": {
+    "0%": {
+      opacity: 0,
+      transform: "translateX(-30px)",
+    },
+    "100%": {
+      opacity: 1,
+      transform: "translateX(0)",
+    },
+  },
+
+  // ===== EFEITOS HOVER =====
+  hoverEffect: {
+    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+    
+    "&:hover": {
+      transform: "translateY(-2px)",
+      boxShadow: "0 8px 24px rgba(0, 0, 0, 0.12) !important",
+    },
+  },
+}));
+
+const ChatMoments = () => {
+  const classes = useStyles();
+  const { user } = useContext(AuthContext);
+
+  if (user.profile === "user" && user.allowRealTime === "disabled") {
+    return <ForbiddenPage />;
+  }
+
+  return (
+    <div className={classes.root}>
+      <div className={classes.container}>
+        {/* CABEÇALHO CORPORATIVO */}
+        <Box className={`${classes.header} ${classes.fadeIn}`}>
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Box>
+              <Typography className={classes.headerTitle}>
+                <DashboardIcon className={classes.headerIcon} />
+                Painel de Atendimentos
+              </Typography>
+              <Typography className={classes.headerSubtitle}>
+                <AccessTimeIcon style={{ fontSize: "18px" }} />
+                {moment().format("dddd, DD [de] MMMM [de] YYYY")} - Monitoramento em tempo real
+              </Typography>
+            </Box>
+          </Box>
+        </Box>
+
+        {/* SEÇÃO CORPORATIVA PRINCIPAL */}
+        <Box className={`${classes.corporateSection} ${classes.slideIn}`}>
+          <Box className={classes.sectionHeader}>
+            <Typography className={classes.sectionTitle}>
+              <DashboardIcon />
+              Central de Atendimentos
+            </Typography>
+          </Box>
+
+          {/* WRAPPER PARA O COMPONENTE MOMENTS */}
+          <Box className={`${classes.contentWrapper} ${classes.hoverEffect}`}>
+            <div className={classes.momentsContainer}>
+              <MomentsUser />
+            </div>
+          </Box>
+        </Box>
+      </div>
+    </div>
+  );
+};
+
+export default ChatMoments;

@@ -1,0 +1,643 @@
+{
+    "info": {
+        "name": "WhatTicket Pro API",
+        "description": "Documentação da API para integração com o sistema WhatTicket Pro - Plataforma completa de atendimento multicanal",
+        "version": "2.0.0",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "auth": {
+        "type": "bearer",
+        "bearer": [
+            {
+                "key": "token",
+                "value": "{{jwt_token}}",
+                "type": "string"
+            }
+        ]
+    },
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "https://chat.api.whaticketpro.com"
+        },
+        {
+            "key": "jwt_token",
+            "value": ""
+        }
+    ],
+    "item": [
+        {
+            "name": "Autenticação",
+            "item": [
+                {
+                    "name": "Login",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "if (pm.response.code === 200) {",
+                                    "    const response = pm.response.json();",
+                                    "    pm.environment.set('jwt_token', response.token);",
+                                    "    pm.collectionVariables.set('jwt_token', response.token);",
+                                    "}"
+                                ]
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/auth/login",
+                            "host": ["{{base_url}}"],
+                            "path": ["auth", "login"]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"admin@whaticket.io\",\n    \"password\": \"admin123\"\n}"
+                        },
+                        "description": "Realiza login e obtém token JWT de autenticação"
+                    }
+                },
+                {
+                    "name": "Refresh Token",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/auth/refresh",
+                            "host": ["{{base_url}}"],
+                            "path": ["auth", "refresh"]
+                        },
+                        "description": "Renovar token JWT usando refresh token"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Tickets",
+            "item": [
+                {
+                    "name": "Listar Tickets",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/tickets?pageNumber=1&status=open",
+                            "host": ["{{base_url}}"],
+                            "path": ["tickets"],
+                            "query": [
+                                {
+                                    "key": "pageNumber",
+                                    "value": "1"
+                                },
+                                {
+                                    "key": "status",
+                                    "value": "open"
+                                }
+                            ]
+                        },
+                        "description": "Lista todos os tickets com paginação e filtros"
+                    }
+                },
+                {
+                    "name": "Buscar Ticket por ID",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/tickets/:ticketId",
+                            "host": ["{{base_url}}"],
+                            "path": ["tickets", ":ticketId"],
+                            "variable": [
+                                {
+                                    "key": "ticketId",
+                                    "value": "1"
+                                }
+                            ]
+                        },
+                        "description": "Busca um ticket específico por ID"
+                    }
+                },
+                {
+                    "name": "Criar Ticket",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/tickets",
+                            "host": ["{{base_url}}"],
+                            "path": ["tickets"]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"contactId\": 1,\n    \"status\": \"open\",\n    \"userId\": 1,\n    \"queueId\": 1\n}"
+                        },
+                        "description": "Cria um novo ticket"
+                    }
+                },
+                {
+                    "name": "Atualizar Ticket",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/tickets/:ticketId",
+                            "host": ["{{base_url}}"],
+                            "path": ["tickets", ":ticketId"],
+                            "variable": [
+                                {
+                                    "key": "ticketId",
+                                    "value": "1"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"status\": \"closed\",\n    \"userId\": 2\n}"
+                        },
+                        "description": "Atualiza um ticket existente"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Mensagens",
+            "item": [
+                {
+                    "name": "Listar Mensagens do Ticket",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/messages/:ticketId",
+                            "host": ["{{base_url}}"],
+                            "path": ["messages", ":ticketId"],
+                            "variable": [
+                                {
+                                    "key": "ticketId",
+                                    "value": "1"
+                                }
+                            ]
+                        },
+                        "description": "Lista mensagens de um ticket específico"
+                    }
+                },
+                {
+                    "name": "Enviar Mensagem",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/messages/send",
+                            "host": ["{{base_url}}"],
+                            "path": ["messages", "send"]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"ticketId\": 1,\n    \"body\": \"Olá! Como posso ajudá-lo?\",\n    \"media\": null\n}"
+                        },
+                        "description": "Envia uma nova mensagem"
+                    }
+                },
+                {
+                    "name": "Enviar Mensagem com Mídia",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "multipart/form-data"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/messages/send",
+                            "host": ["{{base_url}}"],
+                            "path": ["messages", "send"]
+                        },
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "ticketId",
+                                    "value": "1",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "body",
+                                    "value": "Aqui está o arquivo solicitado",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "media",
+                                    "type": "file"
+                                }
+                            ]
+                        },
+                        "description": "Envia mensagem com arquivo anexo"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Contatos",
+            "item": [
+                {
+                    "name": "Listar Contatos",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/contacts?pageNumber=1&searchParam=",
+                            "host": ["{{base_url}}"],
+                            "path": ["contacts"],
+                            "query": [
+                                {
+                                    "key": "pageNumber",
+                                    "value": "1"
+                                },
+                                {
+                                    "key": "searchParam",
+                                    "value": ""
+                                }
+                            ]
+                        },
+                        "description": "Lista todos os contatos com paginação"
+                    }
+                },
+                {
+                    "name": "Criar Contato",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/contacts",
+                            "host": ["{{base_url}}"],
+                            "path": ["contacts"]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"João Silva\",\n    \"number\": \"5511999999999\",\n    \"email\": \"joao@email.com\"\n}"
+                        },
+                        "description": "Cria um novo contato"
+                    }
+                },
+                {
+                    "name": "Atualizar Contato",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/contacts/:contactId",
+                            "host": ["{{base_url}}"],
+                            "path": ["contacts", ":contactId"],
+                            "variable": [
+                                {
+                                    "key": "contactId",
+                                    "value": "1"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"João Silva Santos\",\n    \"email\": \"joao.santos@email.com\"\n}"
+                        },
+                        "description": "Atualiza dados de um contato"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Conexões WhatsApp",
+            "item": [
+                {
+                    "name": "Listar Conexões",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/whatsapp",
+                            "host": ["{{base_url}}"],
+                            "path": ["whatsapp"]
+                        },
+                        "description": "Lista todas as conexões WhatsApp"
+                    }
+                },
+                {
+                    "name": "Criar Conexão",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/whatsapp",
+                            "host": ["{{base_url}}"],
+                            "path": ["whatsapp"]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"WhatsApp Principal\",\n    \"greetingMessage\": \"Olá! Bem-vindo ao nosso atendimento.\",\n    \"farewellMessage\": \"Obrigado pelo contato!\"\n}"
+                        },
+                        "description": "Cria uma nova conexão WhatsApp"
+                    }
+                },
+                {
+                    "name": "Iniciar Sessão",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "{{base_url}}/whatsapp/:whatsappId/start",
+                            "host": ["{{base_url}}"],
+                            "path": ["whatsapp", ":whatsappId", "start"],
+                            "variable": [
+                                {
+                                    "key": "whatsappId",
+                                    "value": "1"
+                                }
+                            ]
+                        },
+                        "description": "Inicia uma sessão WhatsApp"
+                    }
+                },
+                {
+                    "name": "Parar Sessão",
+                    "request": {
+                        "method": "POST",
+                        "url": {
+                            "raw": "{{base_url}}/whatsapp/:whatsappId/restart",
+                            "host": ["{{base_url}}"],
+                            "path": ["whatsapp", ":whatsappId", "restart"],
+                            "variable": [
+                                {
+                                    "key": "whatsappId",
+                                    "value": "1"
+                                }
+                            ]
+                        },
+                        "description": "Para e reinicia uma sessão WhatsApp"
+                    }
+                },
+                {
+                    "name": "Remover Conexão",
+                    "request": {
+                        "method": "DELETE",
+                        "url": {
+                            "raw": "{{base_url}}/whatsapp/:whatsappId",
+                            "host": ["{{base_url}}"],
+                            "path": ["whatsapp", ":whatsappId"],
+                            "variable": [
+                                {
+                                    "key": "whatsappId",
+                                    "value": "1"
+                                }
+                            ]
+                        },
+                        "description": "Remove uma conexão WhatsApp"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Filas de Atendimento",
+            "item": [
+                {
+                    "name": "Listar Filas",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/queue",
+                            "host": ["{{base_url}}"],
+                            "path": ["queue"]
+                        },
+                        "description": "Lista todas as filas de atendimento"
+                    }
+                },
+                {
+                    "name": "Criar Fila",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/queue",
+                            "host": ["{{base_url}}"],
+                            "path": ["queue"]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Suporte Técnico\",\n    \"color\": \"#0000FF\",\n    \"greetingMessage\": \"Você foi direcionado para o suporte técnico.\"\n}"
+                        },
+                        "description": "Cria uma nova fila de atendimento"
+                    }
+                },
+                {
+                    "name": "Atualizar Fila",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/queue/:queueId",
+                            "host": ["{{base_url}}"],
+                            "path": ["queue", ":queueId"],
+                            "variable": [
+                                {
+                                    "key": "queueId",
+                                    "value": "1"
+                                }
+                            ]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Suporte Técnico Avançado\",\n    \"color\": \"#FF0000\"\n}"
+                        },
+                        "description": "Atualiza uma fila existente"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Usuários",
+            "item": [
+                {
+                    "name": "Listar Usuários",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/users",
+                            "host": ["{{base_url}}"],
+                            "path": ["users"]
+                        },
+                        "description": "Lista todos os usuários do sistema"
+                    }
+                },
+                {
+                    "name": "Criar Usuário",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/users",
+                            "host": ["{{base_url}}"],
+                            "path": ["users"]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Novo Atendente\",\n    \"email\": \"atendente@whaticket.io\",\n    \"password\": \"123456\",\n    \"profile\": \"user\"\n}"
+                        },
+                        "description": "Cria um novo usuário"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Relatórios",
+            "item": [
+                {
+                    "name": "Relatório de Tickets",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/reports/tickets?dateFrom=2025-01-01&dateTo=2025-01-31",
+                            "host": ["{{base_url}}"],
+                            "path": ["reports", "tickets"],
+                            "query": [
+                                {
+                                    "key": "dateFrom",
+                                    "value": "2025-01-01"
+                                },
+                                {
+                                    "key": "dateTo",
+                                    "value": "2025-01-31"
+                                }
+                            ]
+                        },
+                        "description": "Gera relatório de tickets por período"
+                    }
+                },
+                {
+                    "name": "Dashboard Analytics",
+                    "request": {
+                        "method": "GET",
+                        "url": {
+                            "raw": "{{base_url}}/dashboard",
+                            "host": ["{{base_url}}"],
+                            "path": ["dashboard"]
+                        },
+                        "description": "Dados para dashboard analytics"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Webhooks",
+            "item": [
+                {
+                    "name": "Exemplo Webhook - Ticket Criado",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-WhatTicket-Event",
+                                "value": "ticket:create"
+                            }
+                        ],
+                        "url": {
+                            "raw": "https://sua-url.com/webhook",
+                            "protocol": "https",
+                            "host": ["sua-url", "com"],
+                            "path": ["webhook"]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"event\": \"ticket:create\",\n    \"timestamp\": \"2025-01-15T10:30:00Z\",\n    \"data\": {\n        \"id\": 123,\n        \"status\": \"open\",\n        \"contactId\": 1,\n        \"userId\": 1,\n        \"queueId\": 1,\n        \"createdAt\": \"2025-01-15T10:30:00Z\",\n        \"updatedAt\": \"2025-01-15T10:30:00Z\"\n    }\n}"
+                        },
+                        "description": "Exemplo de webhook enviado quando um ticket é criado"
+                    }
+                },
+                {
+                    "name": "Exemplo Webhook - Mensagem Recebida",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "X-WhatTicket-Event",
+                                "value": "message:create"
+                            }
+                        ],
+                        "url": {
+                            "raw": "https://sua-url.com/webhook",
+                            "protocol": "https",
+                            "host": ["sua-url", "com"],
+                            "path": ["webhook"]
+                        },
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"event\": \"message:create\",\n    \"timestamp\": \"2025-01-15T10:30:00Z\",\n    \"data\": {\n        \"id\": 456,\n        \"body\": \"Nova mensagem recebida\",\n        \"ticketId\": 123,\n        \"contactId\": 1,\n        \"fromMe\": false,\n        \"mediaType\": \"text\",\n        \"timestamp\": \"2025-01-15T10:30:00Z\",\n        \"ack\": 2\n    }\n}"
+                        },
+                        "description": "Exemplo de webhook enviado quando uma mensagem é recebida"
+                    }
+                }
+            ]
+        }
+    ]
+}

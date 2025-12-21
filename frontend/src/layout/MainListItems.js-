@@ -1,0 +1,966 @@
+import React, { useContext, useEffect, useReducer, useState } from "react";
+import { Link as RouterLink, useLocation } from "react-router-dom";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import useHelps from "../hooks/useHelps";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import ListSubheader from "@material-ui/core/ListSubheader";
+import Divider from "@material-ui/core/Divider";
+import Avatar from "@material-ui/core/Avatar";
+import Badge from "@material-ui/core/Badge";
+import Collapse from "@material-ui/core/Collapse";
+import List from "@material-ui/core/List";
+import Tooltip from "@material-ui/core/Tooltip";
+import Typography from "@material-ui/core/Typography";
+
+// Ícones modernos
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import SyncAltIcon from "@mui/icons-material/SyncAlt";
+import SettingsIcon from "@mui/icons-material/Settings";
+import PeopleIcon from "@mui/icons-material/People";
+import ContactPhoneIcon from "@mui/icons-material/ContactPhone";
+import AccountTreeIcon from "@mui/icons-material/AccountTree";
+import FlashOnIcon from "@mui/icons-material/FlashOn";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import CodeIcon from "@mui/icons-material/Code";
+import ViewKanbanIcon from "@mui/icons-material/ViewKanban";
+import ScheduleIcon from "@mui/icons-material/Schedule";
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
+import EventAvailableIcon from "@mui/icons-material/EventAvailable";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ListAltIcon from "@mui/icons-material/ListAlt";
+import AnnouncementIcon from "@mui/icons-material/Announcement";
+import ForumIcon from "@mui/icons-material/Forum";
+import LocalAtmIcon from "@mui/icons-material/LocalAtm";
+import BusinessIcon from "@mui/icons-material/Business";
+import AllInclusiveIcon from "@mui/icons-material/AllInclusive";
+import AttachFileIcon from "@mui/icons-material/AttachFile";
+import DeviceHubIcon from "@mui/icons-material/DeviceHub";
+import CampaignIcon from "@mui/icons-material/Campaign";
+import ShapeLineIcon from "@mui/icons-material/ShapeLine";
+import WebhookIcon from "@mui/icons-material/Webhook";
+import WorkIcon from "@mui/icons-material/Work";
+import GroupWorkIcon from "@mui/icons-material/GroupWork";
+import DescriptionIcon from "@mui/icons-material/Description";
+import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import BuildIcon from "@mui/icons-material/Build";
+
+import { WhatsAppsContext } from "../context/WhatsApp/WhatsAppsContext";
+import { AuthContext } from "../context/Auth/AuthContext";
+import { useActiveMenu } from "../context/ActiveMenuContext";
+import { Can } from "../components/Can";
+import { isArray } from "lodash";
+import api from "../services/api";
+import toastError from "../errors/toastError";
+import usePlans from "../hooks/usePlans";
+import useVersion from "../hooks/useVersion";
+import { i18n } from "../translate/i18n";
+import moment from "moment";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    background: "#fafafa",
+    height: "100vh",
+    overflowY: "auto",
+    overflowX: "hidden",
+    borderRight: "1px solid #e0e0e0",
+    "&::-webkit-scrollbar": {
+      width: "6px",
+    },
+    "&::-webkit-scrollbar-track": {
+      background: "#f1f1f1",
+    },
+    "&::-webkit-scrollbar-thumb": {
+      background: "#c1c1c1",
+      borderRadius: "3px",
+      "&:hover": {
+        background: "#a8a8a8",
+      },
+    },
+  },
+  
+  menuContainer: {
+    padding: "8px 0 24px 0",
+  },
+  
+  // Estilo para items de menu principal
+  menuHeader: {
+    height: "48px",
+    borderRadius: "8px",
+    margin: "6px 8px",
+    transition: "all 0.2s ease",
+    backgroundColor: "transparent",
+    border: "1px solid transparent",
+    "&:hover": {
+      backgroundColor: "#f5f5f5",
+      border: "1px solid #e0e0e0",
+    },
+    "&.active": {
+      backgroundColor: "#e3f2fd",
+      border: "1px solid #2196f3",
+      "& .MuiTypography-root": {
+        fontWeight: "600",
+        color: "#1976d2",
+      },
+    },
+  },
+
+  // Estilo para items de submenu
+  listItem: {
+    height: "40px",
+    borderRadius: "6px",
+    margin: "3px 8px 3px 16px",
+    transition: "all 0.2s ease",
+    backgroundColor: "transparent",
+    "&:hover": {
+      backgroundColor: "#f0f0f0",
+    },
+    "&.active": {
+      backgroundColor: "#e8f5e8",
+      border: "1px solid #4caf50",
+      "& .MuiTypography-root": {
+        fontWeight: "600",
+        color: "#2e7d32",
+      },
+    },
+  },
+
+  // Texto dos menus
+  menuHeaderText: {
+    fontSize: "14px",
+    fontWeight: "500",
+    color: "#424242",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    "&.active": {
+      fontWeight: "600",
+      color: "#1976d2",
+    },
+  },
+
+  listItemText: {
+    fontSize: "13px",
+    fontWeight: "400",
+    color: "#616161",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    "&.active": {
+      fontWeight: "600",
+      color: "#2e7d32",
+    },
+  },
+
+  // Ícones dos menus principais
+  menuHeaderIcon: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: "8px",
+    height: 34,
+    width: 34,
+    backgroundColor: "#f5f5f5",
+    color: "#757575",
+    transition: "all 0.2s ease",
+    "&:hover, &.active": {
+      backgroundColor: "#2196f3",
+      color: "#ffffff",
+    },
+    "& .MuiSvgIcon-root": {
+      fontSize: "1.2rem",
+    },
+  },
+
+  // Ícones dos subitems
+  itemIcon: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: "6px",
+    height: 30,
+    width: 30,
+    backgroundColor: "#f8f8f8",
+    color: "#757575",
+    transition: "all 0.2s ease",
+    "&:hover, &.active": {
+      backgroundColor: "#4caf50",
+      color: "#ffffff",
+    },
+    "& .MuiSvgIcon-root": {
+      fontSize: "1rem",
+    },
+  },
+
+  // Container dos submenus
+  submenu: {
+    backgroundColor: "transparent",
+    borderRadius: "0",
+    margin: "0",
+    paddingTop: "6px",
+    paddingBottom: "12px",
+    borderLeft: "2px solid #e0e0e0",
+    marginLeft: "16px",
+    marginRight: "4px",
+  },
+  badge: {
+    "& .MuiBadge-badge": {
+      backgroundColor: "#f44336",
+      color: "#ffffff",
+      fontSize: "10px",
+      fontWeight: "600",
+      minWidth: "18px",
+      height: "18px",
+      borderRadius: "9px",
+    },
+  },
+}));
+
+function ListItemLink(props) {
+  const { icon, primary, to, tooltip, showBadge } = props;
+  const classes = useStyles();
+  const { activeMenu } = useActiveMenu();
+  const location = useLocation();
+  const isActive = activeMenu === to || location.pathname === to;
+
+  const renderLink = React.useMemo(
+    () => React.forwardRef((itemProps, ref) => <RouterLink to={to} ref={ref} {...itemProps} />),
+    [to]
+  );
+
+  const ConditionalTooltip = ({ children, tooltipEnabled }) =>
+    tooltipEnabled ? (
+      <Tooltip title={primary} placement="right" arrow>
+        {children}
+      </Tooltip>
+    ) : (
+      children
+    );
+
+  return (
+    <ConditionalTooltip tooltipEnabled={!!tooltip}>
+      <li>
+        <ListItem 
+          button 
+          component={renderLink} 
+          className={`${classes.listItem} ${isActive ? "active" : ""}`}
+        >
+          {icon ? (
+            <ListItemIcon>
+              {showBadge ? (
+                <Badge badgeContent="!" color="error" overlap="circular" className={classes.badge}>
+                  <Avatar className={`${classes.itemIcon} ${isActive ? "active" : ""}`}>{icon}</Avatar>
+                </Badge>
+              ) : (
+                <Avatar className={`${classes.itemIcon} ${isActive ? "active" : ""}`}>{icon}</Avatar>
+              )}
+            </ListItemIcon>
+          ) : null}
+          <ListItemText 
+            primary={
+              <Typography className={`${classes.listItemText} ${isActive ? "active" : ""}`}>
+                {primary}
+              </Typography>
+            } 
+          />
+        </ListItem>
+      </li>
+    </ConditionalTooltip>
+  );
+}
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "LOAD_CHATS":
+      return [...state, ...action.payload];
+    case "UPDATE_CHATS":
+      return state.map((chat) => (chat.id === action.payload.id ? action.payload : chat));
+    case "DELETE_CHAT":
+      return state.filter((chat) => chat.id !== action.payload);
+    case "RESET":
+      return [];
+    case "CHANGE_CHAT":
+      return state.map((chat) => (chat.id === action.payload.chat.id ? action.payload.chat : chat));
+    default:
+      return state;
+  }
+};
+
+const MainListItems = ({ collapsed, drawerClose }) => {
+  const theme = useTheme();
+  const classes = useStyles();
+  const { whatsApps } = useContext(WhatsAppsContext);
+  const { user, socket } = useContext(AuthContext);
+  const { setActiveMenu } = useActiveMenu();
+  const location = useLocation();
+
+  const [connectionWarning, setConnectionWarning] = useState(false);
+  
+  // Todos os menus fechados por padrão
+  const [openManagementSubmenu, setOpenManagementSubmenu] = useState(false);
+  const [openCommunicationSubmenu, setOpenCommunicationSubmenu] = useState(false);
+  const [openCampaignSubmenu, setOpenCampaignSubmenu] = useState(false);
+  const [openFlowSubmenu, setOpenFlowSubmenu] = useState(false);
+  const [openAdministrationSubmenu, setOpenAdministrationSubmenu] = useState(false);
+  const [openToolsSubmenu, setOpenToolsSubmenu] = useState(false);
+
+  const [showCampaigns, setShowCampaigns] = useState(false);
+  const [showKanban, setShowKanban] = useState(false);
+  const [planExpired, setPlanExpired] = useState(false);
+  const [showOpenAi, setShowOpenAi] = useState(false);
+  const [showIntegrations, setShowIntegrations] = useState(false);
+  const [showSchedules, setShowSchedules] = useState(false);
+  const [showInternalChat, setShowInternalChat] = useState(false);
+  const [showExternalApi, setShowExternalApi] = useState(false);
+  const [invisible, setInvisible] = useState(true);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [searchParam, setSearchParam] = useState("");
+  const [chats, dispatch] = useReducer(reducer, []);
+  const [version, setVersion] = useState("1.92");
+  const { list } = useHelps();
+  const [hasHelps, setHasHelps] = useState(false);
+
+  useEffect(() => {
+    async function checkHelps() {
+      const helps = await list();
+      setHasHelps(helps.length > 0);
+    }
+    checkHelps();
+  }, []);
+
+  // Verificação de estados ativos sem abrir menus automaticamente
+  const isManagementActive =
+    location.pathname === "/" || 
+    location.pathname.startsWith("/reports") || 
+    location.pathname.startsWith("/moments");
+
+  const isCommunicationActive =
+    location.pathname.startsWith("/tickets") ||
+    location.pathname.startsWith("/quick-messages") ||
+    location.pathname.startsWith("/contacts") ||
+    location.pathname.startsWith("/schedules") ||
+    location.pathname.startsWith("/tags") ||
+    location.pathname.startsWith("/chats");
+
+  const isCampaignRouteActive =
+    location.pathname === "/campaigns" ||
+    location.pathname.startsWith("/contact-lists") ||
+    location.pathname.startsWith("/campaigns-config");
+
+  const isFlowbuilderRouteActive =
+    location.pathname.startsWith("/phrase-lists") || 
+    location.pathname.startsWith("/flowbuilders");
+
+  const isAdministrationActive =
+    location.pathname.startsWith("/users") ||
+    location.pathname.startsWith("/queues") ||
+    location.pathname.startsWith("/prompts") ||
+    location.pathname.startsWith("/queue-integration") ||
+    location.pathname.startsWith("/connections") ||
+    location.pathname.startsWith("/allConnections") ||
+    location.pathname.startsWith("/files") ||
+    location.pathname.startsWith("/financeiro") ||
+    location.pathname.startsWith("/settings") ||
+    location.pathname.startsWith("/companies") ||
+    location.pathname.startsWith("/announcements");
+
+  const isToolsActive =
+    location.pathname.startsWith("/messages-api") ||
+    location.pathname.startsWith("/kanban") ||
+    location.pathname.startsWith("/todolist") ||
+    location.pathname.startsWith("/helps") ||
+    location.pathname.startsWith("/documentacao");
+
+  useEffect(() => {
+    if (location.pathname.startsWith("/tickets")) {
+      setActiveMenu("/tickets");
+    } else {
+      setActiveMenu("");
+    }
+  }, [location, setActiveMenu]);
+
+  const { getPlanCompany } = usePlans();
+  const { getVersion } = useVersion();
+
+  useEffect(() => {
+    async function fetchVersion() {
+      try {
+        const _version = await getVersion();
+        setVersion(_version.version || "1.92");
+      } catch (error) {
+        setVersion("1.92");
+      }
+    }
+    fetchVersion();
+  }, []);
+
+  useEffect(() => {
+    dispatch({ type: "RESET" });
+    setPageNumber(1);
+  }, [searchParam]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const companyId = user.companyId;
+      const planConfigs = await getPlanCompany(undefined, companyId);
+
+      setShowCampaigns(planConfigs.plan.useCampaigns);
+      setShowKanban(planConfigs.plan.useKanban);
+      setShowOpenAi(planConfigs.plan.useOpenAi);
+      setShowIntegrations(planConfigs.plan.useIntegrations);
+      setShowSchedules(planConfigs.plan.useSchedules);
+      setShowInternalChat(planConfigs.plan.useInternalChat);
+      setShowExternalApi(planConfigs.plan.useExternalApi);
+      setPlanExpired(moment(moment().format()).isBefore(user.company.dueDate));
+    }
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      fetchChats();
+    }, 500);
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchParam, pageNumber]);
+
+  useEffect(() => {
+    if (user.id) {
+      const companyId = user.companyId;
+      const onCompanyChatMainListItems = (data) => {
+        if (data.action === "new-message") {
+          dispatch({ type: "CHANGE_CHAT", payload: data });
+        }
+        if (data.action === "update") {
+          dispatch({ type: "CHANGE_CHAT", payload: data });
+        }
+      };
+
+      socket.on(`company-${companyId}-chat`, onCompanyChatMainListItems);
+      return () => {
+        socket.off(`company-${companyId}-chat`, onCompanyChatMainListItems);
+      };
+    }
+  }, [socket]);
+
+  useEffect(() => {
+    let unreadsCount = 0;
+    if (chats.length > 0) {
+      for (let chat of chats) {
+        for (let chatUser of chat.users) {
+          if (chatUser.userId === user.id) {
+            unreadsCount += chatUser.unreads;
+          }
+        }
+      }
+    }
+    if (unreadsCount > 0) {
+      setInvisible(false);
+    } else {
+      setInvisible(true);
+    }
+  }, [chats, user.id]);
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      if (whatsApps.length > 0) {
+        const offlineWhats = whatsApps.filter((whats) => {
+          return (
+            whats.status === "qrcode" ||
+            whats.status === "PAIRING" ||
+            whats.status === "DISCONNECTED" ||
+            whats.status === "TIMEOUT" ||
+            whats.status === "OPENING"
+          );
+        });
+        if (offlineWhats.length > 0) {
+          setConnectionWarning(true);
+        } else {
+          setConnectionWarning(false);
+        }
+      }
+    }, 2000);
+    return () => clearTimeout(delayDebounceFn);
+  }, [whatsApps]);
+
+  const fetchChats = async () => {
+    try {
+      const { data } = await api.get("/chats/", {
+        params: { searchParam, pageNumber },
+      });
+      dispatch({ type: "LOAD_CHATS", payload: data.records });
+    } catch (err) {
+      toastError(err);
+    }
+  };
+
+  return (
+    <div className={classes.root} onClick={drawerClose}>
+      <div className={classes.menuContainer}>
+      
+      {/* === SEÇÃO DE GERENCIAMENTO === */}
+      {planExpired && (
+        <Can
+          role={
+            (user.profile === "user" && user.showDashboard === "enabled") || user.allowRealTime === "enabled"
+              ? "admin"
+              : user.profile
+          }
+          perform={"drawer-admin-items:view"}
+          yes={() => (
+            <>
+              <Tooltip title={collapsed ? "Gerenciamento" : ""} placement="right" arrow>
+                <ListItem
+                  dense
+                  button
+                  onClick={() => setOpenManagementSubmenu((prev) => !prev)}
+                  className={`${classes.menuHeader} ${isManagementActive ? "active" : ""}`}
+                >
+                  <ListItemIcon>
+                    <Avatar className={`${classes.menuHeaderIcon} ${isManagementActive ? "active" : ""}`}>
+                      <DashboardIcon />
+                    </Avatar>
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={
+                      <Typography className={`${classes.menuHeaderText} ${isManagementActive ? "active" : ""}`}>
+                        Gerenciamento
+                      </Typography>
+                    }
+                  />
+                  {openManagementSubmenu ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                </ListItem>
+              </Tooltip>
+              <Collapse in={openManagementSubmenu} timeout="auto" unmountOnExit className={classes.submenu}>
+                <Can
+                  role={user.profile === "user" && user.showDashboard === "enabled" ? "admin" : user.profile}
+                  perform={"drawer-admin-items:view"}
+                  yes={() => (
+                    <>
+                      <ListItemLink
+                        to="/"
+                        primary="Dashboard"
+                        icon={<DashboardIcon />}
+                        tooltip={collapsed}
+                      />
+                      <ListItemLink
+                        to="/reports"
+                        primary="Relatórios"
+                        icon={<ListAltIcon />}
+                        tooltip={collapsed}
+                      />
+                    </>
+                  )}
+                />
+                <Can
+                  role={user.profile === "user" && user.allowRealTime === "enabled" ? "admin" : user.profile}
+                  perform={"drawer-admin-items:view"}
+                  yes={() => (
+                    <ListItemLink
+                      to="/moments"
+                      primary="Chats em Tempo Real"
+                      icon={<ForumIcon />}
+                      tooltip={collapsed}
+                    />
+                  )}
+                />
+              </Collapse>
+            </>
+          )}
+        />
+      )}
+
+      {/* === SEÇÃO DE COMUNICAÇÃO === */}
+      <Tooltip title={collapsed ? "Comunicação" : ""} placement="right" arrow>
+        <ListItem
+          dense
+          button
+          onClick={() => setOpenCommunicationSubmenu((prev) => !prev)}
+          className={`${classes.menuHeader} ${isCommunicationActive ? "active" : ""}`}
+        >
+          <ListItemIcon>
+            <Avatar className={`${classes.menuHeaderIcon} ${isCommunicationActive ? "active" : ""}`}>
+              <ChatBubbleIcon />
+            </Avatar>
+          </ListItemIcon>
+          <ListItemText
+            primary={
+              <Typography className={`${classes.menuHeaderText} ${isCommunicationActive ? "active" : ""}`}>
+                Comunicação
+              </Typography>
+            }
+          />
+          {openCommunicationSubmenu ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+        </ListItem>
+      </Tooltip>
+      <Collapse in={openCommunicationSubmenu} timeout="auto" unmountOnExit className={classes.submenu}>
+        {planExpired && (
+          <ListItemLink
+            to="/tickets"
+            primary="Atendimentos"
+            icon={<WhatsAppIcon />}
+            tooltip={collapsed}
+          />
+        )}
+
+        {planExpired && (
+          <ListItemLink
+            to="/quick-messages"
+            primary="Respostas Rápidas"
+            icon={<FlashOnIcon />}
+            tooltip={collapsed}
+          />
+        )}
+
+        {planExpired && (
+          <ListItemLink
+            to="/contacts"
+            primary="Contatos"
+            icon={<ContactPhoneIcon />}
+            tooltip={collapsed}
+          />
+        )}
+
+        {showSchedules && planExpired && (
+          <ListItemLink
+            to="/schedules"
+            primary="Agendamentos"
+            icon={<ScheduleIcon />}
+            tooltip={collapsed}
+          />
+        )}
+
+        {planExpired && (
+          <ListItemLink
+            to="/tags"
+            primary="Etiquetas"
+            icon={<LocalOfferIcon />}
+            tooltip={collapsed}
+          />
+        )}
+
+        {showInternalChat && planExpired && (
+          <ListItemLink
+            to="/chats"
+            primary="Chat Interno"
+            icon={
+              <Badge color="secondary" variant="dot" invisible={invisible} className={classes.badge}>
+                <ForumIcon />
+              </Badge>
+            }
+            tooltip={collapsed}
+          />
+        )}
+      </Collapse>
+
+      {/* === SEÇÃO DE CAMPANHAS === */}
+      {showCampaigns && planExpired && (
+        <Can
+          role={user.profile}
+          perform="dashboard:view"
+          yes={() => (
+            <>
+              <Tooltip title={collapsed ? "Campanhas" : ""} placement="right" arrow>
+                <ListItem
+                  dense
+                  button
+                  onClick={() => setOpenCampaignSubmenu((prev) => !prev)}
+                  className={`${classes.menuHeader} ${isCampaignRouteActive ? "active" : ""}`}
+                >
+                  <ListItemIcon>
+                    <Avatar className={`${classes.menuHeaderIcon} ${isCampaignRouteActive ? "active" : ""}`}>
+                      <CampaignIcon />
+                    </Avatar>
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={
+                      <Typography className={`${classes.menuHeaderText} ${isCampaignRouteActive ? "active" : ""}`}>
+                        Campanhas
+                      </Typography>
+                    }
+                  />
+                  {openCampaignSubmenu ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                </ListItem>
+              </Tooltip>
+              <Collapse in={openCampaignSubmenu} timeout="auto" unmountOnExit className={classes.submenu}>
+                <ListItemLink
+                  to="/campaigns"
+                  primary="Lista de Campanhas"
+                  icon={<ListAltIcon />}
+                  tooltip={collapsed}
+                />
+                <ListItemLink
+                  to="/contact-lists"
+                  primary="Lista de Contatos"
+                  icon={<PeopleIcon />}
+                  tooltip={collapsed}
+                />
+                <ListItemLink
+                  to="/campaigns-config"
+                  primary="Configurações"
+                  icon={<SettingsIcon />}
+                  tooltip={collapsed}
+                />
+              </Collapse>
+            </>
+          )}
+        />
+      )}
+
+      {/* === SEÇÃO DE FLUXOS === */}
+      {planExpired && (
+        <Can
+          role={user.profile}
+          perform="dashboard:view"
+          yes={() => (
+            <>
+              <Tooltip title={collapsed ? "Fluxos" : ""} placement="right" arrow>
+                <ListItem
+                  dense
+                  button
+                  onClick={() => setOpenFlowSubmenu((prev) => !prev)}
+                  className={`${classes.menuHeader} ${isFlowbuilderRouteActive ? "active" : ""}`}
+                >
+                  <ListItemIcon>
+                    <Avatar className={`${classes.menuHeaderIcon} ${isFlowbuilderRouteActive ? "active" : ""}`}>
+                      <WebhookIcon />
+                    </Avatar>
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={
+                      <Typography className={`${classes.menuHeaderText} ${isFlowbuilderRouteActive ? "active" : ""}`}>
+                        Construtor de Fluxo
+                      </Typography>
+                    }
+                  />
+                  {openFlowSubmenu ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                </ListItem>
+              </Tooltip>
+              <Collapse in={openFlowSubmenu} timeout="auto" unmountOnExit className={classes.submenu}>
+                <ListItemLink
+                  to="/phrase-lists"
+                  primary="Fluxo de Campanha"
+                  icon={<CampaignIcon />}
+                  tooltip={collapsed}
+                />
+                <ListItemLink
+                  to="/flowbuilders"
+                  primary="Fluxo de Conversa"
+                  icon={<ShapeLineIcon />}
+                  tooltip={collapsed}
+                />
+              </Collapse>
+            </>
+          )}
+        />
+      )}
+
+      {/* === SEÇÃO DE FERRAMENTAS === */}
+      <Tooltip title={collapsed ? "Ferramentas" : ""} placement="right" arrow>
+        <ListItem
+          dense
+          button
+          onClick={() => setOpenToolsSubmenu((prev) => !prev)}
+          className={`${classes.menuHeader} ${isToolsActive ? "active" : ""}`}
+        >
+          <ListItemIcon>
+            <Avatar className={`${classes.menuHeaderIcon} ${isToolsActive ? "active" : ""}`}>
+              <BuildIcon />
+            </Avatar>
+          </ListItemIcon>
+          <ListItemText
+            primary={
+              <Typography className={`${classes.menuHeaderText} ${isToolsActive ? "active" : ""}`}>
+                Ferramentas
+              </Typography>
+            }
+          />
+          {openToolsSubmenu ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+        </ListItem>
+      </Tooltip>
+      <Collapse in={openToolsSubmenu} timeout="auto" unmountOnExit className={classes.submenu}>
+        {showExternalApi && planExpired && (
+          <ListItemLink
+            to="/messages-api"
+            primary="API de Mensagens"
+            icon={<CodeIcon />}
+            tooltip={collapsed}
+          />
+        )}
+
+        {showKanban && planExpired && (
+          <ListItemLink
+            to="/kanban"
+            primary="Kanban"
+            icon={<ViewKanbanIcon />}
+            tooltip={collapsed}
+          />
+        )}
+
+        <ListItemLink
+          to="/todolist"
+          primary="Lista de Tarefas"
+          icon={<EventAvailableIcon />}
+          tooltip={collapsed}
+        />
+
+        <ListItemLink
+          to="/helps"
+          primary="Ajuda"
+          icon={<HelpOutlineIcon />}
+          tooltip={collapsed}
+        />
+
+        <ListItemLink
+          to="/documentacao"
+          primary="Documentação"
+          icon={<DescriptionIcon />}
+          tooltip={collapsed}
+        />
+      </Collapse>
+
+      {/* === SEÇÃO DE ADMINISTRAÇÃO === */}
+      <Can
+        role={user.profile === "user" && user.allowConnections === "enabled" ? "admin" : user.profile}
+        perform="dashboard:view"
+        yes={() => (
+          <>
+            <Tooltip title={collapsed ? "Administração" : ""} placement="right" arrow>
+              <ListItem
+                dense
+                button
+                onClick={() => setOpenAdministrationSubmenu((prev) => !prev)}
+                className={`${classes.menuHeader} ${isAdministrationActive ? "active" : ""}`}
+              >
+                <ListItemIcon>
+                  <Avatar className={`${classes.menuHeaderIcon} ${isAdministrationActive ? "active" : ""}`}>
+                    <SettingsIcon />
+                  </Avatar>
+                </ListItemIcon>
+                <ListItemText
+                  primary={
+                    <Typography className={`${classes.menuHeaderText} ${isAdministrationActive ? "active" : ""}`}>
+                      Administração
+                    </Typography>
+                  }
+                />
+                {openAdministrationSubmenu ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+              </ListItem>
+            </Tooltip>
+            <Collapse in={openAdministrationSubmenu} timeout="auto" unmountOnExit className={classes.submenu}>
+              {user.super && (
+                <ListItemLink
+                  to="/announcements"
+                  primary="Avisos"
+                  icon={<AnnouncementIcon />}
+                  tooltip={collapsed}
+                />
+              )}
+
+              {planExpired && (
+                <ListItemLink
+                  to="/users"
+                  primary="Usuários"
+                  icon={<PeopleIcon />}
+                  tooltip={collapsed}
+                />
+              )}
+
+              {planExpired && (
+                <ListItemLink
+                  to="/queues"
+                  primary="Filas"
+                  icon={<AccountTreeIcon />}
+                  tooltip={collapsed}
+                />
+              )}
+
+              {showOpenAi && planExpired && (
+                <ListItemLink
+                  to="/prompts"
+                  primary="Prompts IA"
+                  icon={<AllInclusiveIcon />}
+                  tooltip={collapsed}
+                />
+              )}
+
+              {showIntegrations && planExpired && (
+                <ListItemLink
+                  to="/queue-integration"
+                  primary="Integração de Filas"
+                  icon={<DeviceHubIcon />}
+                  tooltip={collapsed}
+                />
+              )}
+
+              {planExpired && (
+                <Can
+                  role={user.profile === "user" && user.allowConnections === "enabled" ? "admin" : user.profile}
+                  perform={"drawer-admin-items:view"}
+                  yes={() => (
+                    <ListItemLink
+                      to="/connections"
+                      primary="Conexões"
+                      icon={<SyncAltIcon />}
+                      showBadge={connectionWarning}
+                      tooltip={collapsed}
+                    />
+                  )}
+                />
+              )}
+
+              {user.super && (
+                <ListItemLink
+                  to="/allConnections"
+                  primary="Todas as Conexões"
+                  icon={<SyncAltIcon />}
+                  tooltip={collapsed}
+                />
+              )}
+
+              {planExpired && (
+                <ListItemLink
+                  to="/files"
+                  primary="Arquivos"
+                  icon={<AttachFileIcon />}
+                  tooltip={collapsed}
+                />
+              )}
+
+              <ListItemLink
+                to="/financeiro"
+                primary="Financeiro"
+                icon={<LocalAtmIcon />}
+                tooltip={collapsed}
+              />
+
+              {planExpired && (
+                <ListItemLink
+                  to="/settings"
+                  primary="Configurações"
+                  icon={<SettingsIcon />}
+                  tooltip={collapsed}
+                />
+              )}
+
+              {user.super && (
+                <ListItemLink
+                  to="/companies"
+                  primary="Empresas"
+                  icon={<BusinessIcon />}
+                  tooltip={collapsed}
+                />
+              )}
+            </Collapse>
+          </>
+        )}
+      />
+      </div>
+    </div>
+  );
+};
+
+export default MainListItems;

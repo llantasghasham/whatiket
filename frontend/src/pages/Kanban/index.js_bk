@@ -1,0 +1,1030 @@
+import React, { useState, useEffect, useContext } from "react";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import api from "../../services/api";
+import { AuthContext } from "../../context/Auth/AuthContext";
+import Board from 'react-trello';
+import { toast } from "react-toastify";
+import { i18n } from "../../translate/i18n";
+import { useHistory } from 'react-router-dom';
+import { Facebook, Instagram, WhatsApp } from "@material-ui/icons";
+import { 
+  Badge, 
+  Tooltip, 
+  Typography, 
+  Button, 
+  TextField, 
+  Box,
+  Grid,
+  IconButton,
+  Collapse,
+  Avatar,
+  Chip
+} from "@material-ui/core";
+import { format, isSameDay, parseISO } from "date-fns";
+import { Can } from "../../components/Can";
+import SearchIcon from '@mui/icons-material/Search';
+import AddIcon from '@mui/icons-material/Add';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import ViewKanbanIcon from '@mui/icons-material/ViewKanban';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import ClearIcon from '@mui/icons-material/Clear';
+import { Assessment, Timeline, Speed } from "@material-ui/icons";
+import PersonIcon from '@mui/icons-material/Person';
+import MessageIcon from '@mui/icons-material/Message';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import clsx from "clsx";
+
+const useStyles = makeStyles((theme) => ({
+  // ===== LAYOUT PRINCIPAL =====
+  root: {
+    minHeight: "100vh",
+    backgroundColor: "#0079bf", // Azul característico do Trello
+    padding: theme.spacing(2),
+  },
+
+  container: {
+    maxWidth: "100%",
+    margin: "0 auto",
+  },
+
+  // ===== CABEÇALHO ESTILO TRELLO =====
+  header: {
+    backgroundColor: "rgba(255, 255, 255, 0.24)",
+    borderRadius: "8px",
+    padding: theme.spacing(2, 3),
+    marginBottom: theme.spacing(2),
+    backdropFilter: "blur(4px)",
+    border: "1px solid rgba(255, 255, 255, 0.18)",
+  },
+
+  headerTitle: {
+    fontSize: "24px",
+    fontWeight: 700,
+    color: "#ffffff",
+    marginBottom: theme.spacing(0.5),
+    display: "flex",
+    alignItems: "center",
+    gap: theme.spacing(1),
+  },
+
+  headerSubtitle: {
+    fontSize: "14px",
+    color: "rgba(255, 255, 255, 0.8)",
+    fontWeight: 500,
+  },
+
+  headerActions: {
+    display: "flex",
+    gap: theme.spacing(2),
+    alignItems: "center",
+  },
+
+  // ===== SEÇÃO DE FILTROS ESTILO TRELLO =====
+  filterSection: {
+    backgroundColor: "rgba(255, 255, 255, 0.24)",
+    borderRadius: "8px",
+    padding: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+    backdropFilter: "blur(4px)",
+    border: "1px solid rgba(255, 255, 255, 0.18)",
+  },
+
+  filterHeader: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: theme.spacing(2),
+    cursor: "pointer",
+    padding: theme.spacing(1, 0),
+  },
+
+  filterTitle: {
+    fontSize: "16px",
+    fontWeight: 600,
+    color: "#ffffff",
+    display: "flex",
+    alignItems: "center",
+    gap: theme.spacing(1),
+  },
+
+  // ===== CARDS DE ESTATÍSTICAS ESTILO TRELLO =====
+  cardSection: {
+    marginBottom: theme.spacing(2),
+  },
+
+  sectionTitle: {
+    fontSize: "16px",
+    fontWeight: 600,
+    color: "#ffffff",
+    marginBottom: theme.spacing(2),
+    display: "flex",
+    alignItems: "center",
+    gap: theme.spacing(1),
+  },
+
+  statCard: {
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    borderRadius: "8px",
+    padding: theme.spacing(2),
+    transition: "all 0.2s ease",
+    cursor: "pointer",
+    border: "1px solid rgba(255, 255, 255, 0.2)",
+    
+    "&:hover": {
+      backgroundColor: "rgba(255, 255, 255, 1)",
+      transform: "translateY(-2px)",
+      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+    },
+  },
+
+  statValue: {
+    fontSize: "32px",
+    fontWeight: 800,
+    color: "#172b4d",
+    lineHeight: 1,
+    marginBottom: theme.spacing(0.5),
+  },
+
+  statLabel: {
+    fontSize: "14px",
+    fontWeight: 600,
+    color: "#5e6c84",
+    textTransform: "uppercase",
+    letterSpacing: "0.5px",
+  },
+
+  // ===== CAMPOS DE FILTRO ESTILO TRELLO =====
+  trelloTextField: {
+    "& .MuiOutlinedInput-root": {
+      borderRadius: "3px",
+      backgroundColor: "rgba(255, 255, 255, 0.9)",
+      
+      "&:hover": {
+        backgroundColor: "rgba(255, 255, 255, 1)",
+      },
+      
+      "&.Mui-focused": {
+        backgroundColor: "rgba(255, 255, 255, 1)",
+      }
+    },
+    
+    "& .MuiInputLabel-outlined": {
+      color: "#5e6c84",
+      fontWeight: 500,
+      
+      "&.Mui-focused": {
+        color: "#0079bf",
+      }
+    },
+
+    "& .MuiOutlinedInput-notchedOutline": {
+      borderColor: "rgba(0, 0, 0, 0.2)",
+    },
+
+    "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline": {
+      borderColor: "rgba(0, 0, 0, 0.3)",
+    },
+
+    "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+      borderColor: "#0079bf",
+      borderWidth: "2px",
+    },
+  },
+
+  // ===== BOTÕES ESTILO TRELLO =====
+  trelloButton: {
+    backgroundColor: "rgba(255, 255, 255, 0.24)",
+    color: "#ffffff",
+    borderRadius: "3px",
+    fontWeight: 500,
+    fontSize: "14px",
+    textTransform: "none",
+    border: "none",
+    transition: "all 0.2s ease",
+    height: "36px",
+    
+    "&:hover": {
+      backgroundColor: "rgba(255, 255, 255, 0.32)",
+    },
+  },
+
+  trelloAddButton: {
+    backgroundColor: "#61bd4f",
+    color: "white",
+    borderRadius: "3px",
+    fontWeight: 500,
+    fontSize: "14px",
+    textTransform: "none",
+    border: "none",
+    transition: "all 0.2s ease",
+    
+    "&:hover": {
+      backgroundColor: "#5aac44",
+    },
+  },
+
+  toggleButton: {
+    color: "rgba(255, 255, 255, 0.8)",
+    border: "none",
+    padding: theme.spacing(0.5),
+    borderRadius: "3px",
+    transition: "all 0.2s ease",
+    
+    "&:hover": {
+      backgroundColor: "rgba(255, 255, 255, 0.1)",
+      color: "#ffffff",
+    },
+  },
+
+  // ===== SEÇÃO DO KANBAN ESTILO TRELLO =====
+  kanbanSection: {
+    borderRadius: "8px",
+    padding: theme.spacing(2),
+    minHeight: "calc(100vh - 300px)",
+  },
+
+  kanbanContainer: {
+    width: "100%",
+    height: "calc(100vh - 350px)",
+    overflow: "auto",
+    
+    // Customização do scrollbar estilo Trello
+    "&::-webkit-scrollbar": {
+      width: "8px",
+      height: "8px",
+    },
+    "&::-webkit-scrollbar-track": {
+      background: "rgba(255, 255, 255, 0.1)",
+      borderRadius: "4px",
+    },
+    "&::-webkit-scrollbar-thumb": {
+      background: "rgba(255, 255, 255, 0.3)",
+      borderRadius: "4px",
+      "&:hover": {
+        background: "rgba(255, 255, 255, 0.5)",
+      }
+    },
+  },
+
+  // ===== CUSTOMIZAÇÃO ESPECÍFICA DO TRELLO =====
+  trelloCard: {
+    backgroundColor: "#ffffff",
+    borderRadius: "3px",
+    padding: "8px",
+    marginBottom: "8px",
+    cursor: "pointer",
+    border: "none",
+    boxShadow: "0 1px 0 rgba(9, 30, 66, 0.25)",
+    transition: "box-shadow 0.1s ease",
+    
+    "&:hover": {
+      boxShadow: "0 2px 4px rgba(9, 30, 66, 0.25)",
+    },
+  },
+
+  trelloLane: {
+    backgroundColor: "#ebecf0",
+    borderRadius: "3px",
+    margin: "0 4px",
+    padding: "8px",
+    minWidth: "272px",
+    maxWidth: "272px",
+  },
+
+  trelloLaneHeader: {
+    backgroundColor: "transparent",
+    padding: "8px",
+    marginBottom: "8px",
+    fontWeight: 600,
+    fontSize: "14px",
+    color: "#172b4d",
+  },
+
+  // ===== ELEMENTOS DOS CARDS =====
+  cardTitle: {
+    fontSize: "14px",
+    fontWeight: 500,
+    color: "#172b4d",
+    marginBottom: "8px",
+    lineHeight: "20px",
+    wordWrap: "break-word",
+  },
+
+  cardMeta: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: "6px",
+    fontSize: "12px",
+    color: "#6b778c",
+  },
+
+  cardLastMessage: {
+    fontSize: "12px",
+    color: "#6b778c",
+    marginBottom: "8px",
+    lineHeight: "16px",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    display: "-webkit-box",
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: "vertical",
+  },
+
+  cardActions: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: "8px",
+  },
+
+  cardButton: {
+    backgroundColor: "#0079bf",
+    color: "white",
+    borderRadius: "3px",
+    padding: "4px 8px",
+    fontSize: "12px",
+    fontWeight: 500,
+    textTransform: "none",
+    border: "none",
+    transition: "all 0.2s ease",
+    minWidth: "auto",
+    
+    "&:hover": {
+      backgroundColor: "#005a8b",
+    },
+  },
+
+  userBadge: {
+    backgroundColor: "#dfe1e6",
+    color: "#172b4d",
+    padding: "2px 6px",
+    borderRadius: "3px",
+    fontSize: "10px",
+    fontWeight: 600,
+    textTransform: "uppercase",
+    letterSpacing: "0.3px",
+  },
+
+  channelIcon: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "20px",
+    height: "20px",
+    borderRadius: "3px",
+    marginRight: "6px",
+  },
+
+  unreadBadge: {
+    backgroundColor: "#eb5a46",
+    color: "white",
+    borderRadius: "50%",
+    minWidth: "16px",
+    height: "16px",
+    fontSize: "10px",
+    fontWeight: 600,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    marginLeft: "4px",
+  },
+
+  // ===== RESPONSIVIDADE =====
+  [theme.breakpoints.down('sm')]: {
+    root: {
+      padding: theme.spacing(1),
+    },
+    
+    headerTitle: {
+      fontSize: "20px",
+    },
+    
+    kanbanContainer: {
+      height: "calc(100vh - 400px)",
+    },
+  },
+}));
+
+const Kanban = () => {
+  const classes = useStyles();
+  const theme = useTheme();
+  const history = useHistory();
+  const { user, socket } = useContext(AuthContext);
+  
+  const [tags, setTags] = useState([]);
+  const [tickets, setTickets] = useState([]);
+  const [file, setFile] = useState({ lanes: [] });
+  const [startDate, setStartDate] = useState(format(new Date(), "yyyy-MM-dd"));
+  const [endDate, setEndDate] = useState(format(new Date(), "yyyy-MM-dd"));
+  const [filtersExpanded, setFiltersExpanded] = useState(false);
+
+  const jsonString = user.queues.map(queue => queue.UserQueue.queueId);
+
+  // Função para filtrar tickets por data localmente
+  const filterTicketsByDate = (tickets) => {
+    if (!startDate || !endDate) return tickets;
+    
+    const start = new Date(startDate);
+    start.setHours(0, 0, 0, 0);
+    const end = new Date(endDate);
+    end.setHours(23, 59, 59, 999);
+    
+    return tickets.filter(ticket => {
+      const ticketDate = new Date(ticket.createdAt || ticket.updatedAt || ticket.closedAt);
+      return ticketDate >= start && ticketDate <= end;
+    });
+  };
+
+  // Função para determinar se uma cor é clara ou escura
+  const isLightColor = (color) => {
+    if (!color) return true;
+    
+    const hex = color.replace('#', '');
+    const r = parseInt(hex.substr(0, 2), 16);
+    const g = parseInt(hex.substr(2, 2), 16);
+    const b = parseInt(hex.substr(4, 2), 16);
+    const luminosity = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    
+    return luminosity > 0.5;
+  };
+
+  // Função para obter cor de texto contrastante
+  const getContrastColor = (backgroundColor) => {
+    return isLightColor(backgroundColor) ? '#172b4d' : '#ffffff';
+  };
+
+  const fetchTags = async () => {
+    try {
+      const response = await api.get("/tag/kanban/");
+      const fetchedTags = response.data.lista || [];
+      setTags(fetchedTags);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchTickets = async () => {
+    try {
+      const { data } = await api.get("/ticket/kanban", {
+        params: {
+          queueIds: JSON.stringify(jsonString),
+        }
+      });
+      setTickets(data.tickets);
+    } catch (err) {
+      console.log(err);
+      setTickets([]);
+    }
+  };
+
+  const popularCards = () => {
+    if (!tickets.length) {
+      setFile({ lanes: [] });
+      return;
+    }
+
+    const filteredTickets = filterTicketsByDate(tickets);
+    const defaultLaneTickets = filteredTickets.filter(ticket => ticket.tags.length === 0);
+
+    // Lane padrão estilo Trello
+    const defaultLane = {
+      id: "lane0",
+      title: i18n.t("tagsKanban.laneDefault"),
+      label: defaultLaneTickets.length.toString(),
+      style: { 
+        backgroundColor: "#ebecf0",
+        width: "272px",
+        borderRadius: "3px"
+      },
+      labelStyle: {
+        backgroundColor: "#dfe1e6",
+        color: "#172b4d",
+        padding: "2px 8px",
+        borderRadius: "12px",
+        fontSize: "12px",
+        fontWeight: 600
+      },
+      titleStyle: {
+        backgroundColor: "transparent",
+        padding: "8px 8px 4px 8px",
+        fontWeight: 600,
+        fontSize: "14px",
+        color: "#172b4d"
+      },
+      cards: defaultLaneTickets.map(ticket => ({
+        id: ticket.id.toString(),
+        title: (
+          <div className={classes.trelloCard}>
+            {/* Título do Card */}
+            <div className={classes.cardTitle}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
+                <div className={classes.channelIcon}>
+                  {IconChannel(ticket.channel)}
+                </div>
+                <span style={{ fontWeight: 600 }}>{ticket.contact?.name || 'N/A'}</span>
+                {Number(ticket.unreadMessages) > 0 && (
+                  <div className={classes.unreadBadge}>
+                    {ticket.unreadMessages}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Metadados */}
+            <div className={classes.cardMeta}>
+              <span style={{ fontWeight: 500 }}>{ticket.contact?.number || 'N/A'}</span>
+              <span style={{ fontSize: '11px', color: '#6b778c' }}>
+                #{ticket.id}
+              </span>
+            </div>
+
+            {/* Última mensagem */}
+            {ticket.lastMessage && (
+              <div className={classes.cardLastMessage}>
+                <MessageIcon style={{ fontSize: '12px', marginRight: '4px', verticalAlign: 'middle' }} />
+                {ticket.lastMessage}
+              </div>
+            )}
+
+            {/* Ações do Card */}
+            <div className={classes.cardActions}>
+              <Button
+                startIcon={<VisibilityIcon style={{ fontSize: '12px' }} />}
+                className={classes.cardButton}
+                onClick={() => handleCardClick(ticket.uuid)}
+                size="small"
+              >
+                Ver
+              </Button>
+              
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontSize: '11px', color: '#6b778c', display: 'flex', alignItems: 'center' }}>
+                  <AccessTimeIcon style={{ fontSize: '12px', marginRight: '2px' }} />
+                  {ticket.updatedAt && isSameDay(parseISO(ticket.updatedAt), new Date()) ? (
+                    format(parseISO(ticket.updatedAt), "HH:mm")
+                  ) : ticket.updatedAt ? (
+                    format(parseISO(ticket.updatedAt), "dd/MM")
+                  ) : (
+                    '--'
+                  )}
+                </span>
+                
+                {ticket?.user && (
+                  <div className={classes.userBadge}>
+                    <PersonIcon style={{ fontSize: '10px', marginRight: '2px' }} />
+                    {ticket.user.name.split(' ')[0]}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        ),
+        draggable: true,
+        laneId: "lane0",
+      })),
+    };
+
+    // Lanes das tags estilo Trello
+    const tagLanes = tags.map(tag => {
+      const tagTickets = filteredTickets.filter(ticket => {
+        const tagIds = ticket.tags.map(tag => tag.id);
+        return tagIds.includes(tag.id);
+      });
+
+      const textColor = getContrastColor(tag.color);
+      const darkerColor = isLightColor(tag.color) 
+        ? `rgba(0, 0, 0, 0.1)` 
+        : `rgba(255, 255, 255, 0.2)`;
+
+      return {
+        id: tag.id.toString(),
+        title: tag.name,
+        label: tagTickets?.length.toString(),
+        style: { 
+          backgroundColor: tag.color,
+          width: "272px",
+          borderRadius: "3px",
+          border: isLightColor(tag.color) ? '1px solid rgba(0,0,0,0.1)' : 'none'
+        },
+        labelStyle: {
+          backgroundColor: darkerColor,
+          color: textColor,
+          padding: "2px 8px",
+          borderRadius: "12px",
+          fontSize: "12px",
+          fontWeight: 600,
+          border: isLightColor(tag.color) ? '1px solid rgba(0,0,0,0.1)' : '1px solid rgba(255,255,255,0.2)'
+        },
+        titleStyle: {
+          backgroundColor: "transparent",
+          padding: "8px 8px 4px 8px",
+          fontWeight: 600,
+          fontSize: "14px",
+          color: textColor
+        },
+        cards: tagTickets.map(ticket => ({
+          id: ticket.id.toString(),
+          title: (
+            <div className={classes.trelloCard}>
+              {/* Título do Card */}
+              <div className={classes.cardTitle}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
+                  <div className={classes.channelIcon}>
+                    {IconChannel(ticket.channel)}
+                  </div>
+                  <span style={{ fontWeight: 600 }}>{ticket.contact?.name || 'N/A'}</span>
+                  {Number(ticket.unreadMessages) > 0 && (
+                    <div className={classes.unreadBadge}>
+                      {ticket.unreadMessages}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Metadados */}
+              <div className={classes.cardMeta}>
+                <span style={{ fontWeight: 500 }}>{ticket.contact?.number || 'N/A'}</span>
+                <span style={{ fontSize: '11px', color: '#6b778c' }}>
+                  #{ticket.id}
+                </span>
+              </div>
+
+              {/* Última mensagem */}
+              {ticket.lastMessage && (
+                <div className={classes.cardLastMessage}>
+                  <MessageIcon style={{ fontSize: '12px', marginRight: '4px', verticalAlign: 'middle' }} />
+                  {ticket.lastMessage}
+                </div>
+              )}
+
+              {/* Ações do Card */}
+              <div className={classes.cardActions}>
+                <Button
+                  startIcon={<VisibilityIcon style={{ fontSize: '12px' }} />}
+                  className={classes.cardButton}
+                  onClick={() => handleCardClick(ticket.uuid)}
+                  size="small"
+                >
+                  Ver
+                </Button>
+                
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ fontSize: '11px', color: '#6b778c', display: 'flex', alignItems: 'center' }}>
+                    <AccessTimeIcon style={{ fontSize: '12px', marginRight: '2px' }} />
+                    {ticket.updatedAt && isSameDay(parseISO(ticket.updatedAt), new Date()) ? (
+                      format(parseISO(ticket.updatedAt), "HH:mm")
+                    ) : ticket.updatedAt ? (
+                      format(parseISO(ticket.updatedAt), "dd/MM")
+                    ) : (
+                      '--'
+                    )}
+                  </span>
+                  
+                  {ticket?.user && (
+                    <div className={classes.userBadge}>
+                      <PersonIcon style={{ fontSize: '10px', marginRight: '2px' }} />
+                      {ticket.user.name.split(' ')[0]}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          ),
+          draggable: true,
+          laneId: tag.id.toString(),
+        })),
+      };
+    });
+
+    setFile({ lanes: [defaultLane, ...tagLanes] });
+  };
+
+  const IconChannel = (channel) => {
+    switch (channel) {
+      case "facebook":
+        return <Facebook style={{ color: "#1877F2", fontSize: "16px" }} />;
+      case "instagram":
+        return <Instagram style={{ color: "#E4405F", fontSize: "16px" }} />;
+      case "whatsapp":
+        return <WhatsApp style={{ color: "#25D366", fontSize: "16px" }} />
+      default:
+        return <WhatsApp style={{ color: "#25D366", fontSize: "16px" }} />;
+    }
+  };
+
+  const handleCardClick = (uuid) => {
+    history.push('/tickets/' + uuid);
+  };
+
+  const handleCardMove = async (cardId, sourceLaneId, targetLaneId) => {
+    try {
+      await api.delete(`/ticket-tags/${targetLaneId}`);
+      toast.success('Ticket Tag Removido!');
+      await api.put(`/ticket-tags/${targetLaneId}/${sourceLaneId}`);
+      toast.success('Ticket Tag Adicionado com Sucesso!');
+      await fetchTickets();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleAddConnectionClick = () => {
+    history.push('/tagsKanban');
+  };
+
+  const handleSearchClick = () => {
+    fetchTickets();
+    setFiltersExpanded(false);
+    const filtered = filterTicketsByDate(tickets);
+    if (startDate && endDate) {
+      toast.success(`Filtro aplicado! ${filtered.length} tickets encontrados entre ${format(new Date(startDate), "dd/MM/yyyy")} e ${format(new Date(endDate), "dd/MM/yyyy")}`);
+    } else {
+      toast.success("Busca realizada com sucesso!");
+    }
+  };
+
+  const handleClearFilters = () => {
+    setStartDate(format(new Date(), "yyyy-MM-dd"));
+    setEndDate(format(new Date(), "yyyy-MM-dd"));
+    fetchTickets();
+    toast.success("Filtros limpos! Mostrando todos os tickets.");
+  };
+
+  const handleStartDateChange = (event) => {
+    setStartDate(event.target.value);
+  };
+
+  const handleEndDateChange = (event) => {
+    setEndDate(event.target.value);
+  };
+
+  // Calcular estatísticas
+  const filteredTickets = filterTicketsByDate(tickets);
+  const totalTickets = filteredTickets.length;
+  const openTickets = filteredTickets.filter(t => t.status === 'open').length;
+  const pendingTickets = filteredTickets.filter(t => t.status === 'pending').length;
+
+  useEffect(() => {
+    fetchTags();
+  }, []);
+
+  useEffect(() => {
+    if (user?.queues?.length > 0) {
+      fetchTickets();
+    }
+  }, [user]);
+
+  useEffect(() => {
+    popularCards();
+  }, [tags, tickets, startDate, endDate]);
+
+  useEffect(() => {
+    if (!user?.companyId || !socket) return;
+
+    const companyId = user.companyId;
+    const onAppMessage = (data) => {
+      if (data.action === "create" || data.action === "update" || data.action === "delete") {
+        fetchTickets();
+      }
+    };
+
+    socket.on(`company-${companyId}-ticket`, onAppMessage);
+    socket.on(`company-${companyId}-appMessage`, onAppMessage);
+
+    return () => {
+      socket.off(`company-${companyId}-ticket`, onAppMessage);
+      socket.off(`company-${companyId}-appMessage`, onAppMessage);
+    };
+  }, [socket, user?.companyId]);
+
+  if (!user?.queues) {
+    return (
+      <div className={classes.root}>
+        <div className={classes.container}>
+          <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
+            <Typography variant="h6" style={{ color: "#ffffff" }}>
+              Carregando...
+            </Typography>
+          </Box>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={classes.root}>
+      <div className={classes.container}>
+        {/* CABEÇALHO ESTILO TRELLO */}
+        <Box className={classes.header}>
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Box>
+              <Typography className={classes.headerTitle}>
+                <ViewKanbanIcon />
+                Quadro Kanban
+              </Typography>
+              <Typography className={classes.headerSubtitle}>
+                Gerencie tickets de forma visual e intuitiva
+              </Typography>
+            </Box>
+            <Box className={classes.headerActions}>
+              <Can role={user.profile} perform="dashboard:view" yes={() => (
+                <Button
+                  onClick={handleAddConnectionClick}
+                  className={classes.trelloAddButton}
+                  startIcon={<AddIcon />}
+                >
+                  Adicionar Quadro
+                </Button>
+              )} />
+            </Box>
+          </Box>
+        </Box>
+
+        {/* SEÇÃO DE FILTROS ESTILO TRELLO */}
+        <Box className={classes.filterSection}>
+          <Box 
+            className={classes.filterHeader}
+            onClick={() => setFiltersExpanded(!filtersExpanded)}
+          >
+            <Typography className={classes.filterTitle}>
+              <FilterListIcon />
+              Filtros de Data
+            </Typography>
+            <IconButton className={classes.toggleButton}>
+              {filtersExpanded ? <ExpandLess /> : <ExpandMore />}
+            </IconButton>
+          </Box>
+          
+          <Collapse in={filtersExpanded}>
+            <Grid container spacing={2} alignItems="center">
+              <Grid item xs={12} sm={6} md={3}>
+                <TextField
+                  label="Data de início"
+                  type="date"
+                  value={startDate}
+                  onChange={handleStartDateChange}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  variant="outlined"
+                  fullWidth
+                  size="small"
+                  className={classes.trelloTextField}
+                />
+              </Grid>
+              
+              <Grid item xs={12} sm={6} md={3}>
+                <TextField
+                  label="Data de fim"
+                  type="date"
+                  value={endDate}
+                  onChange={handleEndDateChange}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  variant="outlined"
+                  fullWidth
+                  size="small"
+                  className={classes.trelloTextField}
+                />
+              </Grid>
+              
+              <Grid item xs={12} sm={6} md={2}>
+                <Button
+                  variant="contained"
+                  className={classes.trelloButton}
+                  onClick={handleSearchClick}
+                  startIcon={<SearchIcon />}
+                  fullWidth
+                >
+                  Buscar
+                </Button>
+              </Grid>
+
+              <Grid item xs={12} sm={6} md={2}>
+                <Button
+                  variant="contained"
+                  className={classes.trelloButton}
+                  onClick={handleClearFilters}
+                  startIcon={<ClearIcon />}
+                  fullWidth
+                >
+                  Limpar
+                </Button>
+              </Grid>
+            </Grid>
+          </Collapse>
+        </Box>
+
+        {/* SEÇÃO: ESTATÍSTICAS ESTILO TRELLO */}
+        <Box className={classes.cardSection}>
+          <Typography className={classes.sectionTitle}>
+            <Assessment />
+            Estatísticas do Quadro
+            {startDate && endDate && (
+              <Box component="span" style={{ 
+                marginLeft: '12px',
+                padding: '4px 8px',
+                backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                color: 'white',
+                borderRadius: '3px',
+                fontSize: '12px',
+                fontWeight: 500
+              }}>
+                {format(new Date(startDate), "dd/MM")} - {format(new Date(endDate), "dd/MM")}
+              </Box>
+            )}
+          </Typography>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={4} md={4}>
+              <Box className={classes.statCard}>
+                <Typography className={classes.statValue}>
+                  {totalTickets}
+                </Typography>
+                <Typography className={classes.statLabel}>
+                  Total de Tickets
+                </Typography>
+              </Box>
+            </Grid>
+
+            <Grid item xs={12} sm={4} md={4}>
+              <Box className={classes.statCard}>
+                <Typography className={classes.statValue}>
+                  {openTickets}
+                </Typography>
+                <Typography className={classes.statLabel}>
+                  Tickets Abertos
+                </Typography>
+              </Box>
+            </Grid>
+
+            <Grid item xs={12} sm={4} md={4}>
+              <Box className={classes.statCard}>
+                <Typography className={classes.statValue}>
+                  {pendingTickets}
+                </Typography>
+                <Typography className={classes.statLabel}>
+                  Tickets Pendentes
+                </Typography>
+              </Box>
+            </Grid>
+          </Grid>
+        </Box>
+
+        {/* SEÇÃO DO KANBAN ESTILO TRELLO */}
+        <Box className={classes.kanbanSection}>
+          {totalTickets === 0 && startDate && endDate && (
+            <Box style={{
+              padding: '12px 16px',
+              backgroundColor: 'rgba(255, 255, 255, 0.9)',
+              color: '#172b4d',
+              borderRadius: '3px',
+              fontSize: '14px',
+              fontWeight: 500,
+              marginBottom: '16px',
+              textAlign: 'center'
+            }}>
+              Nenhum ticket encontrado no período selecionado
+            </Box>
+          )}
+
+          <div className={classes.kanbanContainer}>
+            <Board
+              data={file}
+              onCardMoveAcrossLanes={handleCardMove}
+              style={{ 
+                backgroundColor: 'transparent',
+                fontFamily: theme.typography.fontFamily,
+              }}
+              laneStyle={{
+                backgroundColor: '#ebecf0',
+                borderRadius: '3px',
+                margin: '0 4px',
+                padding: '8px',
+                minWidth: '272px',
+                maxWidth: '272px',
+              }}
+              cardStyle={{
+                backgroundColor: '#ffffff',
+                borderRadius: '3px',
+                padding: '0',
+                margin: '0 0 8px 0',
+                border: 'none',
+                boxShadow: '0 1px 0 rgba(9, 30, 66, 0.25)',
+                cursor: 'pointer',
+              }}
+              cardDragClass="react_trello_dragClass"
+              cardDropClass="react_trello_dropClass"
+              laneDropClass="react_trello_dragLaneClass"
+            />
+          </div>
+        </Box>
+      </div>
+    </div>
+  );
+};
+
+export default Kanban;

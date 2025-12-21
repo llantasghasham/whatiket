@@ -1,0 +1,7 @@
+Aguardando conexão para iniciar a importação de mensagens:
+  Whatsapp nome: 88164228
+  Whatsapp Id: 1
+  Criação do arquivo de logs: 15/09/2025 18:44:35
+  Selecionado Data de inicio de importação: 01/08/2025 14:22:00 
+  Selecionado Data final da importação: 31/08/2025 14:21:00 
+   

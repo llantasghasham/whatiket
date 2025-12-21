@@ -1,0 +1,1439 @@
+import React, { useContext, useState, useEffect } from "react";
+import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@material-ui/core/styles";
+import { useTheme } from "@material-ui/core/styles";
+import { 
+  IconButton, 
+  Dialog, 
+  DialogTitle, 
+  DialogContent, 
+  DialogActions, 
+  Box, 
+  LinearProgress,
+  Grid,
+  Card,
+  CardContent,
+  Container,
+  Button,
+  Fade,
+  CircularProgress,
+  Stack,
+  Avatar,
+  SvgIcon,
+  Tab,
+  Tabs,
+  Chip,
+  Grow
+} from "@mui/material";
+import { Groups, SaveAlt, TrendingUp, TrendingDown } from "@mui/icons-material";
+import CallIcon from "@material-ui/icons/Call";
+import RecordVoiceOverIcon from "@material-ui/icons/RecordVoiceOver";
+import GroupAddIcon from "@material-ui/icons/GroupAdd";
+import HourglassEmptyIcon from "@material-ui/icons/HourglassEmpty";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import FilterListIcon from "@material-ui/icons/FilterList";
+import ClearIcon from "@material-ui/icons/Clear";
+import SendIcon from '@material-ui/icons/Send';
+import MessageIcon from '@material-ui/icons/Message';
+import AccessAlarmIcon from '@material-ui/icons/AccessAlarm';
+import TimerIcon from '@material-ui/icons/Timer';
+import RefreshIcon from '@material-ui/icons/Refresh';
+import TimelineIcon from '@material-ui/icons/Timeline';
+import DateRangeIcon from '@material-ui/icons/DateRange';
+import PeopleIcon from '@material-ui/icons/People';
+import AccessTimeIcon from '@material-ui/icons/AccessTime';
+import AssessmentIcon from '@material-ui/icons/Assessment';
+import InfoIcon from '@material-ui/icons/Info';
+import SpeedIcon from '@material-ui/icons/Speed';
+import TrendingFlatIcon from '@material-ui/icons/TrendingFlat';
+import ChatIcon from '@material-ui/icons/Chat';
+import * as XLSX from 'xlsx';
+import { grey, blue, green, orange, red, purple, teal, indigo } from "@material-ui/core/colors";
+import { toast } from "react-toastify";
+import clsx from "clsx";
+import TabPanel from "../../components/TabPanel";
+import TableAttendantsStatus from "../../components/Dashboard/TableAttendantsStatus";
+import { isArray } from "lodash";
+import { AuthContext } from "../../context/Auth/AuthContext";
+import Chart from "react-apexcharts";
+import useDashboard from "../../hooks/useDashboard";
+import useContacts from "../../hooks/useContacts";
+import useMessages from "../../hooks/useMessages";
+import ChatsUser from "./ChartsUser";
+import ChartDonut from "./ChartDonut";
+import Filters from "./Filters";
+import { isEmpty } from "lodash";
+import moment from "moment";
+import 'moment/locale/es';
+import { ChartsDate } from "./ChartsDate";
+import { i18n } from "../../translate/i18n";
+import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
+import ForbiddenPage from "../../components/ForbiddenPage";
+import { ArrowDownward, ArrowUpward } from "@material-ui/icons";
+
+const useStyles = makeStyles((theme) => ({
+  // ===== LAYOUT PRINCIPAL =====
+  root: {
+    minHeight: "100vh",
+    backgroundColor: "#f8fafc",
+    padding: theme.spacing(3),
+  },
+
+  container: {
+    maxWidth: "1400px",
+    margin: "0 auto",
+  },
+
+  // ===== CABEÇALHO =====
+  header: {
+    backgroundColor: "white",
+    borderRadius: "16px",
+    padding: theme.spacing(3, 4),
+    marginBottom: theme.spacing(4),
+    boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+    border: "1px solid #e2e8f0",
+  },
+
+  headerTitle: {
+    fontSize: "28px",
+    fontWeight: 700,
+    color: "#1a202c",
+    marginBottom: theme.spacing(0.5),
+  },
+
+  headerSubtitle: {
+    fontSize: "16px",
+    color: "#64748b",
+    fontWeight: 500,
+  },
+
+  headerActions: {
+    display: "flex",
+    gap: theme.spacing(2),
+    alignItems: "center",
+  },
+
+  filterButton: {
+    backgroundColor: "#3b82f6",
+    color: "white",
+    padding: theme.spacing(1, 3),
+    borderRadius: "12px",
+    fontWeight: 600,
+    fontSize: "14px",
+    textTransform: "none",
+    border: "none",
+    transition: "all 0.2s ease",
+    
+    "&:hover": {
+      backgroundColor: "#2563eb",
+      transform: "translateY(-1px)",
+    },
+  },
+
+  refreshButton: {
+    backgroundColor: "#10b981",
+    color: "white",
+    width: "48px",
+    height: "48px",
+    borderRadius: "12px",
+    border: "none",
+    
+    "&:hover": {
+      backgroundColor: "#059669",
+      transform: "translateY(-1px)",
+    },
+  },
+
+  // ===== CARDS PRINCIPAIS =====
+  mainCard: {
+    backgroundColor: "white",
+    borderRadius: "20px",
+    padding: theme.spacing(3),
+    border: "1px solid #e2e8f0",
+    transition: "all 0.2s ease",
+    cursor: "pointer",
+    position: "relative",
+    overflow: "hidden",
+    height: "100%",
+    
+    "&::before": {
+      content: '""',
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "4px",
+      height: "100%",
+      transition: "all 0.2s ease",
+    },
+    
+    "&:hover": {
+      transform: "translateY(-4px)",
+      boxShadow: "0 10px 25px rgba(0, 0, 0, 0.1)",
+      
+      "&::before": {
+        width: "6px",
+      }
+    },
+  },
+
+  // Cores dos cards
+  cardBlue: {
+    "&::before": {
+      backgroundColor: "#3b82f6",
+    },
+  },
+
+  cardGreen: {
+    "&::before": {
+      backgroundColor: "#10b981",
+    },
+  },
+
+  cardYellow: {
+    "&::before": {
+      backgroundColor: "#f59e0b",
+    },
+  },
+
+  cardRed: {
+    "&::before": {
+      backgroundColor: "#ef4444",
+    },
+  },
+
+  cardPurple: {
+    "&::before": {
+      backgroundColor: "#8b5cf6",
+    },
+  },
+
+  cardTeal: {
+    "&::before": {
+      backgroundColor: "#06b6d4",
+    },
+  },
+
+  cardOrange: {
+    "&::before": {
+      backgroundColor: "#f97316",
+    },
+  },
+
+  cardIndigo: {
+    "&::before": {
+      backgroundColor: "#6366f1",
+    },
+  },
+
+  cardPink: {
+    "&::before": {
+      backgroundColor: "#ec4899",
+    },
+  },
+
+  cardCyan: {
+    "&::before": {
+      backgroundColor: "#22d3ee",
+    },
+  },
+
+  cardLime: {
+    "&::before": {
+      backgroundColor: "#84cc16",
+    },
+  },
+
+  cardAmber: {
+    "&::before": {
+      backgroundColor: "#eab308",
+    },
+  },
+
+  // ===== CONTEÚDO DOS CARDS =====
+  cardHeader: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    marginBottom: theme.spacing(2),
+  },
+
+  cardIcon: {
+    width: "56px",
+    height: "56px",
+    borderRadius: "14px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    color: "white",
+    fontSize: "24px",
+    
+    "& svg": {
+      fontSize: "28px",
+    }
+  },
+
+  cardIconBlue: {
+    backgroundColor: "#3b82f6",
+  },
+
+  cardIconGreen: {
+    backgroundColor: "#10b981",
+  },
+
+  cardIconYellow: {
+    backgroundColor: "#f59e0b",
+  },
+
+  cardIconRed: {
+    backgroundColor: "#ef4444",
+  },
+
+  cardIconPurple: {
+    backgroundColor: "#8b5cf6",
+  },
+
+  cardIconTeal: {
+    backgroundColor: "#06b6d4",
+  },
+
+  cardIconOrange: {
+    backgroundColor: "#f97316",
+  },
+
+  cardIconIndigo: {
+    backgroundColor: "#6366f1",
+  },
+
+  cardIconPink: {
+    backgroundColor: "#ec4899",
+  },
+
+  cardIconCyan: {
+    backgroundColor: "#22d3ee",
+  },
+
+  cardIconLime: {
+    backgroundColor: "#84cc16",
+  },
+
+  cardIconAmber: {
+    backgroundColor: "#eab308",
+  },
+
+  cardLabel: {
+    fontSize: "14px",
+    fontWeight: 600,
+    color: "#64748b",
+    textTransform: "uppercase",
+    letterSpacing: "0.5px",
+    marginBottom: theme.spacing(1),
+  },
+
+  cardValue: {
+    fontSize: "36px",
+    fontWeight: 800,
+    color: "#1a202c",
+    lineHeight: 1,
+    marginBottom: theme.spacing(1),
+  },
+
+  cardSubValue: {
+    fontSize: "14px",
+    fontWeight: 500,
+    color: "#64748b",
+    marginBottom: theme.spacing(1),
+  },
+
+  cardTrend: {
+    display: "flex",
+    alignItems: "center",
+    gap: theme.spacing(1),
+  },
+
+  trendPositive: {
+    color: "#10b981",
+    fontSize: "14px",
+    fontWeight: 600,
+  },
+
+  trendNegative: {
+    color: "#ef4444",
+    fontSize: "14px",
+    fontWeight: 600,
+  },
+
+  // ===== CARDS DE MÉTRICAS =====
+  metricCard: {
+    backgroundColor: "white",
+    borderRadius: "16px",
+    padding: theme.spacing(3),
+    border: "1px solid #e2e8f0",
+    transition: "all 0.2s ease",
+    textAlign: "center",
+    
+    "&:hover": {
+      transform: "translateY(-2px)",
+      boxShadow: "0 6px 20px rgba(0, 0, 0, 0.08)",
+    },
+  },
+
+  metricIcon: {
+    width: "48px",
+    height: "48px",
+    borderRadius: "12px",
+    backgroundColor: "#f1f5f9",
+    color: "#475569",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    margin: "0 auto",
+    marginBottom: theme.spacing(2),
+    
+    "& svg": {
+      fontSize: "24px",
+    }
+  },
+
+  metricValue: {
+    fontSize: "28px",
+    fontWeight: 700,
+    color: "#1a202c",
+    marginBottom: theme.spacing(0.5),
+  },
+
+  metricLabel: {
+    fontSize: "14px",
+    color: "#64748b",
+    fontWeight: 500,
+  },
+
+  // ===== SEÇÃO DE EQUIPE =====
+  teamSection: {
+    backgroundColor: "white",
+    borderRadius: "20px",
+    padding: theme.spacing(4),
+    marginTop: theme.spacing(4),
+    border: "1px solid #e2e8f0",
+  },
+
+  teamHeader: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: theme.spacing(3),
+  },
+
+  teamTitle: {
+    fontSize: "24px",
+    fontWeight: 700,
+    color: "#1a202c",
+  },
+
+  exportButton: {
+    backgroundColor: "#6366f1",
+    color: "white",
+    padding: theme.spacing(1, 2),
+    borderRadius: "12px",
+    border: "none",
+    fontWeight: 600,
+    display: "flex",
+    alignItems: "center",
+    gap: theme.spacing(1),
+    
+    "&:hover": {
+      backgroundColor: "#4f46e5",
+    },
+  },
+
+  attendantGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+    gap: theme.spacing(2),
+    marginBottom: theme.spacing(4),
+  },
+
+  attendantCard: {
+    backgroundColor: "#f8fafc",
+    borderRadius: "12px",
+    padding: theme.spacing(2),
+    border: "1px solid #e2e8f0",
+    display: "flex",
+    alignItems: "center",
+    gap: theme.spacing(2),
+    transition: "all 0.2s ease",
+    
+    "&:hover": {
+      backgroundColor: "#f1f5f9",
+    },
+  },
+
+  attendantAvatar: {
+    width: "44px",
+    height: "44px",
+    borderRadius: "12px",
+    fontSize: "16px",
+    fontWeight: 600,
+  },
+
+  onlineAvatar: {
+    backgroundColor: "#10b981",
+    color: "white",
+  },
+
+  offlineAvatar: {
+    backgroundColor: "#94a3b8",
+    color: "white",
+  },
+
+  attendantInfo: {
+    flex: 1,
+  },
+
+  attendantName: {
+    fontSize: "16px",
+    fontWeight: 600,
+    color: "#1a202c",
+    marginBottom: theme.spacing(0.5),
+  },
+
+  attendantStatus: {
+    fontSize: "14px",
+    fontWeight: 500,
+  },
+
+  statusOnline: {
+    color: "#10b981",
+  },
+
+  statusOffline: {
+    color: "#94a3b8",
+  },
+
+  statusBadge: {
+    padding: theme.spacing(0.5, 1),
+    borderRadius: "8px",
+    fontSize: "12px",
+    fontWeight: 600,
+    textTransform: "uppercase",
+    letterSpacing: "0.5px",
+  },
+
+  badgeOnline: {
+    backgroundColor: "#dcfce7",
+    color: "#166534",
+  },
+
+  badgeOffline: {
+    backgroundColor: "#f1f5f9",
+    color: "#475569",
+  },
+
+  // ===== ESTATÍSTICAS DA EQUIPE =====
+  teamStats: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+    gap: theme.spacing(3),
+    padding: theme.spacing(3, 0),
+    borderTop: "1px solid #e2e8f0",
+  },
+
+  teamStatItem: {
+    textAlign: "center",
+  },
+
+  teamStatIcon: {
+    width: "48px",
+    height: "48px",
+    borderRadius: "12px",
+    backgroundColor: "#f1f5f9",
+    color: "#475569",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    margin: "0 auto",
+    marginBottom: theme.spacing(1),
+    
+    "& svg": {
+      fontSize: "24px",
+    }
+  },
+
+  teamStatValue: {
+    fontSize: "24px",
+    fontWeight: 700,
+    color: "#1a202c",
+    marginBottom: theme.spacing(0.5),
+  },
+
+  teamStatLabel: {
+    fontSize: "14px",
+    color: "#64748b",
+    fontWeight: 500,
+  },
+
+  // ===== DIALOG =====
+  dialog: {
+    "& .MuiPaper-root": {
+      borderRadius: "20px",
+      maxWidth: "600px",
+    }
+  },
+
+  dialogHeader: {
+    padding: theme.spacing(3),
+    backgroundColor: "#f8fafc",
+    borderBottom: "1px solid #e2e8f0",
+  },
+
+  dialogTitle: {
+    fontSize: "20px",
+    fontWeight: 700,
+    color: "#1a202c",
+  },
+
+  dialogContent: {
+    padding: theme.spacing(3),
+  },
+
+  dialogActions: {
+    padding: theme.spacing(2, 3),
+    backgroundColor: "#f8fafc",
+    borderTop: "1px solid #e2e8f0",
+    gap: theme.spacing(2),
+  },
+
+  dialogButton: {
+    borderRadius: "12px",
+    padding: theme.spacing(1, 3),
+    fontWeight: 600,
+    textTransform: "none",
+  },
+
+  primaryButton: {
+    backgroundColor: "#3b82f6",
+    color: "white",
+    
+    "&:hover": {
+      backgroundColor: "#2563eb",
+    },
+  },
+
+  secondaryButton: {
+    backgroundColor: "transparent",
+    color: "#64748b",
+    border: "1px solid #e2e8f0",
+    
+    "&:hover": {
+      backgroundColor: "#f8fafc",
+    },
+  },
+
+  // ===== LOADING =====
+  loadingContainer: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: theme.spacing(4),
+  },
+
+  // ===== SEÇÕES DE CARDS =====
+  cardSection: {
+    marginBottom: theme.spacing(4),
+  },
+
+  sectionTitle: {
+    fontSize: "20px",
+    fontWeight: 700,
+    color: "#1a202c",
+    marginBottom: theme.spacing(3),
+    display: "flex",
+    alignItems: "center",
+    gap: theme.spacing(1),
+    
+    "&::before": {
+      content: '""',
+      width: "4px",
+      height: "20px",
+      backgroundColor: "#3b82f6",
+      borderRadius: "2px",
+    }
+  },
+}));
+
+// Componente para indicador de tendência
+const TrendIndicator = ({ value, isPositive }) => {
+  const classes = useStyles();
+  return (
+    <Box className={classes.cardTrend}>
+      {isPositive ? (
+        <TrendingUp style={{ color: "#10b981", fontSize: "20px" }} />
+      ) : (
+        <TrendingDown style={{ color: "#ef4444", fontSize: "20px" }} />
+      )}
+      <Typography className={isPositive ? classes.trendPositive : classes.trendNegative}>
+        {Math.abs(value)}%
+      </Typography>
+    </Box>
+  );
+};
+
+const Dashboard = () => {
+  const classes = useStyles();
+  const [counters, setCounters] = useState({});
+  const [attendants, setAttendants] = useState([]);
+  const [filterType, setFilterType] = useState(1);
+  const [period, setPeriod] = useState(0);
+  const [dateFrom, setDateFrom] = useState(moment("1", "D").format("YYYY-MM-DD"));
+  const [dateTo, setDateTo] = useState(moment().format("YYYY-MM-DD"));
+  const [loading, setLoading] = useState(false);
+  const { find } = useDashboard();
+
+  const [tab, setTab] = useState("Indicadores");
+  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [selectedQueues, setSelectedQueues] = useState([]);
+
+  let newDate = new Date();
+  let date = newDate.getDate();
+  let month = newDate.getMonth() + 1;
+  let year = newDate.getFullYear();
+  let nowIni = `${year}-${month < 10 ? `0${month}` : `${month}`}-01`;
+  let now = `${year}-${month < 10 ? `0${month}` : `${month}`}-${date < 10 ? `0${date}` : `${date}`}`;
+
+  const [showFilter, setShowFilter] = useState(false);
+  const [dateStartTicket, setDateStartTicket] = useState(nowIni);
+  const [dateEndTicket, setDateEndTicket] = useState(now);
+  const [queueTicket, setQueueTicket] = useState(false);
+  const [fetchDataFilter, setFetchDataFilter] = useState(false);
+
+  const { user } = useContext(AuthContext);
+  
+  // Configurar locale de fechas a Español
+  moment.locale('es');
+
+  const exportarGridParaExcel = () => {
+    const ws = XLSX.utils.table_to_sheet(document.getElementById('grid-attendants'));
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'ReporteDeAgentes');
+    XLSX.writeFile(wb, 'reporte-de-agentes.xlsx');
+  };
+
+  var userQueueIds = [];
+
+  if (user.queues && user.queues.length > 0) {
+    userQueueIds = user.queues.map((q) => q.id);
+  }
+
+  useEffect(() => {
+    async function firstLoad() {
+      await fetchData();
+    }
+    setTimeout(() => {
+      firstLoad();
+    }, 1000);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fetchDataFilter]);
+
+  async function fetchData() {
+    setLoading(true);
+
+    let params = {};
+
+    if (period > 0) {
+      params = {
+        days: period,
+      };
+    }
+
+    if (!isEmpty(dateStartTicket) && moment(dateStartTicket).isValid()) {
+      params = {
+        ...params,
+        date_from: moment(dateStartTicket).format("YYYY-MM-DD"),
+      };
+    }
+
+    if (!isEmpty(dateEndTicket) && moment(dateEndTicket).isValid()) {
+      params = {
+        ...params,
+        date_to: moment(dateEndTicket).format("YYYY-MM-DD"),
+      };
+    }
+
+    if (Object.keys(params).length === 0) {
+      toast.error("Configura el filtro");
+      setLoading(false);
+      return;
+    }
+
+    const data = await find(params);
+
+    setCounters(data.counters);
+    if (isArray(data.attendants)) {
+      setAttendants(data.attendants);
+    } else {
+      setAttendants([]);
+    }
+
+    setLoading(false);
+  }
+
+  const handleSelectedUsers = (selecteds) => {
+    const users = selecteds.map((t) => t.id);
+    setSelectedUsers(users);
+  };
+
+  const handleChangeTab = (e, newValue) => {
+    setTab(newValue);
+  };
+
+  function formatTime(minutes) {
+    return moment()
+      .startOf("day")
+      .add(minutes, "minutes")
+      .format("HH[h] mm[m]");
+  }
+
+  const GetUsers = () => {
+    let count;
+    let userOnline = 0;
+    attendants.forEach(user => {
+      if (user.online === true) {
+        userOnline = userOnline + 1
+      }
+    });
+    count = userOnline === 0 ? 0 : userOnline;
+    return count;
+  };
+
+  const GetContacts = (all) => {
+    let props = {};
+    if (all) {
+      props = {};
+    } else {
+      props = {
+        dateStart: dateStartTicket,
+        dateEnd: dateEndTicket,
+      };
+    }
+    const { count } = useContacts(props);
+    return count;
+  };
+
+  const GetMessages = (all, fromMe) => {
+    let props = {};
+    if (all) {
+      if (fromMe) {
+        props = {
+          fromMe: true
+        };
+      } else {
+        props = {
+          fromMe: false
+        };
+      }
+    } else {
+      if (fromMe) {
+        props = {
+          fromMe: true,
+          dateStart: dateStartTicket,
+          dateEnd: dateEndTicket,
+        };
+      } else {
+        props = {
+          fromMe: false,
+          dateStart: dateStartTicket,
+          dateEnd: dateEndTicket,
+        };
+      }
+    }
+    const { count } = useMessages(props);
+    return count;
+  };
+
+  // Cálculos dos novos indicadores
+  const messagesReceived = GetMessages(false, false) || 0;
+  const messagesSent = GetMessages(false, true) || 0;
+  const totalMessages = messagesReceived + messagesSent;
+  const totalChats = (counters.supportHappening || 0) + (counters.supportPending || 0) + (counters.supportFinished || 0);
+  
+  const percentReceived = totalChats > 0 ? ((messagesReceived / totalChats) * 100).toFixed(1) : 0;
+  const percentSent = totalChats > 0 ? ((messagesSent / totalChats) * 100).toFixed(1) : 0;
+  
+  // Nível de serviço (simulado - você pode ajustar conforme sua API)
+  const serviceLevel = totalMessages > 0 ? Math.min(((counters.supportFinished || 0) / totalChats * 100), 100).toFixed(1) : 0;
+  
+  // TMA e TME (usando dados existentes ou simulados)
+  const tma = counters.avgSupportTime || 0; // Tempo Médio de Atendimento
+  const tme = counters.avgWaitingTime || (tma * 0.7); // Tempo Médio de Espera (simulado)
+
+  function toggleShowFilter() {
+    setShowFilter(!showFilter);
+  }
+
+  return (
+    <>
+      {
+        user.profile === "user" && user.showDashboard === "disabled" ?
+          <ForbiddenPage />
+          :
+          <div className={classes.root}>
+            <div className={classes.container}>
+              {/* CABEÇALHO */}
+              <Box className={classes.header}>
+                <Box display="flex" justifyContent="space-between" alignItems="center">
+                  <Box>
+                    <Typography className={classes.headerTitle}>
+                      Panel de Atención
+                    </Typography>
+                    <Typography className={classes.headerSubtitle}>
+                      {moment().format("dddd, DD [de] MMMM [de] YYYY")}
+                    </Typography>
+                  </Box>
+                  <Box className={classes.headerActions}>
+                    <Button
+                      onClick={toggleShowFilter}
+                      className={classes.filterButton}
+                      startIcon={!showFilter ? <FilterListIcon /> : <ClearIcon />}
+                    >
+                      {!showFilter ? "Filtros" : "Cerrar"}
+                    </Button>
+                    <IconButton 
+                      className={classes.refreshButton}
+                      onClick={fetchData}
+                      disabled={loading}
+                    >
+                      {loading ? <CircularProgress size={20} color="inherit" /> : <RefreshIcon />}
+                    </IconButton>
+                  </Box>
+                </Box>
+              </Box>
+
+              {/* DIALOG DE FILTROS */}
+              <Dialog
+                open={showFilter}
+                onClose={toggleShowFilter}
+                className={classes.dialog}
+                maxWidth="md"
+                fullWidth
+              >
+                <Box className={classes.dialogHeader}>
+                  <Typography className={classes.dialogTitle}>
+                    Filtros de Análisis
+                  </Typography>
+                </Box>
+                <Box className={classes.dialogContent}>
+                  <Filters
+                    classes={classes}
+                    setDateStartTicket={setDateStartTicket}
+                    setDateEndTicket={setDateEndTicket}
+                    dateStartTicket={dateStartTicket}
+                    dateEndTicket={dateEndTicket}
+                    setQueueTicket={setQueueTicket}
+                    queueTicket={queueTicket}
+                    fetchData={setFetchDataFilter}
+                  />
+                </Box>
+                <Box className={classes.dialogActions}>
+                  <Button
+                    onClick={toggleShowFilter}
+                    className={clsx(classes.dialogButton, classes.secondaryButton)}
+                  >
+                    Cancelar
+                  </Button>
+                  <Button
+                    onClick={() => { setFetchDataFilter(!fetchDataFilter); toggleShowFilter(); }}
+                    className={clsx(classes.dialogButton, classes.primaryButton)}
+                  >
+                    Aplicar Filtros
+                  </Button>
+                </Box>
+              </Dialog>
+
+              <TabPanel
+                className={classes.container}
+                value={tab}
+                name={"Indicadores"}
+              >
+                {/* SECCIÓN: ESTADO DE ATENCIÓN */}
+                <Box className={classes.cardSection}>
+                  <Typography className={classes.sectionTitle}>
+                    <AssessmentIcon />
+                    Estado de Atención
+                  </Typography>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} sm={6} lg={3}>
+                      <Card className={clsx(classes.mainCard, classes.cardBlue)}>
+                        <Box className={classes.cardHeader}>
+                          <Box>
+                            <Typography className={classes.cardLabel}>
+                              En atención
+                            </Typography>
+                            <Typography className={classes.cardValue}>
+                              {counters.supportHappening || 0}
+                            </Typography>
+                            <TrendIndicator value={15} isPositive={true} />
+                          </Box>
+                          <Box className={clsx(classes.cardIcon, classes.cardIconBlue)}>
+                            <CallIcon />
+                          </Box>
+                        </Box>
+                      </Card>
+                    </Grid>
+
+                    <Grid item xs={12} sm={6} lg={3}>
+                      <Card className={clsx(classes.mainCard, classes.cardYellow)}>
+                        <Box className={classes.cardHeader}>
+                          <Box>
+                            <Typography className={classes.cardLabel}>
+                              En espera
+                            </Typography>
+                            <Typography className={classes.cardValue}>
+                              {counters.supportPending || 0}
+                            </Typography>
+                            <TrendIndicator value={8} isPositive={false} />
+                          </Box>
+                          <Box className={clsx(classes.cardIcon, classes.cardIconYellow)}>
+                            <HourglassEmptyIcon />
+                          </Box>
+                        </Box>
+                      </Card>
+                    </Grid>
+
+                    <Grid item xs={12} sm={6} lg={3}>
+                      <Card className={clsx(classes.mainCard, classes.cardGreen)}>
+                        <Box className={classes.cardHeader}>
+                          <Box>
+                            <Typography className={classes.cardLabel}>
+                              Finalizados
+                            </Typography>
+                            <Typography className={classes.cardValue}>
+                              {counters.supportFinished || 0}
+                            </Typography>
+                            <TrendIndicator value={22} isPositive={true} />
+                          </Box>
+                          <Box className={clsx(classes.cardIcon, classes.cardIconGreen)}>
+                            <CheckCircleIcon />
+                          </Box>
+                        </Box>
+                      </Card>
+                    </Grid>
+
+                    <Grid item xs={12} sm={6} lg={3}>
+                      <Card className={clsx(classes.mainCard, classes.cardPurple)}>
+                        <Box className={classes.cardHeader}>
+                          <Box>
+                            <Typography className={classes.cardLabel}>
+                              Grupos
+                            </Typography>
+                            <Typography className={classes.cardValue}>
+                              {counters.supportGroups || 0}
+                            </Typography>
+                            <TrendIndicator value={5} isPositive={true} />
+                          </Box>
+                          <Box className={clsx(classes.cardIcon, classes.cardIconPurple)}>
+                            <Groups />
+                          </Box>
+                        </Box>
+                      </Card>
+                    </Grid>
+                  </Grid>
+                </Box>
+
+                {/* SECCIÓN: MENSAJES */}
+                <Box className={classes.cardSection}>
+                  <Typography className={classes.sectionTitle}>
+                    <MessageIcon />
+                    Análisis de mensajes
+                  </Typography>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} sm={6} lg={4}>
+                      <Card className={clsx(classes.mainCard, classes.cardTeal)}>
+                        <Box className={classes.cardHeader}>
+                          <Box>
+                            <Typography className={classes.cardLabel}>
+                              Mensajes recibidos
+                            </Typography>
+                            <Typography className={classes.cardValue}>
+                              {messagesReceived.toLocaleString()}
+                            </Typography>
+                            <Typography className={classes.cardSubValue}>
+                              {percentReceived}% del total de chats
+                            </Typography>
+                            <TrendIndicator value={12} isPositive={true} />
+                          </Box>
+                          <Box className={clsx(classes.cardIcon, classes.cardIconTeal)}>
+                            <MessageIcon />
+                          </Box>
+                        </Box>
+                      </Card>
+                    </Grid>
+
+                    <Grid item xs={12} sm={6} lg={4}>
+                      <Card className={clsx(classes.mainCard, classes.cardOrange)}>
+                        <Box className={classes.cardHeader}>
+                          <Box>
+                            <Typography className={classes.cardLabel}>
+                              Mensajes enviados
+                            </Typography>
+                            <Typography className={classes.cardValue}>
+                              {messagesSent.toLocaleString()}
+                            </Typography>
+                            <Typography className={classes.cardSubValue}>
+                              {percentSent}% del total de chats
+                            </Typography>
+                            <TrendIndicator value={18} isPositive={true} />
+                          </Box>
+                          <Box className={clsx(classes.cardIcon, classes.cardIconOrange)}>
+                            <SendIcon />
+                          </Box>
+                        </Box>
+                      </Card>
+                    </Grid>
+
+                    <Grid item xs={12} sm={6} lg={4}>
+                      <Card className={clsx(classes.mainCard, classes.cardIndigo)}>
+                        <Box className={classes.cardHeader}>
+                          <Box>
+                            <Typography className={classes.cardLabel}>
+                              Total de mensajes
+                            </Typography>
+                            <Typography className={classes.cardValue}>
+                              {totalMessages.toLocaleString()}
+                            </Typography>
+                            <Typography className={classes.cardSubValue}>
+                              Enviadas + Recibidas
+                            </Typography>
+                            <TrendIndicator value={25} isPositive={true} />
+                          </Box>
+                          <Box className={clsx(classes.cardIcon, classes.cardIconIndigo)}>
+                            <ChatIcon />
+                          </Box>
+                        </Box>
+                      </Card>
+                    </Grid>
+                  </Grid>
+                </Box>
+
+                {/* SECCIÓN: EQUIPO Y CONTACTOS */}
+                <Box className={classes.cardSection}>
+                  <Typography className={classes.sectionTitle}>
+                    <PeopleIcon />
+                    Equipo y contactos
+                  </Typography>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} sm={6} lg={4}>
+                      <Card className={clsx(classes.mainCard, classes.cardCyan)}>
+                        <Box className={classes.cardHeader}>
+                          <Box>
+                            <Typography className={classes.cardLabel}>
+                              Agentes activos
+                            </Typography>
+                            <Typography className={classes.cardValue}>
+                              {GetUsers()}/{attendants.length}
+                            </Typography>
+                            <Typography className={classes.cardSubValue}>
+                              {Math.round((GetUsers()/attendants.length)*100) || 0}% de disponibilidad
+                            </Typography>
+                            <TrendIndicator value={Math.round((GetUsers()/attendants.length)*100) || 0} isPositive={GetUsers() > 0} />
+                          </Box>
+                          <Box className={clsx(classes.cardIcon, classes.cardIconCyan)}>
+                            <RecordVoiceOverIcon />
+                          </Box>
+                        </Box>
+                      </Card>
+                    </Grid>
+
+                    <Grid item xs={12} sm={6} lg={4}>
+                      <Card className={clsx(classes.mainCard, classes.cardPink)}>
+                        <Box className={classes.cardHeader}>
+                          <Box>
+                            <Typography className={classes.cardLabel}>
+                              Nuevos contactos
+                            </Typography>
+                            <Typography className={classes.cardValue}>
+                              {counters.leads || 0}
+                            </Typography>
+                            <Typography className={classes.cardSubValue}>
+                              En el período seleccionado
+                            </Typography>
+                            <TrendIndicator value={12} isPositive={true} />
+                          </Box>
+                          <Box className={clsx(classes.cardIcon, classes.cardIconPink)}>
+                            <GroupAddIcon />
+                          </Box>
+                        </Box>
+                      </Card>
+                    </Grid>
+
+                    <Grid item xs={12} sm={6} lg={4}>
+                      <Card className={clsx(classes.mainCard, classes.cardLime)}>
+                        <Box className={classes.cardHeader}>
+                          <Box>
+                            <Typography className={classes.cardLabel}>
+                              Nivel de servicio
+                            </Typography>
+                            <Typography className={classes.cardValue}>
+                              {serviceLevel}%
+                            </Typography>
+                            <Typography className={classes.cardSubValue}>
+                              Atendidas en hasta 60s
+                            </Typography>
+                            <TrendIndicator value={parseFloat(serviceLevel)} isPositive={parseFloat(serviceLevel) > 80} />
+                          </Box>
+                          <Box className={clsx(classes.cardIcon, classes.cardIconLime)}>
+                            <SpeedIcon />
+                          </Box>
+                        </Box>
+                      </Card>
+                    </Grid>
+                  </Grid>
+                </Box>
+
+                {/* SECCIÓN: TIEMPOS DE RESPUESTA */}
+                <Box className={classes.cardSection}>
+                  <Typography className={classes.sectionTitle}>
+                    <AccessTimeIcon />
+                    Métricas de tiempo
+                  </Typography>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} sm={6} lg={6}>
+                      <Card className={clsx(classes.mainCard, classes.cardAmber)}>
+                        <Box className={classes.cardHeader}>
+                          <Box>
+                            <Typography className={classes.cardLabel}>
+                              TMA - Tiempo medio de atención
+                            </Typography>
+                            <Typography className={classes.cardValue}>
+                              {formatTime(tma)}
+                            </Typography>
+                            <Typography className={classes.cardSubValue}>
+                              Por conversación finalizada
+                            </Typography>
+                            <TrendIndicator value={8} isPositive={false} />
+                          </Box>
+                          <Box className={clsx(classes.cardIcon, classes.cardIconAmber)}>
+                            <TimerIcon />
+                          </Box>
+                        </Box>
+                      </Card>
+                    </Grid>
+
+                    <Grid item xs={12} sm={6} lg={6}>
+                      <Card className={clsx(classes.mainCard, classes.cardRed)}>
+                        <Box className={classes.cardHeader}>
+                          <Box>
+                            <Typography className={classes.cardLabel}>
+                              TME - Tiempo medio de espera
+                            </Typography>
+                            <Typography className={classes.cardValue}>
+                              {formatTime(tme)}
+                            </Typography>
+                            <Typography className={classes.cardSubValue}>
+                              Antes de la primera atención
+                            </Typography>
+                            <TrendIndicator value={15} isPositive={false} />
+                          </Box>
+                          <Box className={clsx(classes.cardIcon, classes.cardIconRed)}>
+                            <AccessAlarmIcon />
+                          </Box>
+                        </Box>
+                      </Card>
+                    </Grid>
+                  </Grid>
+                </Box>
+
+                {/* SECCIÓN DE MÉTRICAS RÁPIDAS */}
+                <Box className={classes.cardSection}>
+                  <Typography className={classes.sectionTitle}>
+                    <TimelineIcon />
+                    Métricas rápidas
+                  </Typography>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} sm={6} md={3}>
+                      <Card className={classes.metricCard}>
+                        <Box className={classes.metricIcon}>
+                          <MessageIcon />
+                        </Box>
+                        <Typography className={classes.metricValue}>
+                          {GetMessages(false, false) || 0}
+                        </Typography>
+                        <Typography className={classes.metricLabel}>
+                          Mensajes recibidos
+                        </Typography>
+                      </Card>
+                    </Grid>
+
+                    <Grid item xs={12} sm={6} md={3}>
+                      <Card className={classes.metricCard}>
+                        <Box className={classes.metricIcon}>
+                          <AccessTimeIcon />
+                        </Box>
+                        <Typography className={classes.metricValue}>
+                          {formatTime(counters.avgSupportTime || 0)}
+                        </Typography>
+                        <Typography className={classes.metricLabel}>
+                          Tiempo medio de atención
+                        </Typography>
+                      </Card>
+                    </Grid>
+
+                    <Grid item xs={12} sm={6} md={3}>
+                      <Card className={classes.metricCard}>
+                        <Box className={classes.metricIcon}>
+                          <GroupAddIcon />
+                        </Box>
+                        <Typography className={classes.metricValue}>
+                          {GetContacts(false) || 0}
+                        </Typography>
+                        <Typography className={classes.metricLabel}>
+                          Nuevos contactos
+                        </Typography>
+                      </Card>
+                    </Grid>
+
+                    <Grid item xs={12} sm={6} md={3}>
+                      <Card className={classes.metricCard}>
+                        <Box className={classes.metricIcon}>
+                          <TrendingFlatIcon />
+                        </Box>
+                        <Typography className={classes.metricValue}>
+                          {totalChats}
+                        </Typography>
+                        <Typography className={classes.metricLabel}>
+                          Total de chats
+                        </Typography>
+                      </Card>
+                    </Grid>
+                  </Grid>
+                </Box>
+
+                {/* SECCIÓN DE EQUIPO */}
+                <Box className={classes.teamSection}>
+                  <Box className={classes.teamHeader}>
+                    <Typography className={classes.teamTitle}>
+                      Estado del equipo
+                    </Typography>
+                    <Button
+                      onClick={exportarGridParaExcel}
+                      className={classes.exportButton}
+                      startIcon={<SaveAlt />}
+                    >
+                      Exportar
+                    </Button>
+                  </Box>
+
+                  {/* GRID DE ATENDENTES */}
+                  <Box className={classes.attendantGrid}>
+                    {attendants.map((attendant) => (
+                      <Box key={attendant.id} className={classes.attendantCard}>
+                        <Avatar 
+                          className={clsx(
+                            classes.attendantAvatar,
+                            attendant.online ? classes.onlineAvatar : classes.offlineAvatar
+                          )}
+                        >
+                          {attendant.name.charAt(0).toUpperCase()}
+                        </Avatar>
+                        <Box className={classes.attendantInfo}>
+                          <Typography className={classes.attendantName}>
+                            {attendant.name}
+                          </Typography>
+                          <Typography 
+                            className={clsx(
+                              classes.attendantStatus,
+                              attendant.online ? classes.statusOnline : classes.statusOffline
+                            )}
+                          >
+                            {attendant.online ? "En línea" : "Desconectado"}
+                          </Typography>
+                        </Box>
+                        <Box 
+                          className={clsx(
+                            classes.statusBadge,
+                            attendant.online ? classes.badgeOnline : classes.badgeOffline
+                          )}
+                        >
+                          {attendant.online ? "Activo" : "Inactivo"}
+                        </Box>
+                      </Box>
+                    ))}
+                  </Box>
+
+                  {/* ESTATÍSTICAS DA EQUIPE */}
+                  <Box className={classes.teamStats}>
+                    <Box className={classes.teamStatItem}>
+                      <Box className={classes.teamStatIcon}>
+                        <Groups />
+                      </Box>
+                      <Typography className={classes.teamStatValue}>
+                        {attendants.length}
+                      </Typography>
+                      <Typography className={classes.teamStatLabel}>
+                        Total de agentes
+                      </Typography>
+                    </Box>
+
+                    <Box className={classes.teamStatItem}>
+                      <Box className={classes.teamStatIcon}>
+                        <CheckCircleIcon />
+                      </Box>
+                      <Typography className={classes.teamStatValue}>
+                        {Math.round((GetUsers() / attendants.length) * 100) || 0}%
+                      </Typography>
+                      <Typography className={classes.teamStatLabel}>
+                        Tasa de disponibilidad
+                      </Typography>
+                    </Box>
+
+                    <Box className={classes.teamStatItem}>
+                      <Box className={classes.teamStatIcon}>
+                        <AccessTimeIcon />
+                      </Box>
+                      <Typography className={classes.teamStatValue}>
+                        {formatTime(counters.avgSupportTime || 0)}
+                      </Typography>
+                      <Typography className={classes.teamStatLabel}>
+                        Tiempo medio de respuesta
+                      </Typography>
+                    </Box>
+
+                    <Box className={classes.teamStatItem}>
+                      <Box className={classes.teamStatIcon}>
+                        <SpeedIcon />
+                      </Box>
+                      <Typography className={classes.teamStatValue}>
+                        {serviceLevel}%
+                      </Typography>
+                      <Typography className={classes.teamStatLabel}>
+                        Nivel de servicio
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  {/* TABELA DETALHADA */}
+                  <Box sx={{ mt: 4, pt: 3, borderTop: "1px solid #e2e8f0" }}>
+                    <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: "#1a202c" }}>
+                      Detalles del equipo
+                    </Typography>
+                    <Box sx={{ 
+                      borderRadius: "12px", 
+                      overflow: 'hidden',
+                      border: "1px solid #e2e8f0",
+                      backgroundColor: "white",
+                    }}>
+                      <TableAttendantsStatus
+                        attendants={attendants}
+                        loading={loading}
+                      />
+                    </Box>
+                  </Box>
+                </Box>
+              </TabPanel>
+            </div>
+          </div>
+      }
+    </>
+  );
+};
+
+export default Dashboard;

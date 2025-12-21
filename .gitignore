@@ -1,0 +1,13 @@
+backend/node_modules/
+frontend/node_modules/
+backend/dist/
+frontend/build/
+backend/.env
+frontend/.env
+**/certs/
+**/uploads/
+**/public/
+**/wwebjs_auth/
+**/auth_info_baileys/
+**/sessions/
+*.log
