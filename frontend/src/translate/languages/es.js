@@ -100,7 +100,7 @@ const messages = {
           score: "Puntaje",
           prosecutors: "Promotores",
           neutral: "Neutrales",
-          detractors: "Dectratores",
+          detractors: "Detractores",
         },
       },
       reports: {
@@ -888,7 +888,7 @@ const messages = {
             contact: "Contacto",
           },
           notRegister: "No hay registros",
-          refresh: "Atuaclizar",
+          refresh: "Actualizar",
         },
       },
       languages: {
@@ -1644,6 +1644,22 @@ const messages = {
           expirationDate: "Fecha Venc.",
           action: "Acción",
         },
+      },
+      translationManager: {
+        title: "Gestor de Traducciones",
+        subtitle: "Administre idiomas y traducciones del sistema. Los cambios aplican a todas las empresas.",
+        languages: "Idiomas",
+        noLanguages: "Ningún idioma registrado",
+        new: "Nuevo",
+        selectLanguage: "Seleccione un idioma",
+        selectLanguageHint: "Elija un idioma de la lista a la izquierda para editar sus traducciones",
+        translations: "Traducciones",
+        translated: "traducidas",
+        pending: "pendientes",
+        autoTranslate: "Traducir automáticamente",
+        translating: "Traduciendo...",
+        export: "Exportar",
+        import: "Importar",
       },
       backendErrors: {
         ERR_NO_OTHER_WHATSAPP:

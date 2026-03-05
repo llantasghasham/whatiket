@@ -18,6 +18,7 @@ import FormControl from "@material-ui/core/FormControl";
 import Slide from '@material-ui/core/Slide';
 import whatsappIcon from '../../assets/nopicture.png';
 import { i18n } from "../../translate/i18n";
+import { getFormatLocale } from "../../utils/formatLocale";
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
@@ -492,7 +493,7 @@ const UserModal = ({ open, onClose, userId }) => {
   const formatDate = (dateStr) => {
     if (!dateStr) return "-";
     const date = new Date(dateStr);
-    return date.toLocaleDateString("pt-BR");
+    return date.toLocaleDateString(getFormatLocale());
   };
 
   const handleOpenAppointmentModal = (appointment = null) => {
@@ -534,7 +535,7 @@ const UserModal = ({ open, onClose, userId }) => {
   const formatDateTime = (dateStr) => {
     if (!dateStr) return "-";
     const date = new Date(dateStr);
-    return date.toLocaleString("pt-BR", {
+    return date.toLocaleString(getFormatLocale(), {
       day: "2-digit",
       month: "2-digit",
       year: "numeric",

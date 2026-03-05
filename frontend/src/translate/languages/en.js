@@ -370,6 +370,22 @@ const messages = {
 					message: "This action cannot be reverted.",
 				},
 			},
+			translationManager: {
+				title: "Translation Manager",
+				subtitle: "Manage system languages and translations. Changes apply to all companies.",
+				languages: "Languages",
+				noLanguages: "No languages registered",
+				new: "New",
+				selectLanguage: "Select a language",
+				selectLanguageHint: "Choose a language from the list on the left to edit its translations",
+				translations: "Translations",
+				translated: "translated",
+				pending: "pending",
+				autoTranslate: "Auto-translate",
+				translating: "Translating...",
+				export: "Export",
+				import: "Import",
+			},
 			backendErrors: {
 				ERR_NO_OTHER_WHATSAPP:
 					"There must be at lest one default WhatsApp connection.",

@@ -22,6 +22,7 @@ import Drawer from "@material-ui/core/Drawer";
 import CreateIcon from '@material-ui/icons/Create';
 import formatSerializedId from '../../utils/formatSerializedId';
 import { i18n } from "../../translate/i18n";
+import { getFormatLocale } from "../../utils/formatLocale";
 import ModalImageCors from "../ModalImageCors";
 import ContactDrawerSkeleton from "../ContactDrawerSkeleton";
 import MarkdownWrapper from "../MarkdownWrapper";
@@ -262,7 +263,7 @@ const ContactDrawer = ({ open, handleDrawerClose, contact, ticket, loading }) =>
 		if (value === null || value === undefined || value === "") return "R$ 0,00";
 		const numeric = Number(value);
 		if (Number.isNaN(numeric)) return "R$ 0,00";
-		return numeric.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+		return numeric.toLocaleString(getFormatLocale(), { style: "currency", currency: "BRL" });
 	};
 
 	const handleSaveLeadValue = async () => {

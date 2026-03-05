@@ -1,7 +1,9 @@
 /* eslint-disable new-cap */
-export default function formatToCurrency(value) {
-  return Intl.NumberFormat('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
+import { getFormatLocale } from "./formatLocale";
+
+export default function formatToCurrency(value, currency = "BRL") {
+  return Intl.NumberFormat(getFormatLocale(), {
+    style: "currency",
+    currency,
   }).format(value);
 }

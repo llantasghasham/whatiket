@@ -9,9 +9,9 @@ import api from "../../services/api";
 
 // Default languages (fallback if API fails)
 const defaultLanguages = [
+    { code: "es", name: "Español" },
     { code: "pt-BR", name: "Português" },
     { code: "en", name: "English" },
-    { code: "es", name: "Español" },
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -106,7 +106,7 @@ const UserLanguageSelector = () => {
         handleCloseLanguageMenu();
     };
 
-    const currentLang = i18n.language || "pt-BR";
+    const currentLang = i18n.language || "es";
 
     if (languages.length <= 1) return null;
 

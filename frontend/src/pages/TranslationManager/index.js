@@ -31,6 +31,7 @@ import api from "../../services/api";
 import { AuthContext } from "../../context/Auth/AuthContext";
 import toastError from "../../errors/toastError";
 import { toast } from "react-toastify";
+import { i18n } from "../../translate/i18n";
 
 // Curated translation keys grouped by section
 const CURATED_KEYS = {
@@ -685,10 +686,10 @@ const TranslationManager = () => {
       <Box className={classes.header}>
         <Typography className={classes.headerTitle}>
           <TranslateIcon style={{ fontSize: 28 }} />
-          Gerenciador de Traduções
+          {i18n.t("translationManager.title")}
         </Typography>
         <Typography className={classes.headerSubtitle}>
-          Gerencie idiomas e traduções do sistema. As alterações valem para todas as empresas.
+          {i18n.t("translationManager.subtitle")}
         </Typography>
       </Box>
 
@@ -699,7 +700,7 @@ const TranslationManager = () => {
             <Box className={classes.cardHeader}>
               <Typography className={classes.cardTitle}>
                 <LanguageIcon style={{ fontSize: 18, marginRight: 8, verticalAlign: "middle" }} />
-                Idiomas
+                {i18n.t("translationManager.languages")}
               </Typography>
               <Button
                 size="small"
@@ -713,13 +714,13 @@ const TranslationManager = () => {
                 }}
                 style={{ borderRadius: 8, textTransform: "none", fontWeight: 600 }}
               >
-                Novo
+                {i18n.t("translationManager.new")}
               </Button>
             </Box>
             <Box className={classes.cardBody}>
               {languages.length === 0 ? (
                 <Box className={classes.emptyState}>
-                  <Typography>Nenhum idioma cadastrado</Typography>
+                  <Typography>{i18n.t("translationManager.noLanguages")}</Typography>
                 </Box>
               ) : (
                 languages.map((lang) => (
@@ -783,23 +784,23 @@ const TranslationManager = () => {
               <Box className={classes.emptyState}>
                 <TranslateIcon style={{ fontSize: 48, color: "#e2e8f0", marginBottom: 16 }} />
                 <Typography variant="h6" style={{ color: "#94a3b8", fontWeight: 600 }}>
-                  Selecione um idioma
+                  {i18n.t("translationManager.selectLanguage")}
                 </Typography>
                 <Typography style={{ color: "#cbd5e1", fontSize: 14, marginTop: 4 }}>
-                  Escolha um idioma na lista à esquerda para editar suas traduções
+                  {i18n.t("translationManager.selectLanguageHint")}
                 </Typography>
               </Box>
             ) : (
               <>
                 <Box className={classes.cardHeader}>
                   <Typography className={classes.cardTitle}>
-                    Traduções — {selectedLang.name} ({selectedLang.code})
+                    {i18n.t("translationManager.translations")} — {selectedLang.name} ({selectedLang.code})
                   </Typography>
                 </Box>
 
                 <Box className={classes.toolbar}>
                   <Chip
-                    label={`${stats.translated}/${stats.total} traduzidas`}
+                    label={`${stats.translated}/${stats.total} ${i18n.t("translationManager.translated")}`}
                     size="small"
                     className={classes.statsChip}
                     style={{
@@ -809,7 +810,7 @@ const TranslationManager = () => {
                   />
                   {stats.missing > 0 && (
                     <Chip
-                      label={`${stats.missing} pendentes`}
+                      label={`${stats.missing} ${i18n.t("translationManager.pending")}`}
                       size="small"
                       className={classes.statsChip}
                       style={{ backgroundColor: "#fef2f2", color: "#dc2626" }}
@@ -836,7 +837,7 @@ const TranslationManager = () => {
                       marginRight: 4,
                     }}
                   >
-                    {autoTranslating ? "Traduzindo..." : "Traduzir automaticamente"}
+                    {autoTranslating ? i18n.t("translationManager.translating") : i18n.t("translationManager.autoTranslate")}
                   </Button>
                   <Button
                     size="small"

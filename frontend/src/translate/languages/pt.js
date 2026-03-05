@@ -1712,6 +1712,22 @@ const messages = {
           action: "Ação",
         },
       },
+      translationManager: {
+        title: "Gerenciador de Traduções",
+        subtitle: "Gerencie idiomas e traduções do sistema. As alterações valem para todas as empresas.",
+        languages: "Idiomas",
+        noLanguages: "Nenhum idioma cadastrado",
+        new: "Novo",
+        selectLanguage: "Selecione um idioma",
+        selectLanguageHint: "Escolha um idioma na lista à esquerda para editar suas traduções",
+        translations: "Traduções",
+        translated: "traduzidas",
+        pending: "pendentes",
+        autoTranslate: "Traduzir automaticamente",
+        translating: "Traduzindo...",
+        export: "Exportar",
+        import: "Importar",
+      },
       backendErrors: {
         ERR_NO_OTHER_WHATSAPP: "Deve haver pelo menos um WhatsApp padrão.",
         ERR_NO_DEF_WAPP_FOUND:
