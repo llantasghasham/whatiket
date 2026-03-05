@@ -104,7 +104,6 @@ import UserModal from "../components/UserModal";
 import SearchTicketModal from "../components/SearchTicketModal";
 import UserLanguageSelector from "../components/UserLanguageSelector";
 import { getBackendUrl } from "../config";
-import { i18n } from "../translate/i18n";
 import f002Image from "../assets/f002.png";
 import logo from "../assets/logo.png";
 import ColorModeContext from "./themeContext";

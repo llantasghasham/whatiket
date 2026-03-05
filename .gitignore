@@ -1,4 +1,6 @@
 node_modules/
+frontend/build/
+backend/dist/
 *.zip
 *.mp4
 *.mov
