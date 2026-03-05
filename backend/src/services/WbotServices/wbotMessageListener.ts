@@ -6245,7 +6245,7 @@ const wbotMessageListener = (wbot: Session, companyId: number): void => {
           contactNumber = contact.id.replace(/\D/g, "");
         }
 
-        // ✅ Normalizar e validar número brasileiro (sempre 55 + DDD + número)
+        // ✅ Normalizar número internacional (usa DEFAULT_COUNTRY_CODE para números locales)
         const normalizedNumber = normalizePhoneNumber(contactNumber);
         if (!normalizedNumber) {
           logger.error(`❌ Número inválido, ignorando: ${contactNumber}`);
