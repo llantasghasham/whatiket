@@ -134,6 +134,12 @@ const messages = {
         toasts: {
           success: "Login efetuado com sucesso!",
         },
+        planExpired: {
+          title: "Plano vencido",
+          message: "Para continuar usando o sistema, regularize seu pagamento na página Financeiro.",
+          messageFeature: "Seu plano está vencido. Para acessar esta função, regularize seu pagamento na página Financeiro.",
+          confirmText: "Entendi",
+        },
         dueDate: {
           expiration: "Sua assinatura expira em",
           days: "dias!",

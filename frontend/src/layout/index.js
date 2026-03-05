@@ -841,22 +841,26 @@ const LoggedInLayout = ({ children }) => {
     }
   }, [user?.language, user?.id]);
 
+  // RTL para árabe (العربية)
+  useEffect(() => {
+    const dir = i18n.language === "ar" ? "rtl" : "ltr";
+    const html = document.documentElement;
+    if (html.getAttribute("dir") !== dir) {
+      html.setAttribute("dir", dir);
+      html.setAttribute("lang", i18n.language || "es");
+    }
+  }, [i18n.language]);
+
   // BLOQUEIO PARA PLANOS VENCIDOS
   useEffect(() => {
-    // Se ainda está carregando informações do plano, não faz nada
     if (planLoading || loading) return;
-    
-    // Se o plano não está ativo (vencido) e a empresa não está ativa, e não está na página financeiro
     if (!planActive && !user?.company?.status && location.pathname !== "/financeiro") {
-      // Redireciona para a página financeiro
       history.push("/financeiro");
-      
-      // Mostra alerta sobre o bloqueio
       showAlert({
         type: "warning",
-        title: "Plano Vencido",
-        message: "Para continuar usando o sistema, por favor, regularize seu pagamento na página Financeiro.",
-        confirmText: "Entendi",
+        title: i18n.t("auth.planExpired.title"),
+        message: i18n.t("auth.planExpired.message"),
+        confirmText: i18n.t("auth.planExpired.confirmText"),
       });
     }
   }, [planActive, planLoading, loading, location.pathname, history, user?.company?.status]);
@@ -1137,12 +1141,11 @@ const LoggedInLayout = ({ children }) => {
     const handleClick = (event) => {
       if (disabled) {
         event.preventDefault();
-        // Mostra alerta ao tentar acessar com plano vencido
         showAlert({
           type: "warning",
-          title: "Plano Vencido",
-          message: "Para continuar usando o sistema, por favor, regularize seu pagamento na página Financeiro.",
-          confirmText: "Entendi",
+          title: i18n.t("auth.planExpired.title"),
+          message: i18n.t("auth.planExpired.message"),
+          confirmText: i18n.t("auth.planExpired.confirmText"),
         });
         return;
       }
@@ -1252,9 +1255,9 @@ const LoggedInLayout = ({ children }) => {
                   if (group.disabled) {
                     showAlert({
                       type: "warning",
-                      title: "Acesso Bloqueado",
-                      message: "Seu plano está vencido. Para acessar esta funcionalidade, por favor, regularize seu pagamento na página Financeiro.",
-                      confirmText: "Entendi",
+                      title: i18n.t("auth.planExpired.title"),
+                      message: i18n.t("auth.planExpired.messageFeature"),
+                      confirmText: i18n.t("auth.planExpired.confirmText"),
                     });
                     return;
                   }

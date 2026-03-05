@@ -7,11 +7,12 @@ import { AuthContext } from "../../context/Auth/AuthContext";
 import toastError from "../../errors/toastError";
 import api from "../../services/api";
 
-// Default languages (fallback if API fails)
+// Default languages (fallback if API fails): Español, English, Português, العربية
 const defaultLanguages = [
     { code: "es", name: "Español" },
-    { code: "pt-BR", name: "Português" },
     { code: "en", name: "English" },
+    { code: "ar", name: "العربية (لبنان)" },
+    { code: "pt-BR", name: "Português" },
 ];
 
 const useStyles = makeStyles((theme) => ({

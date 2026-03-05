@@ -121,6 +121,12 @@ const messages = {
 				toasts: {
 					success: "Login successfully!",
 				},
+				planExpired: {
+					title: "Plan expired",
+					message: "To continue using the system, please update your payment on the Finance page.",
+					messageFeature: "Your plan has expired. To access this feature, please update your payment on the Finance page.",
+					confirmText: "Got it",
+				},
 			},
 			dashboard: {
 				charts: {

@@ -5,7 +5,7 @@ const messages = {
         menu: {
           painel: "Panel",
           inbox: "Inbox",
-          conversas: "Conversas",
+          conversas: "Conversaciones",
           chamadas: "Llamadas",
           kanban: "Kanban",
           funil: "Embudo",
@@ -27,7 +27,7 @@ const messages = {
           juridico: "Jurídico",
           veiculo: "Vehículo",
           agenteIA: "Agente de IA",
-          construtorFluxo: "Construtor de Flujo",
+          construtorFluxo: "Constructor de flujo",
           disparos: "Envíos",
           campanhas: "Campañas",
           respostasRapidas: "Respuestas rápidas",
@@ -134,6 +134,12 @@ const messages = {
       auth: {
         toasts: {
           success: "¡Inicio de sesión exitoso!",
+        },
+        planExpired: {
+          title: "Plan vencido",
+          message: "Para continuar usando el sistema, regularice su pago en la página Financiero.",
+          messageFeature: "Su plan está vencido. Para acceder a esta función, regularice su pago en la página Financiero.",
+          confirmText: "Entendido",
         },
         dueDate: {
           expiration: "Suscripción caducará en",
