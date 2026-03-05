@@ -1,0 +1,35 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const Automation_1 = __importDefault(require("../../models/Automation"));
+const AutomationAction_1 = __importDefault(require("../../models/AutomationAction"));
+const AutomationLog_1 = __importDefault(require("../../models/AutomationLog"));
+const AppError_1 = __importDefault(require("../../errors/AppError"));
+const ShowAutomationService = async (data) => {
+    const { id, companyId } = data;
+    const automation = await Automation_1.default.findOne({
+        where: { id, companyId },
+        include: [
+            {
+                model: AutomationAction_1.default,
+                as: "actions",
+                separate: true,
+                order: [["order", "ASC"]]
+            },
+            {
+                model: AutomationLog_1.default,
+                as: "logs",
+                separate: true,
+                limit: 50,
+                order: [["createdAt", "DESC"]]
+            }
+        ]
+    });
+    if (!automation) {
+        throw new AppError_1.default("ERR_AUTOMATION_NOT_FOUND", 404);
+    }
+    return automation;
+};
+exports.default = ShowAutomationService;
