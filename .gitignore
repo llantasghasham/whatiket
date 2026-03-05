@@ -14,3 +14,8 @@ tmp/
 *.txt
 backend/.env.example
 backend/.env.example
+backend/public/*.jpg
+backend/public/*.jpeg
+backend/public/*.png
+backend/public/uploads/
+backend/public/company1/tutorials/
