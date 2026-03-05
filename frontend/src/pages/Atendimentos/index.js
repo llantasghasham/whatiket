@@ -107,6 +107,7 @@ import TicketActionsMenu from "../../components/TicketActionsMenu";
 import useQuickMessages from "../../hooks/useQuickMessages";
 import { toast } from "react-toastify";
 import { useSystemAlert } from "../../components/SystemAlert";
+import { i18n } from "../../translate/i18n";
 
 const Mp3Recorder = new MicRecorder({ bitRate: 128 });
 
@@ -1949,16 +1950,16 @@ useEffect(() => {
 
 	// TAB_CONFIG dinâmico baseado no perfil do usuário
 	const TAB_CONFIG = useMemo(() => [
-		{ key: "automation", name: "Automação", status: "pending", filter: isAutomationTicket },
-		{ key: "pending", name: "Aguardando", status: "pending", filter: (ticket) => (
+		{ key: "automation", name: i18n.t("atendimentos.tabs.automation"), status: "pending", filter: isAutomationTicket },
+		{ key: "pending", name: i18n.t("atendimentos.tabs.pending"), status: "pending", filter: (ticket) => (
 			ticket?.status === "pending" && (hasAssignedUser(ticket) || hasQueue(ticket))
 		) },
-		{ key: "open", name: "Atendendo", status: "open", filter: (ticket) => (
+		{ key: "open", name: i18n.t("atendimentos.tabs.attending"), status: "open", filter: (ticket) => (
 			ticket?.status === "open" && hasAssignedUser(ticket)
 		) },
-		{ key: "closed", name: "Fechados", status: "closed" },
-		{ key: "groups", name: "Grupos", status: null, filter: (ticket) => ticket.isGroup === true }
-	], [isAutomationTicket]);
+		{ key: "closed", name: i18n.t("atendimentos.tabs.closedLabel"), status: "closed" },
+		{ key: "groups", name: i18n.t("atendimentos.tabs.groups"), status: null, filter: (ticket) => ticket.isGroup === true }
+	], [isAutomationTicket, i18n.language]);
 
 	// Função para verificar se ticket corresponde aos filtros atuais
 	const ticketMatchesCurrentFilters = useCallback((ticket) => {
@@ -3098,9 +3099,9 @@ useEffect(() => {
 
 	const getStatusLabel = (status) => {
 		const labels = {
-			pending: "Aguardando",
-			open: "Atendendo",
-			closed: "Finalizado",
+			pending: i18n.t("atendimentos.statusLabels.pending"),
+			open: i18n.t("atendimentos.statusLabels.open"),
+			closed: i18n.t("atendimentos.statusLabels.closed"),
 		};
 		return labels[status] || status;
 	};
@@ -3523,7 +3524,7 @@ useEffect(() => {
 								</IconButton>
 							</span>
 						</Tooltip>
-						<Tooltip title="Ver Finalizados">
+						<Tooltip title={i18n.t("atendimentos.tooltips.verFinalizados")}>
 							<IconButton
 								size="small"
 								onClick={() => setTabIndex(TAB_CONFIG.length - 1)}
@@ -3562,7 +3563,7 @@ useEffect(() => {
 										color="error"
 										max={99}
 									>
-										<span style={{ fontSize: '0.75rem' }}>Automação</span>
+										<span style={{ fontSize: '0.75rem' }}>{i18n.t("atendimentos.tabs.automation")}</span>
 									</Badge>
 								} 
 							/>
@@ -3574,7 +3575,7 @@ useEffect(() => {
 									color="error"
 									max={99}
 								>
-									<span style={{ fontSize: '0.75rem' }}>Aguardando</span>
+									<span style={{ fontSize: '0.75rem' }}>{i18n.t("atendimentos.tabs.pending")}</span>
 								</Badge>
 							} 
 						/>
@@ -3598,7 +3599,7 @@ useEffect(() => {
 										color="primary"
 										max={99}
 									>
-										<span style={{ fontSize: '0.75rem' }}>Finalizados</span>
+										<span style={{ fontSize: '0.75rem' }}>{i18n.t("atendimentos.tabs.closed")}</span>
 									</Badge>
 								} 
 							/>
@@ -3613,7 +3614,7 @@ useEffect(() => {
 							</div>
 						) : tickets.length === 0 ? (
 							<div style={{ padding: 20, textAlign: "center", color: "#667781" }}>
-								Nenhum atendimento encontrado
+								{i18n.t("atendimentos.noTickets")}
 							</div>
 						) : (
 							tickets.map((ticket) => (
@@ -4522,12 +4523,12 @@ useEffect(() => {
 					<div className={classes.welcomeContainer}>
 						<ChatIcon className={classes.welcomeIcon} />
 						<div className={classes.welcomeTitle}>
-							Atendimentos
+							{i18n.t("atendimentos.title")}
 						</div>
 						<div className={classes.welcomeText}>
-							Selecione um atendimento para visualizar a conversa
+							{i18n.t("atendimentos.selectMessage")}
 							<br />
-							ou inicie um novo atendimento
+							{i18n.t("atendimentos.startNew")}
 						</div>
 					</div>
 				)}

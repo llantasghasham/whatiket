@@ -27,6 +27,7 @@ import FacebookIcon from "@material-ui/icons/Facebook";
 import ChatIcon from "@material-ui/icons/Chat";
 import api from "../../services/api";
 import { AuthContext } from "../../context/Auth/AuthContext";
+import { i18n } from "../../translate/i18n";
 import toastError from "../../errors/toastError";
 
 const useStyles = makeStyles((theme) => ({
@@ -335,7 +336,7 @@ const SearchTicketModal = ({ open, onClose }) => {
     >
       <DialogTitle disableTypography className={classes.dialogTitle}>
         <Typography className={classes.titleText}>
-          Buscar Conversas
+          {i18n.t("layout.searchModalTitle")}
         </Typography>
         <IconButton className={classes.closeButton} onClick={onClose}>
           <CloseIcon />
@@ -348,7 +349,7 @@ const SearchTicketModal = ({ open, onClose }) => {
             autoFocus
             fullWidth
             variant="outlined"
-            placeholder="Digite o nome, número ou mensagem..."
+            placeholder={i18n.t("layout.searchModalPlaceholder")}
             value={searchParam}
             onChange={(e) => setSearchParam(e.target.value)}
             className={classes.searchField}

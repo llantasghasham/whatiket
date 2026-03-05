@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState, useCallback } from "react";
+import { i18n } from "../translate/i18n";
 import { useHistory, useLocation } from "react-router-dom";
 import {
   makeStyles,
@@ -831,6 +832,16 @@ const LoggedInLayout = ({ children }) => {
     }
   }, [user?.profileImage, user?.companyId]);
 
+  // Sincronizar idioma del usuario al cargar (si no tiene preferencia, usar español)
+  useEffect(() => {
+    if (user) {
+      const lang = user.language || "es";
+      if (i18n.language !== lang) {
+        i18n.changeLanguage(lang);
+      }
+    }
+  }, [user?.language, user?.id]);
+
   // BLOQUEIO PARA PLANOS VENCIDOS
   useEffect(() => {
     // Se ainda está carregando informações do plano, não faz nada
@@ -896,129 +907,129 @@ const LoggedInLayout = ({ children }) => {
   const menuGroups = useMemo(
     () => [
       {
-        title: "Painel",
+        title: i18n.t("layout.menu.painel"),
         icon: <DashboardIcon />,
         disabled: !planActive && location.pathname !== "/financeiro",
         children: [
-          { title: "Dashboard", path: "/painel", exact: true },
-          { title: "Relatórios", path: "/relatorios" },
+          { title: i18n.t("layout.menu.dashboard"), path: "/painel", exact: true },
+          { title: i18n.t("layout.menu.relatorios"), path: "/relatorios" },
         ],
       },
       {
-        title: "Inbox",
+        title: i18n.t("layout.menu.inbox"),
         icon: <ChatIcon />,
         disabled: !planActive && location.pathname !== "/financeiro",
         children: [
-          { title: "Conversas", path: "/atendimentos" },
-          { title: "Chamadas", path: "/chamadas" },
+          { title: i18n.t("layout.menu.conversas"), path: "/atendimentos" },
+          { title: i18n.t("layout.menu.chamadas"), path: "/chamadas" },
         ],
       },
       {
-        title: "Kanban",
+        title: i18n.t("layout.menu.kanban"),
         icon: <ViewKanbanIcon />,
         disabled: !planActive && location.pathname !== "/financeiro",
         children: [
-          { title: "Kanban", path: "/kanban" },
-          { title: "Funil", path: "/funil" },
-          { title: "Etiquetas", path: "/etiquetas" },
+          { title: i18n.t("layout.menu.kanban"), path: "/kanban" },
+          { title: i18n.t("layout.menu.funil"), path: "/funil" },
+          { title: i18n.t("layout.menu.etiquetas"), path: "/etiquetas" },
         ],
       },
       {
-        title: "Consultas",
+        title: i18n.t("layout.menu.consultas"),
         icon: <SearchIcon />,
         disabled: !planActive && location.pathname !== "/financeiro",
         children: [
-          { title: "Dados", path: "/consultas/dados" },
-          { title: "Dívidas e Crédito", path: "/consultas/dividas-credito" },
-          { title: "Juridico", path: "/consultas/juridico" },
-          { title: "Veiculo", path: "/consultas/veiculo" },
+          { title: i18n.t("layout.menu.dados"), path: "/consultas/dados" },
+          { title: i18n.t("layout.menu.dividasCredito"), path: "/consultas/dividas-credito" },
+          { title: i18n.t("layout.menu.juridico"), path: "/consultas/juridico" },
+          { title: i18n.t("layout.menu.veiculo"), path: "/consultas/veiculo" },
         ],
       },
       {
-        title: "Usuários",
+        title: i18n.t("layout.menu.usuarios"),
         icon: <GroupIcon />,
         disabled: !planActive && location.pathname !== "/financeiro",
         children: [
-          { title: "Contatos", path: "/contatos" },
-          { title: "Leads", path: "/leads" },
-          { title: "Clientes", path: "/clientes" },
-          { title: "Usuários", path: "/users" },
+          { title: i18n.t("layout.menu.contatos"), path: "/contatos" },
+          { title: i18n.t("layout.menu.leads"), path: "/leads" },
+          { title: i18n.t("layout.menu.clientes"), path: "/clientes" },
+          { title: i18n.t("layout.menu.usuarios"), path: "/users" },
         ],
       },
       {
-        title: "Automação",
+        title: i18n.t("layout.menu.automacao"),
         icon: <SmartToyIcon />,
         disabled: !planActive && location.pathname !== "/financeiro",
         children: [
-          { title: "Agente de IA", path: "/agentes" },
-          { title: "Construtor de Fluxo", path: "/flowbuilders" },
-          { title: "Disparos", path: "/campanhas" },
-          { title: "Campanhas", path: "/phrase-lists" },
-          { title: "Respostas rápidas", path: "/quick-messages" },
-          { title: "Integrações", path: "/integracao" },
-          { title: "Ferramentas", path: "/ferramentas" },
+          { title: i18n.t("layout.menu.agenteIA"), path: "/agentes" },
+          { title: i18n.t("layout.menu.construtorFluxo"), path: "/flowbuilders" },
+          { title: i18n.t("layout.menu.disparos"), path: "/campanhas" },
+          { title: i18n.t("layout.menu.campanhas"), path: "/phrase-lists" },
+          { title: i18n.t("layout.menu.respostasRapidas"), path: "/quick-messages" },
+          { title: i18n.t("layout.menu.integracoes"), path: "/integracao" },
+          { title: i18n.t("layout.menu.ferramentas"), path: "/ferramentas" },
         ],
       },
       {
-        title: "Produtividade",
+        title: i18n.t("layout.menu.produtividade"),
         icon: <TrendingUpIcon />,
         disabled: !planActive && location.pathname !== "/financeiro",
         children: [
-          { title: "Produtos", path: "/produtos" },
-          { title: "Catálogo", path: "/catalogo-produtos" },
-          { title: "Serviços", path: "/servicos" },
-          { title: "Ordens de Serviço", path: "/ordens-servico" },
-          { title: "Agenda", path: "/user-schedules" },
-          { title: "Projetos", path: "/projects" },
+          { title: i18n.t("layout.menu.produtos"), path: "/produtos" },
+          { title: i18n.t("layout.menu.catalogo"), path: "/catalogo-produtos" },
+          { title: i18n.t("layout.menu.servicos"), path: "/servicos" },
+          { title: i18n.t("layout.menu.ordensServico"), path: "/ordens-servico" },
+          { title: i18n.t("layout.menu.agenda"), path: "/user-schedules" },
+          { title: i18n.t("layout.menu.projetos"), path: "/projects" },
         ],
       },
       {
-        title: "Ajuda",
+        title: i18n.t("layout.menu.ajuda"),
         icon: <HelpOutlineIcon />,
         disabled: !planActive && location.pathname !== "/financeiro",
         children: [
-          { title: "Ajuda", path: "/helps" },
-          { title: "Documentação", path: "/messages-api" },
+          { title: i18n.t("layout.menu.ajuda"), path: "/helps" },
+          { title: i18n.t("layout.menu.documentacao"), path: "/messages-api" },
         ],
       },
       {
-        title: "Configurações",
+        title: i18n.t("layout.menu.configuracoes"),
         icon: <SettingsIcon />,
         disabled: !planActive && location.pathname !== "/financeiro",
         children: [
-          { title: "Canais", path: "/canais" },
-          { title: "Departamentos", path: "/departamentos" },
-          { title: "Pagamentos", path: "/payment-settings" },
-          { title: "Faturas", path: "/faturas" },
-          { title: "Contas a Pagar", path: "/financeiro-manager" },
+          { title: i18n.t("layout.menu.canais"), path: "/canais" },
+          { title: i18n.t("layout.menu.departamentos"), path: "/departamentos" },
+          { title: i18n.t("layout.menu.pagamentos"), path: "/payment-settings" },
+          { title: i18n.t("layout.menu.faturas"), path: "/faturas" },
+          { title: i18n.t("layout.menu.contasPagar"), path: "/financeiro-manager" },
         ],
       },
       {
-        title: "Sistema",
+        title: i18n.t("layout.menu.sistema"),
         icon: <BuildIcon />,
         disabled: !planActive && location.pathname !== "/financeiro",
         children: [
-          { title: "Lista de contatos", path: "/contact-lists" },
-          { title: "Importar contatos", path: "/contatos/import" },
-          { title: "Automações", path: "/automations" },
-          { title: "Financeiro", path: "/financeiro" },
-          { title: "Lembretes", path: "/lembretes" },
-          { title: "Configurações", path: "/settings" },
-          { title: "Meu Painel Afiliado", path: "/afiliados" },
-          { title: "Afiliados", path: "/admin/afiliados", superAdmin: true },
-          { title: "Cupons", path: "/admin/cupons", superAdmin: true },
-          { title: "Comissões", path: "/admin/comissoes", superAdmin: true },
-          { title: "Saques", path: "/admin/saques", superAdmin: true },
-          { title: "Banners", path: "/slider-banners", superAdmin: true },
-          { title: "Vídeo Tutorial", path: "/tutorial-videos", superAdmin: true },
-          { title: "Traduções", path: "/translation-manager", superAdmin: true },
-          { title: "Whitelabel", path: "/whitelabel", superAdmin: true },
-          { title: "Empresas", path: "/empresas", superAdmin: true },
-          { title: "Planos", path: "/planos", superAdmin: true },
+          { title: i18n.t("layout.menu.listaContatos"), path: "/contact-lists" },
+          { title: i18n.t("layout.menu.importarContatos"), path: "/contatos/import" },
+          { title: i18n.t("layout.menu.automacoes"), path: "/automations" },
+          { title: i18n.t("layout.menu.financeiro"), path: "/financeiro" },
+          { title: i18n.t("layout.menu.lembretes"), path: "/lembretes" },
+          { title: i18n.t("layout.menu.configuracoes"), path: "/settings" },
+          { title: i18n.t("layout.menu.meuPainelAfiliado"), path: "/afiliados" },
+          { title: i18n.t("layout.menu.afiliados"), path: "/admin/afiliados", superAdmin: true },
+          { title: i18n.t("layout.menu.cupons"), path: "/admin/cupons", superAdmin: true },
+          { title: i18n.t("layout.menu.comissoes"), path: "/admin/comissoes", superAdmin: true },
+          { title: i18n.t("layout.menu.saques"), path: "/admin/saques", superAdmin: true },
+          { title: i18n.t("layout.menu.banners"), path: "/slider-banners", superAdmin: true },
+          { title: i18n.t("layout.menu.videoTutorial"), path: "/tutorial-videos", superAdmin: true },
+          { title: i18n.t("layout.menu.traducoes"), path: "/translation-manager", superAdmin: true },
+          { title: i18n.t("layout.menu.whitelabel"), path: "/whitelabel", superAdmin: true },
+          { title: i18n.t("layout.menu.empresas"), path: "/empresas", superAdmin: true },
+          { title: i18n.t("layout.menu.planos"), path: "/planos", superAdmin: true },
         ],
       },
     ],
-    [planActive, location.pathname]
+    [planActive, location.pathname, i18n.language]
   );
 
   const isAdmin = user?.profile === "admin";
@@ -1185,7 +1196,7 @@ const LoggedInLayout = ({ children }) => {
   const DrawerContent = () => (
     <div>
       <div className={classes.drawerHeader}>
-        <Tooltip title="Painel" placement="right">
+        <Tooltip title={i18n.t("layout.menu.painel")} placement="right">
           <div className={classes.logo} onClick={() => history.push("/painel")}>
             {showMenuLabels ? (
               (theme.appLogoLight || theme.calculatedLogoLight?.()) ? (
@@ -1402,7 +1413,7 @@ const LoggedInLayout = ({ children }) => {
                 <SearchIcon />
               </div>
               <InputBase
-                placeholder="Buscar conversas..."
+                placeholder={i18n.t("layout.searchPlaceholder")}
                 classes={{
                   root: classes.inputRoot,
                   input: classes.inputInput,
@@ -1434,7 +1445,7 @@ const LoggedInLayout = ({ children }) => {
             <IconButton
               className={classes.iconButton}
               onClick={handleRefreshPage}
-              title="Atualizar"
+              title={i18n.t("mainDrawer.appBar.user.refresh")}
             >
               <CachedIcon />
             </IconButton>
@@ -1524,7 +1535,7 @@ const LoggedInLayout = ({ children }) => {
             onClick={() => history.push("/painel")}
           >
             <DashboardIcon className={classes.mobileNavIcon} />
-            <span className={classes.mobileNavLabel}>Painel</span>
+            <span className={classes.mobileNavLabel}>{i18n.t("layout.menu.painel")}</span>
           </div>
 
           {/* Botão 2 - Contatos */}
@@ -1533,7 +1544,7 @@ const LoggedInLayout = ({ children }) => {
             onClick={() => history.push("/contatos")}
           >
             <ContactsIcon className={classes.mobileNavIcon} />
-            <span className={classes.mobileNavLabel}>Contatos</span>
+            <span className={classes.mobileNavLabel}>{i18n.t("layout.menu.contatos")}</span>
           </div>
 
           {/* Botão Home (Centro) - Tickets */}
@@ -1550,7 +1561,7 @@ const LoggedInLayout = ({ children }) => {
             onClick={() => history.push("/canais")}
           >
             <DeviceHubIcon className={classes.mobileNavIcon} />
-            <span className={classes.mobileNavLabel}>Canais</span>
+            <span className={classes.mobileNavLabel}>{i18n.t("layout.menu.canais")}</span>
           </div>
 
           {/* Botão 5 - Relatórios */}
@@ -1559,7 +1570,7 @@ const LoggedInLayout = ({ children }) => {
             onClick={() => history.push("/relatorios")}
           >
             <BarChartIcon className={classes.mobileNavIcon} />
-            <span className={classes.mobileNavLabel}>Relatórios</span>
+            <span className={classes.mobileNavLabel}>{i18n.t("layout.menu.relatorios")}</span>
           </div>
         </div>
       )}
