@@ -2,6 +2,7 @@ import path from "path";
 import multer from "multer";
 import fs from "fs";
 import Whatsapp from "../models/Whatsapp";
+import User from "../models/User";
 import { isEmpty, isNil } from "lodash";
 
 const publicFolder = path.resolve(__dirname, "..", "..", "public");
@@ -11,9 +12,16 @@ export default {
   storage: multer.diskStorage({
     destination: async function (req, file, cb) {
 
-      let companyId;
-      companyId = req.user?.companyId
+      let companyId = req.user?.companyId;
       const { typeArch, fileId } = req.body;
+
+      // Foto de usuario: usar companyId del usuario editado (permite superadmin editar cualquier usuario)
+      if (typeArch === "user" && req.params?.userId) {
+        try {
+          const targetUser = await User.findByPk(req.params.userId, { attributes: ["companyId"] });
+          if (targetUser?.companyId != null) companyId = targetUser.companyId;
+        } catch (_) {}
+      }
 
       if (companyId === undefined && isNil(companyId) && isEmpty(companyId)) {
         const authHeader = req.headers.authorization;

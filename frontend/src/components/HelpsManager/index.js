@@ -24,10 +24,13 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import TitleIcon from '@mui/icons-material/Title';
 import VideoLabelIcon from '@mui/icons-material/VideoLabel';
 import DescriptionIcon from '@mui/icons-material/Description';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
+import LinkIcon from '@mui/icons-material/Link';
 import { Edit as EditIcon } from "@material-ui/icons";
 
 import { toast } from "react-toastify";
 import useHelps from "../../hooks/useHelps";
+import api from "../../services/api";
 import { i18n } from "../../translate/i18n";
 
 
@@ -151,6 +154,58 @@ export function HelpManagerForm (props) {
                                     } 
                                 }}
                             />
+                        </Grid>
+
+                        <Grid item xs={12} sm={6} md={3}>
+                            <Field
+                                as={TextField}
+                                label={i18n.t("helps.settings.link") || "Enlace / Archivo de ayuda"}
+                                name="link"
+                                variant="outlined"
+                                margin="dense"
+                                fullWidth
+                                placeholder="URL o subir archivo abajo"
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <LinkIcon color="action" />
+                                        </InputAdornment>
+                                    ),
+                                    style: { backgroundColor: "white", borderRadius: "8px" },
+                                }}
+                            />
+                            <input
+                                type="file"
+                                id="help-file-upload"
+                                style={{ display: "none" }}
+                                accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg"
+                                onChange={async (e) => {
+                                    const file = e.target.files?.[0];
+                                    if (!file) return;
+                                    const formData = new FormData();
+                                    formData.append("file", file);
+                                    formData.append("typeArch", "help");
+                                    try {
+                                        const { data } = await api.post("/helps/upload", formData);
+                                        if (data?.url) {
+                                            values.setFieldValue("link", data.url);
+                                            toast.success(i18n.t("helps.settings.uploadSuccess") || "Archivo subido correctamente");
+                                        }
+                                    } catch (err) {
+                                        toast.error(err?.response?.data?.message || "Error al subir el archivo");
+                                    }
+                                    e.target.value = "";
+                                }}
+                            />
+                            <ButtonWithSpinner
+                                startIcon={<AttachFileIcon />}
+                                variant="outlined"
+                                size="small"
+                                style={{ marginTop: 8 }}
+                                onClick={() => document.getElementById("help-file-upload").click()}
+                            >
+                                {i18n.t("helps.settings.uploadFile") || "Subir archivo de ayuda"}
+                            </ButtonWithSpinner>
                         </Grid>
 
                         <Grid item xs={12} sm={12} md={6}>
@@ -303,6 +358,12 @@ export function HelpsManagerGrid (props) {
                                     <VideoLabelIcon fontSize="small" style={{ verticalAlign: "middle", marginRight: 8 }} />
                                     Vídeo: {row.video || "-"}
                                 </Typography>
+                                {(row.link) && (
+                                    <Typography variant="body2" style={{ fontSize: "0.875rem" }}>
+                                        <LinkIcon fontSize="small" style={{ verticalAlign: "middle", marginRight: 8 }} />
+                                        <a href={row.link} target="_blank" rel="noopener noreferrer">Abrir archivo de ayuda</a>
+                                    </Typography>
+                                )}
                             </CardContent>
                         </Card>
                     </Grid>
@@ -322,7 +383,8 @@ export default function HelpsManager () {
     const [record, setRecord] = useState({
         title: '',
         description: '',
-        video: ''
+        video: '',
+        link: ''
     })
 
     useEffect(() => {
@@ -382,7 +444,8 @@ export default function HelpsManager () {
         setRecord({
             title: '',
             description: '',
-            video: ''
+            video: '',
+            link: ''
         })
     }
 
@@ -391,7 +454,8 @@ export default function HelpsManager () {
             id: data.id,
             title: data.title || '',
             description: data.description || '',
-            video: data.video || ''
+            video: data.video || '',
+            link: data.link || ''
         })
     }
 

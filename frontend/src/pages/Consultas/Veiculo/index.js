@@ -382,7 +382,7 @@ const Veiculo = () => {
     doc.setFontSize(12);
     let yPosition = 40;
     
-    doc.text(`Valor: R$ ${data.valor.toLocaleString('pt-BR')}`, 20, yPosition);
+    doc.text(`Valor: $ ${data.valor.toLocaleString('en-US')}`, 20, yPosition);
     yPosition += 10;
     doc.text(`Código FIPE: ${data.codigoFipe}`, 20, yPosition);
     yPosition += 10;
@@ -408,7 +408,7 @@ const Veiculo = () => {
     
     doc.setFontSize(10);
     data.historico.slice(0, 10).forEach(item => {
-      doc.text(`${item.mes}: R$ ${item.valor.toLocaleString('pt-BR')}`, 20, yPosition);
+      doc.text(`${item.mes}: $ ${item.valor.toLocaleString('en-US')}`, 20, yPosition);
       yPosition += 8;
     });
     
@@ -421,7 +421,7 @@ const Veiculo = () => {
     const item = data.dados[0];
     return `CONSULTA FIPE - PLACA: ${searchInput.toUpperCase()}
     
-VALOR ATUAL: R$ ${item.valor.toLocaleString('pt-BR')}
+VALOR ATUAL: $ ${item.valor.toLocaleString('en-US')}
 CÓDIGO FIPE: ${item.codigoFipe}
 ANO MODELO: ${item.anoModelo}
 ANO FABRICAÇÃO: ${item.anoFabricacao}
@@ -441,7 +441,7 @@ Data da consulta: ${new Date().toLocaleString('pt-BR')}`;
   const formatCurrency = (value) => {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
-      currency: 'BRL'
+      currency: 'USD'
     }).format(value);
   };
 

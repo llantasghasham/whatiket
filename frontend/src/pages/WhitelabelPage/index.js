@@ -1141,7 +1141,7 @@ const WhitelabelPage = () => {
             onChange={(e) => setInvoiceMsgAviso(e.target.value)}
             onBlur={() => { if (invoiceMsgAviso !== settingsLoaded.invoiceMsgAviso) handleSaveSetting("invoiceMsgAviso", invoiceMsgAviso); }}
             InputProps={{ style: { backgroundColor: "#ffffff" } }}
-            placeholder={"Olá! 👋\n\nSua fatura do plano *{plano}* no valor de *R$ {valor}* vence em *{vencimento}*.\n\nPara evitar a suspensão do serviço, realize o pagamento pelo link:\n{link}\n\nQualquer dúvida, estamos à disposição!"}
+            placeholder={"Olá! 👋\n\nSua fatura do plano *{plano}* no valor de *$ {valor}* vence em *{vencimento}*.\n\nPara evitar a suspensão do serviço, realize o pagamento pelo link:\n{link}\n\nQualquer dúvida, estamos à disposição!"}
           />
         </FormControl>
       </Grid>
@@ -1167,7 +1167,7 @@ const WhitelabelPage = () => {
             onChange={(e) => setInvoiceMsgDia(e.target.value)}
             onBlur={() => { if (invoiceMsgDia !== settingsLoaded.invoiceMsgDia) handleSaveSetting("invoiceMsgDia", invoiceMsgDia); }}
             InputProps={{ style: { backgroundColor: "#ffffff" } }}
-            placeholder={"Olá! ⚠️\n\nSua fatura do plano *{plano}* no valor de *R$ {valor}* vence *hoje* ({vencimento}).\n\nRealize o pagamento para manter seu acesso:\n{link}\n\nEm caso de dúvidas, entre em contato conosco!"}
+            placeholder={"Olá! ⚠️\n\nSua fatura do plano *{plano}* no valor de *$ {valor}* vence *hoje* ({vencimento}).\n\nRealize o pagamento para manter seu acesso:\n{link}\n\nEm caso de dúvidas, entre em contato conosco!"}
           />
         </FormControl>
       </Grid>
@@ -1193,7 +1193,7 @@ const WhitelabelPage = () => {
             onChange={(e) => setInvoiceMsgAtrasada(e.target.value)}
             onBlur={() => { if (invoiceMsgAtrasada !== settingsLoaded.invoiceMsgAtrasada) handleSaveSetting("invoiceMsgAtrasada", invoiceMsgAtrasada); }}
             InputProps={{ style: { backgroundColor: "#ffffff" } }}
-            placeholder={"Olá! 🚨\n\nSua fatura do plano *{plano}* no valor de *R$ {valor}* venceu em *{vencimento}* e ainda está em aberto.\n\nPara evitar o bloqueio do sistema, regularize o pagamento:\n{link}\n\nCaso já tenha efetuado o pagamento, desconsidere esta mensagem."}
+            placeholder={"Olá! 🚨\n\nSua fatura do plano *{plano}* no valor de *$ {valor}* venceu em *{vencimento}* e ainda está em aberto.\n\nPara evitar o bloqueio do sistema, regularize o pagamento:\n{link}\n\nCaso já tenha efetuado o pagamento, desconsidere esta mensagem."}
           />
         </FormControl>
       </Grid>

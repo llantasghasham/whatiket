@@ -471,15 +471,15 @@ const TicketTagsKanbanModal = ({ open, onClose, contact, ticket, onUpdate }) => 
 
   const formatCurrency = (value) => {
     if (value === null || value === "" || typeof value === "undefined") {
-      return "R$ 0,00";
+      return "$ 0.00";
     }
     const numberValue = Number(value);
     if (Number.isNaN(numberValue)) {
-      return "R$ 0,00";
+      return "$ 0.00";
     }
     return numberValue.toLocaleString("pt-BR", {
       style: "currency",
-      currency: "BRL"
+      currency: "USD"
     });
   };
 

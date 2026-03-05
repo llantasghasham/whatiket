@@ -268,7 +268,7 @@ const FaturaModal = ({ open, onClose, fatura, onSaved, initialData }) => {
 
   const formatCurrency = value => {
     const number = Number(value) || 0;
-    return number.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+    return number.toLocaleString("en-US", { style: "currency", currency: "USD" });
   };
 
   const fetchReferences = async tipo => {
@@ -494,7 +494,7 @@ const FaturaModal = ({ open, onClose, fatura, onSaved, initialData }) => {
           <Grid item xs={12} sm={6}>
             <TextField
               margin="dense"
-              label="Valor (R$)"
+              label="Valor ($)"
               type="number"
               fullWidth
               value={form.valor}

@@ -364,7 +364,7 @@ const FlowBuilderProductListModal = ({ open, onClose, onSave, data }) => {
                           {product.nome || "Produto sem nome"}
                         </Typography>
                         <Typography className={classes.itemPrice}>
-                          {product.valor ? `R$ ${parseFloat(product.valor).toFixed(2)}` : "Preço não definido"}
+                          {product.valor ? `$ ${parseFloat(product.valor).toFixed(2)}` : "Preço não definido"}
                         </Typography>
                         <span className={`${classes.itemType} ${classes.productType}`}>
                           Produto
@@ -408,9 +408,9 @@ const FlowBuilderProductListModal = ({ open, onClose, onSave, data }) => {
                         </Typography>
                         <Typography className={classes.itemPrice}>
                           {service.possuiDesconto && service.valorComDesconto 
-                            ? `R$ ${parseFloat(service.valorComDesconto).toFixed(2)} (com desconto)`
+                            ? `$ ${parseFloat(service.valorComDesconto).toFixed(2)} (com desconto)`
                             : service.valorOriginal 
-                              ? `R$ ${parseFloat(service.valorOriginal).toFixed(2)}`
+                              ? `$ ${parseFloat(service.valorOriginal).toFixed(2)}`
                               : "Preço não definido"
                           }
                         </Typography>

@@ -17,7 +17,7 @@ export const EMAILJS_CONFIG = {
   TEMPLATE_ID: 'YOUR_TEMPLATE_ID_HERE',
   
   // Email de destino (onde receberá as solicitações)
-  TO_EMAIL: 'rafaeloficialpaixao@gmail.com'
+  TO_EMAIL: 'autolavadoelpana@hotmail.com'
 };
 
 // Template sugerido para o EmailJS:

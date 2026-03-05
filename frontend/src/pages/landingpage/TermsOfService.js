@@ -5,7 +5,7 @@ const TermsOfService = () => {
   return (
     <LegalPageLayout
       title="Termos de Serviço"
-      intro="Estas condições regulam o uso do Atend Zappy e garantem transparência entre nossa equipe e sua empresa."
+      intro="Estas condições regulam o uso da plataforma e garantem transparência entre o licenciante (Moufid Ghasham) e sua empresa."
     >
       <p>
         Ao acessar ou utilizar a plataforma você concorda em seguir estas condições. Se não concordar com

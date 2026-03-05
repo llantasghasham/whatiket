@@ -293,7 +293,7 @@ const AppointmentModal = (props) => {
               </MenuItem>
               {services.map((service) => (
                 <MenuItem key={service.id} value={String(service.id)}>
-                  {service.nome} - R$ {Number(service.valorOriginal || 0).toFixed(2)}
+                  {service.nome} - $ {Number(service.valorOriginal || 0).toFixed(2)}
                 </MenuItem>
               ))}
             </TextField>

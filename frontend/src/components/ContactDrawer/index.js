@@ -260,10 +260,10 @@ const ContactDrawer = ({ open, handleDrawerClose, contact, ticket, loading }) =>
 	};
 
 	const formatCurrency = (value) => {
-		if (value === null || value === undefined || value === "") return "R$ 0,00";
+		if (value === null || value === undefined || value === "") return "$ 0.00";
 		const numeric = Number(value);
-		if (Number.isNaN(numeric)) return "R$ 0,00";
-		return numeric.toLocaleString(getFormatLocale(), { style: "currency", currency: "BRL" });
+		if (Number.isNaN(numeric)) return "$ 0.00";
+		return numeric.toLocaleString("en-US", { style: "currency", currency: "USD" });
 	};
 
 	const handleSaveLeadValue = async () => {

@@ -26,7 +26,7 @@ export default function ReviewOrder({ invoice, onPay }) {
                 Valor
               </Typography>
               <Typography variant="h6" color="primary">
-                {invoice?.value ? invoice.value.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }) : 'N/A'}
+                {invoice?.value ? invoice.value.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) : 'N/A'}
               </Typography>
             </Grid>
             <Grid item xs={12} sm={6}>

@@ -156,7 +156,7 @@ const statusStyles = {
 const formatCurrency = (value) =>
   new Intl.NumberFormat("pt-BR", {
     style: "currency",
-    currency: "BRL"
+    currency: "USD"
   }).format(value || 0);
 
 const formatDate = (date) => {

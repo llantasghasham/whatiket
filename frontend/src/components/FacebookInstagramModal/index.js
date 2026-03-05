@@ -120,20 +120,20 @@ const FacebookInstagramModal = ({ open, onClose, whatsAppId }) => {
   const [activeTab, setActiveTab] = useState(0); // 0 = Facebook, 1 = Instagram
 
   // Informações do webhook - usando a URL do backend
-  const backendUrl = process.env.REACT_APP_BACKEND_URL || "https://api.faedeveloper.com.br";
+  const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
   const webhookUrl = `${backendUrl}/webhook`;
   const verifyToken = "whaticket";
 
   // Função para login direto no Instagram Business
   const handleInstagramLogin = () => {
-    const instagramOAuthUrl = `https://www.facebook.com/v18.0/dialog/oauth?client_id=${process.env.REACT_APP_FACEBOOK_APP_ID}&redirect_uri=${encodeURIComponent(backendUrl + '/instagram-callback')}&scope=instagram_basic,instagram_manage_messages,pages_messaging,pages_show_list,pages_manage_metadata,pages_read_engagement,business_management&response_type=token&state=${localStorage.getItem('companyId')}`;
-    window.open(instagramOAuthUrl, '_blank', 'width=600,height=600');
+    const instagramOAuthUrl = `https://www.facebook.com/v18.0/dialog/oauth?client_id=${process.env.REACT_APP_FACEBOOK_APP_ID}&redirect_uri=${encodeURIComponent(backendUrl + '/instagram-callback')}&scope=instagram_basic,instagram_manage_messages,pages_messaging,pages_show_list,pages_manage_metadata,pages_read_engagement,business_management&response_type=code&state=${localStorage.getItem("companyId") || ""}`;
+    window.location.href = instagramOAuthUrl;
   };
 
-  // Função para login direto no Facebook
+  // Função para login direto no Facebook (response_type=code para o backend trocar por token)
   const handleFacebookLogin = () => {
-    const facebookOAuthUrl = `https://www.facebook.com/v18.0/dialog/oauth?client_id=${process.env.REACT_APP_FACEBOOK_APP_ID}&redirect_uri=${encodeURIComponent(backendUrl + '/facebook-callback')}&scope=public_profile,pages_messaging,pages_show_list,pages_manage_metadata,pages_read_engagement,business_management&response_type=token&state=${localStorage.getItem('companyId')}`;
-    window.open(facebookOAuthUrl, '_blank', 'width=600,height=600');
+    const facebookOAuthUrl = `https://www.facebook.com/v18.0/dialog/oauth?client_id=${process.env.REACT_APP_FACEBOOK_APP_ID}&redirect_uri=${encodeURIComponent(backendUrl + "/facebook-callback")}&scope=public_profile,pages_messaging,pages_show_list,pages_manage_metadata,pages_read_engagement,business_management&response_type=code&state=${localStorage.getItem("companyId") || ""}`;
+    window.location.href = facebookOAuthUrl;
   };
 
   useEffect(() => {

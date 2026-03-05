@@ -91,7 +91,7 @@ const ApiUsuariosPage = () => {
       description: "Cria um novo usuário.",
       body: {
         name: "João Silva",
-        email: "joao@empresa.com",
+        email: "autolavadoelpana@hotmail.com",
         password: "senha123",
         profile: "user",
         userType: "professional",

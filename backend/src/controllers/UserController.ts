@@ -693,15 +693,17 @@ export const mediaUpload = async (
 
   try {
     let user = await User.findByPk(userId);
+    if (!user) throw new AppError("ERR_NO_USER_FOUND", 404);
     user.profileImage = file.filename.replace('/', '-');
 
     await user.save();
 
-    user = await ShowUserService(userId, companyId);
+    const targetCompanyId = user.companyId;
+    user = await ShowUserService(userId, targetCompanyId);
     
     const io = getIO();
-    io.of(String(companyId))
-      .emit(`company-${companyId}-user`, {
+    io.of(String(targetCompanyId))
+      .emit(`company-${targetCompanyId}-user`, {
         action: "update",
         user
       });
@@ -759,8 +761,8 @@ export const setup2FA = async (req: Request, res: Response): Promise<Response> =
   }
 
   const secret = speakeasy.generateSecret({
-    name: `AtendZappy (${user.email})`,
-    issuer: "AtendZappy"
+    name: `Whatiket (${user.email})`,
+    issuer: "Moufid Ghasham"
   });
 
   // Salvar secret temporariamente (ainda não confirmado)

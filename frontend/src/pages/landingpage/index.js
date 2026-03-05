@@ -987,7 +987,7 @@ export default function LandingPage() {
 
             {/* BUTTONS */}
             <div className="buttons">
-              <button className="btn-primary" onClick={() => window.open("https://wa.me/552433540335?text=" + encodeURIComponent(`Olá! Gostaria de saber mais sobre o ${appName}.`), "_blank")}>
+              <button className="btn-primary" onClick={() => window.open("https://wa.me/50687021496?text=" + encodeURIComponent(`Olá! Gostaria de saber mais sobre o ${appName}.`), "_blank")}>
                 Fale Conosco
               </button>
             </div>
@@ -1111,7 +1111,7 @@ export default function LandingPage() {
                         <div className="plan-resources">Recursos inclusos</div>
                         <div className="plan-price-label">Por apenas:</div>
                         <div className="plan-price">
-                          R$ {plan.amount}<span>/mês</span>
+                          $ {plan.amount}<span>/mês</span>
                         </div>
                         <div className="plan-discount">30% de desconto contratando o plano anual</div>
                         <button className="plan-btn" onClick={() => handlePlanClick(plan)}>
@@ -1151,7 +1151,7 @@ export default function LandingPage() {
 
       {/* WHATSAPP FLOATING BUTTON */}
       <a 
-        href="https://wa.me/552433540335" 
+        href="https://wa.me/50687021496" 
         target="_blank" 
         rel="noopener noreferrer" 
         className="whatsapp-float"

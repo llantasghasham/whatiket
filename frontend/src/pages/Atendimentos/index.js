@@ -633,10 +633,10 @@ const formatWhatsAppText = (text) => {
 	formatted = formatted.replace(/\~([^~]+)\~/g, '<del>$1</del>');
 	
 	// Monospace: ```texto```
-	formatted = formatted.replace(/\`\`\`([^`]+)\`\`\`/g, '<code style="background:#f0f0f0;padding:2px 4px;border-radius:3px;font-family:monospace">$1</code>');
+	formatted = formatted.replace(/```([^`]+)```/g, '<code style="background:#f0f0f0;padding:2px 4px;border-radius:3px;font-family:monospace">$1</code>');
 	
 	// Monospace inline: `texto`
-	formatted = formatted.replace(/\`([^`]+)\`/g, '<code style="background:#f0f0f0;padding:2px 4px;border-radius:3px;font-family:monospace">$1</code>');
+	formatted = formatted.replace(/`([^`]+)`/g, '<code style="background:#f0f0f0;padding:2px 4px;border-radius:3px;font-family:monospace">$1</code>');
 	
 	// Links clicáveis (http, https, www, domínios .com/.br)
 	const urlRegex = /(https?:\/\/[^\s]+)|(www\.[^\s]+)|([a-zA-Z0-9-]+\.(com|br|org|net|gov|edu|mil|info|biz|co|io|ai|app|dev|tech|store|online|site|art|design|photo|video|music|blog|news|shop|club|team|live|studio|agency|company|services|solutions|consulting|marketing|software|data|cloud|security|network|systems|digital|creative|media|group|global|local|international|world|us|uk|ca|au|de|fr|es|it|pt|mx|ar|cl|pe|ve|uy|py|bo|ec|gy|sr|gf|gu)\b[^\s]*)/g;
@@ -681,7 +681,7 @@ const Atendimentos = () => {
 	const [selectedTicket, setSelectedTicket] = useState(null);
 	const [messages, setMessages] = useState([]);
 	const [loading, setLoading] = useState(false);
-	const [searchTerm, setSearchTerm] = useState("");
+	const [searchTerm] = useState("");
 	const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 	const [filterAnchor, setFilterAnchor] = useState(null);
 	const [selectedQueues, setSelectedQueues] = useState([]);
@@ -703,7 +703,7 @@ const Atendimentos = () => {
 	});
 	const [closeAllDialogOpen, setCloseAllDialogOpen] = useState(false);
 	const [closingAllTickets, setClosingAllTickets] = useState(false);
-	const [currentTime, setCurrentTime] = useState(Date.now());
+	const [, setCurrentTime] = useState(Date.now());
 	const [messageMenuAnchor, setMessageMenuAnchor] = useState(null);
 	const [selectedMessage, setSelectedMessage] = useState(null);
 	const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -735,7 +735,7 @@ const Atendimentos = () => {
 	const [selectedFile, setSelectedFile] = useState(null);
 	const [selectedFiles, setSelectedFiles] = useState([]);
 	const [mediaPreviewOpen, setMediaPreviewOpen] = useState(false);
-	const [mediaRecorder, setMediaRecorder] = useState(null);
+	const [, setMediaRecorder] = useState(null);
 	const [recording, setRecording] = useState(false);
 	const [recordingTime, setRecordingTime] = useState(0);
 	const [recordingInterval, setRecordingInterval] = useState(null);
@@ -2937,7 +2937,6 @@ useEffect(() => {
 		};
 
 		const layout = getGridLayout();
-		const itemWidth = layout.columns === 1 ? '100%' : 'calc(50% - 2px)';
 		const itemHeight = totalFiles === 2 ? '200px' : '150px';
 
 		return (
@@ -3088,7 +3087,7 @@ useEffect(() => {
 		}
 	};
 
-	const getStatusColor = (status) => {
+	const _getStatusColor = (status) => {
 		const colors = {
 			pending: "#FFA500",
 			open: "#00a884",
@@ -3141,7 +3140,7 @@ useEffect(() => {
 		}
 	};
 
-	const sumUnread = (tickets = []) =>
+	const _sumUnread = (tickets = []) =>
 		tickets.reduce((total, ticket) => total + (ticket.unreadMessages || 0), 0);
 	
 	const countTickets = (tickets = []) => tickets.length;

@@ -282,9 +282,9 @@ const ServicosPage = () => {
   };
 
   const formatCurrency = value =>
-    new Intl.NumberFormat("pt-BR", {
+    new Intl.NumberFormat("en-US", {
       style: "currency",
-      currency: "BRL"
+      currency: "USD"
     }).format(Number(value) || 0);
 
   const renderList = () => {

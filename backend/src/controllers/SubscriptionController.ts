@@ -86,7 +86,7 @@ export const createSubscription = async (
 
   if (!(await schema.isValid(req.body))) {
     console.log("Erro linha 32")
-    throw new AppError("Dados Incorretos - Contate o Suporte!", 400);
+    throw new AppError("Dados Incorretos - Contate o administrador (autolavadoelpana@hotmail.com).", 400);
   }  
 
   const {

@@ -55,7 +55,8 @@ const UserLanguageSelector = () => {
                 const { data } = await api.get("/translations/languages");
                 if (data && data.length > 0) {
                     const activeLanguages = data.filter(l => l.active);
-                    if (activeLanguages.length > 0) {
+                    // Solo usar lista del backend si hay más de 1 idioma; si no, mantener los 4 por defecto para que siempre se vea el icono
+                    if (activeLanguages.length > 1) {
                         setLanguages(activeLanguages);
                     }
                 }
@@ -108,8 +109,9 @@ const UserLanguageSelector = () => {
     };
 
     const currentLang = i18n.language || "es";
+    const showSelector = languages.length > 1;
 
-    if (languages.length <= 1) return null;
+    if (!showSelector) return null;
 
     return (
         <>

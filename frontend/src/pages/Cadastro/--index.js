@@ -977,7 +977,7 @@ const SignUp = () => {
                                                 <p><strong>7. LIMITAÇÃO DE RESPONSABILIDATE</strong></p>
                                                 <p>7.1. O Sistema é fornecido, com garantias de uso e funcionalidades, expressas ou implícitas. 7.2. O Licenciante não será responsável por quaisquer danos diretos, indiretos, incidentais ou consequentes resultantes do uso ou impossibilidade de uso do Sistema.</p>
                                                 <p><strong>8. CONTATO</strong></p>
-                                                <p>Para dúvidas ou esclarecimentos, o Usuário pode entrar em contato com o Licenciante pelo e-mail <strong>sac@atendzappy.com.br</strong> ou pelo Whatsapp <strong><a href="https://wa.me/552433540335" target="_blank" rel="noopener noreferrer">+55 2433540335</a></strong>.</p>                    
+                                                <p>Para dúvidas ou esclarecimentos, o Usuário pode entrar em contato com o Licenciante: <strong>Moufid Ghasham</strong> — e-mail <strong>autolavadoelpana@hotmail.com</strong> ou WhatsApp <strong><a href="https://wa.me/50687021496" target="_blank" rel="noopener noreferrer">+506 8702-1496</a></strong> (Costa Rica).</p>                    
                                                 <p><em>Última atualização: 07-02-2025</em></p>
                                             </DialogContent>
                                             <DialogActions>

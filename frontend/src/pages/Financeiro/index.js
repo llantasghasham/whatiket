@@ -442,7 +442,7 @@ const Invoices = () => {
                     <TableCell align="center">{invoice.connections}</TableCell>
                     <TableCell align="center">{invoice.queues}</TableCell>
                     <TableCell align="right" style={{ fontWeight: 600 }}>
-                      {invoice.value?.toLocaleString("pt-br", { style: "currency", currency: "BRL" })}
+                      {invoice.value?.toLocaleString("en-US", { style: "currency", currency: "USD" })}
                     </TableCell>
                     <TableCell align="center">
                       {moment(invoice.dueDate).isValid() ? moment(invoice.dueDate).format("DD/MM/YYYY") : "-"}
@@ -572,7 +572,7 @@ const Invoices = () => {
             <Box style={{ backgroundColor: "#f8fafc", padding: 16, borderRadius: 8, marginBottom: 16, textAlign: "left" }}>
               <Typography variant="body1"><strong>Empresa:</strong> {selectedInvoiceForPay.company?.name || "Empresa"} (ID: {selectedInvoiceForPay.companyId})</Typography>
               <Typography variant="body1"><strong>Detalhes:</strong> {selectedInvoiceForPay.detail}</Typography>
-              <Typography variant="body1"><strong>Valor:</strong> {selectedInvoiceForPay.value?.toLocaleString("pt-br", { style: "currency", currency: "BRL" })}</Typography>
+              <Typography variant="body1"><strong>Valor:</strong> {selectedInvoiceForPay.value?.toLocaleString("en-US", { style: "currency", currency: "USD" })}</Typography>
               <Typography variant="body1"><strong>Vencimento:</strong> {moment(selectedInvoiceForPay.dueDate).format("DD/MM/YYYY")}</Typography>
             </Box>
           )}
@@ -608,7 +608,7 @@ const Invoices = () => {
             <Box style={{ backgroundColor: "#f8fafc", padding: 16, borderRadius: 8, marginBottom: 16, textAlign: "left" }}>
               <Typography variant="body1"><strong>Empresa:</strong> {selectedInvoiceForBilling.company?.name || "Empresa"} (ID: {selectedInvoiceForBilling.companyId})</Typography>
               <Typography variant="body1"><strong>Detalhes:</strong> {selectedInvoiceForBilling.detail}</Typography>
-              <Typography variant="body1"><strong>Valor:</strong> {selectedInvoiceForBilling.value?.toLocaleString("pt-br", { style: "currency", currency: "BRL" })}</Typography>
+              <Typography variant="body1"><strong>Valor:</strong> {selectedInvoiceForBilling.value?.toLocaleString("en-US", { style: "currency", currency: "USD" })}</Typography>
               <Typography variant="body1"><strong>Vencimento:</strong> {moment(selectedInvoiceForBilling.dueDate).format("DD/MM/YYYY")}</Typography>
             </Box>
           )}

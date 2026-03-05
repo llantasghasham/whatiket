@@ -376,7 +376,7 @@ const IndicatorCard = ({ icon, iconBg, label, value, trend, trendValue, classes 
 );
 
 const formatCurrency = (value) =>
-  new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value || 0);
+  new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(value || 0);
 
 const Reports = () => {
   const classes = useStyles();
@@ -1919,7 +1919,7 @@ const Reports = () => {
     };
     
     const formatCurrency = (value) => {
-      return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value || 0);
+      return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value || 0);
     };
     
     return (

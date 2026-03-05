@@ -273,10 +273,7 @@ a[x-apple-data-detectors] {
 <td align="center" class="es-m-txt-c" style="padding:0;Margin:0;padding-top:15px">
   <p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:roboto, 'helvetica neue', helvetica, arial, sans-serif;line-height:24px;color:#131313;font-size:16px">
     Entre em contato agora mesmo conosco via 
-    <a href="https://wa.me/552433540335" target="_blank" style="text-decoration:none;color:#25D366;">
-
-    </a>
-    <a href="https://wa.me/552433540335" target="_blank" style="text-decoration:none;color:#25D366;">WhatsApp</a>.
+    <a href="https://wa.me/50687021496" target="_blank" style="text-decoration:none;color:#25D366;">WhatsApp</a> (Costa Rica).
   </p>
 </td>
                    </table></td>

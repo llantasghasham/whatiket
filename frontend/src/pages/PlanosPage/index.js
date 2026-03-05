@@ -420,7 +420,7 @@ const PlanosPage = () => {
                     <TableCell align="center">{row.connections || 0}</TableCell>
                     <TableCell align="center">{row.queues || 0}</TableCell>
                     <TableCell align="right">
-                      R$ {row.amount ? row.amount.toLocaleString("pt-br", { minimumFractionDigits: 2 }) : "0,00"}
+                      $ {row.amount ? row.amount.toLocaleString("en-US", { minimumFractionDigits: 2 }) : "0.00"}
                     </TableCell>
                     <TableCell align="center">{renderRecurrence(row.recurrence)}</TableCell>
                     <TableCell align="center">

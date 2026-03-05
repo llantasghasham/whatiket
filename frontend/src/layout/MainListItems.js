@@ -86,7 +86,7 @@ const useStyles = makeStyles((theme) => ({
         fontWeight: 600,
         color: "#FFFFFF",
       },
-      "& .MuiAvatar-root": {
+      "& .MuiAvatar-root:not([class*='iconWrapper'])": {
         backgroundColor: "rgba(255, 255, 255, 0.2)",
         color: "#FFFFFF",
       },
@@ -124,6 +124,62 @@ const useStyles = makeStyles((theme) => ({
       fontSize: "1.1rem",
       color: "#ffffff",
     },
+  },
+  // Iconos modernos estilo POS: caja redondeada con color y sombra
+  iconWrapper: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: "10px",
+    height: 32,
+    width: 32,
+    color: "#fff",
+    transition: "all 0.2s ease",
+    boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+    "& .MuiSvgIcon-root": {
+      fontSize: "1.15rem",
+      color: "#fff",
+    },
+  },
+  iconWrapperHome: {
+    backgroundColor: "#3b82f6",
+    "&:hover": { backgroundColor: "#2563eb" },
+  },
+  iconWrapperManagement: {
+    backgroundColor: "#8b5cf6",
+    "&:hover": { backgroundColor: "#7c3aed" },
+  },
+  iconWrapperCommunication: {
+    backgroundColor: "#06b6d4",
+    "&:hover": { backgroundColor: "#0891b2" },
+  },
+  iconWrapperCampaigns: {
+    backgroundColor: "#ec4899",
+    "&:hover": { backgroundColor: "#db2777" },
+  },
+  iconWrapperFlows: {
+    backgroundColor: "#6366f1",
+    "&:hover": { backgroundColor: "#4f46e5" },
+  },
+  iconWrapperTools: {
+    backgroundColor: "#f59e0b",
+    "&:hover": { backgroundColor: "#d97706" },
+  },
+  iconWrapperAdmin: {
+    backgroundColor: "#10b981",
+    "&:hover": { backgroundColor: "#059669" },
+  },
+  iconWrapperSistema: {
+    backgroundColor: theme.palette.primary?.main || "#7c3aed",
+    boxShadow: theme.palette.primary?.main ? `0 4px 12px ${theme.palette.primary.main}40` : "0 4px 12px rgba(124,58,237,0.25)",
+  },
+  iconWrapperChat: {
+    backgroundColor: "#14b8a6",
+    "&:hover": { backgroundColor: "#0d9488" },
+  },
+  iconWrapperProfile: {
+    backgroundColor: "#64748b",
+    "&:hover": { backgroundColor: "#475569" },
   },
   submenuDrawer: {
     width: submenuWidth,
@@ -219,14 +275,29 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   submenuItemIcon: {
-    minWidth: "28px",
-    color: "#ffffff",
+    minWidth: "36px",
+    display: "flex",
+    justifyContent: "center",
     "& .MuiSvgIcon-root": {
       fontSize: "1.1rem",
-      color: "#ffffff",
       [theme.breakpoints.down("xs")]: {
         fontSize: "1.25rem",
       },
+    },
+  },
+  submenuIconWrapper: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: "8px",
+    height: 28,
+    width: 28,
+    backgroundColor: "rgba(255, 255, 255, 0.12)",
+    color: "#ffffff",
+    transition: "all 0.2s ease",
+    "& .MuiSvgIcon-root": {
+      fontSize: "1rem",
+      color: "#ffffff",
     },
   },
   submenuItemText: {
@@ -451,10 +522,10 @@ function ListItemLink(props) {
           <ListItemIcon className={classes.submenuItemIcon}>
             {showBadge ? (
               <Badge badgeContent="!" color="error" overlap="circular">
-                {icon}
+                <Box className={classes.submenuIconWrapper}>{icon}</Box>
               </Badge>
             ) : (
-              icon
+              <Box className={classes.submenuIconWrapper}>{icon}</Box>
             )}
           </ListItemIcon>
         )}
@@ -1183,7 +1254,7 @@ const MainListItems = ({ collapsed, drawerClose, onSubmenuOpen, submenuOpen, onT
             className={`${classes.listItem} ${location.pathname === "/" ? "active" : ""}`}
           >
             <ListItemIcon className={classes.listItemIcon}>
-              <Avatar className={classes.iconAvatar}>
+              <Avatar className={`${classes.iconWrapper} ${classes.iconWrapperHome}`}>
                 <HomeIcon />
               </Avatar>
             </ListItemIcon>
@@ -1218,7 +1289,7 @@ const MainListItems = ({ collapsed, drawerClose, onSubmenuOpen, submenuOpen, onT
                   className={`${classes.listItem} ${activeSubmenu === "management" ? "active" : ""}`}
                 >
                   <ListItemIcon className={classes.listItemIcon}>
-                    <Avatar className={classes.iconAvatar}>
+                    <Avatar className={`${classes.iconWrapper} ${classes.iconWrapperManagement}`}>
                       <TrendingUpIcon />
                     </Avatar>
                   </ListItemIcon>
@@ -1247,7 +1318,7 @@ const MainListItems = ({ collapsed, drawerClose, onSubmenuOpen, submenuOpen, onT
             className={`${classes.listItem} ${activeSubmenu === "communication" ? "active" : ""}`}
           >
             <ListItemIcon className={classes.listItemIcon}>
-              <Avatar className={classes.iconAvatar}>
+              <Avatar className={`${classes.iconWrapper} ${classes.iconWrapperCommunication}`}>
                 <ChatBubbleOutlineIcon />
               </Avatar>
             </ListItemIcon>
@@ -1278,7 +1349,7 @@ const MainListItems = ({ collapsed, drawerClose, onSubmenuOpen, submenuOpen, onT
                   className={`${classes.listItem} ${activeSubmenu === "campaigns" ? "active" : ""}`}
                 >
                   <ListItemIcon className={classes.listItemIcon}>
-                    <Avatar className={classes.iconAvatar}>
+                    <Avatar className={`${classes.iconWrapper} ${classes.iconWrapperCampaigns}`}>
                       <CampaignOutlinedIcon />
                     </Avatar>
                   </ListItemIcon>
@@ -1302,7 +1373,7 @@ const MainListItems = ({ collapsed, drawerClose, onSubmenuOpen, submenuOpen, onT
             role={user.profile}
             perform="dashboard:view"
             yes={() => (
-              <Tooltip title={collapsed ? i18n.t("Flowbuilder") : ""} placement="right">
+                <Tooltip title={collapsed ? i18n.t("Flowbuilder") : ""} placement="right">
                 <ListItem
                   button
                   onClick={(e) => {
@@ -1312,7 +1383,7 @@ const MainListItems = ({ collapsed, drawerClose, onSubmenuOpen, submenuOpen, onT
                   className={`${classes.listItem} ${activeSubmenu === "flows" ? "active" : ""}`}
                 >
                   <ListItemIcon className={classes.listItemIcon}>
-                    <Avatar className={classes.iconAvatar}>
+                    <Avatar className={`${classes.iconWrapper} ${classes.iconWrapperFlows}`}>
                       <AccountTreeIcon />
                     </Avatar>
                   </ListItemIcon>
@@ -1341,7 +1412,7 @@ const MainListItems = ({ collapsed, drawerClose, onSubmenuOpen, submenuOpen, onT
             className={`${classes.listItem} ${activeSubmenu === "tools" ? "active" : ""}`}
           >
             <ListItemIcon className={classes.listItemIcon}>
-              <Avatar className={classes.iconAvatar}>
+              <Avatar className={`${classes.iconWrapper} ${classes.iconWrapperTools}`}>
                 <BuildOutlinedIcon />
               </Avatar>
             </ListItemIcon>
@@ -1371,7 +1442,7 @@ const MainListItems = ({ collapsed, drawerClose, onSubmenuOpen, submenuOpen, onT
                 className={`${classes.listItem} ${activeSubmenu === "administration" ? "active" : ""}`}
               >
                 <ListItemIcon className={classes.listItemIcon}>
-                  <Avatar className={classes.iconAvatar}>
+                  <Avatar className={`${classes.iconWrapper} ${classes.iconWrapperAdmin}`}>
                     <SettingsOutlinedIcon />
                   </Avatar>
                 </ListItemIcon>

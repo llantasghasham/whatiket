@@ -39,7 +39,7 @@ export const StartWhatsAppSession = async (
           await useVoiceCallsBaileys(
             whatsapp.wavoip,
             wbot,
-            "atendzappy",
+            "whatiket",
             "open",
             true
           );

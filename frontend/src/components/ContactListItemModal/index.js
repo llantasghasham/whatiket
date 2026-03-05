@@ -213,7 +213,7 @@ const ContactListItemModal = ({ open, onClose, contactId, initialValues, onSave 
                   name="number"
                   error={touched.number && Boolean(errors.number)}
                   helperText={touched.number && errors.number}
-                  placeholder="552433540335"
+                  placeholder="50687021496"
                   variant="outlined"
                   margin="dense"
                 />

@@ -1168,7 +1168,7 @@ const ProdutosPage = () => {
                 </Box>
 
                 <Typography className={classes.itemValue}>
-                  R$ {Number(produto.valor || 0).toFixed(2)}
+                  $ {Number(produto.valor || 0).toFixed(2)}
                 </Typography>
 
                 <Box className={classes.itemActions} style={{ marginLeft: 16 }}>

@@ -558,7 +558,7 @@ const ContactModal = ({ open, onClose, contactId, initialValues, onSave }) => {
                       }
                       value={isTempNumber(values.number) ? "" : values.number}
                       variant="filled"
-                      placeholder="552433540335"
+                      placeholder="50687021496"
                       InputProps={{
                         startAdornment: (
                           <InputAdornment position="start">

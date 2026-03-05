@@ -259,10 +259,10 @@ const ProjectDetails = () => {
   };
 
   const formatCurrency = (value) => {
-    if (!value) return "R$ 0,00";
+    if (!value) return "$ 0.00";
     return Number(value).toLocaleString("pt-BR", {
       style: "currency",
-      currency: "BRL"
+      currency: "USD"
     });
   };
 

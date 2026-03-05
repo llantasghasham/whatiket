@@ -255,7 +255,7 @@ const AffiliateDashboard = () => {
                     <AccountBalanceWallet className={classes.statIcon} />
                     <div>
                       <div className={classes.statValue}>
-                        R$ {parseFloat(stats?.availableBalance || 0).toFixed(2)}
+                        $ {parseFloat(stats?.availableBalance || 0).toFixed(2)}
                       </div>
                       <div className={classes.statLabel}>Saldo Disponível</div>
                     </div>
@@ -264,7 +264,7 @@ const AffiliateDashboard = () => {
                     <TrendingUp className={classes.statIcon} />
                     <div>
                       <div className={classes.statValue}>
-                        R$ {parseFloat(stats?.totalEarned || 0).toFixed(2)}
+                        $ {parseFloat(stats?.totalEarned || 0).toFixed(2)}
                       </div>
                       <div className={classes.statLabel}>Total Ganho</div>
                     </div>
@@ -345,7 +345,7 @@ const AffiliateDashboard = () => {
                     <MonetizationOn className={classes.statIcon} />
                     <div>
                       <div className={classes.statValue}>
-                        R$ {parseFloat(affiliateInfo.minWithdrawAmount || 0).toFixed(2)}
+                        $ {parseFloat(affiliateInfo.minWithdrawAmount || 0).toFixed(2)}
                       </div>
                       <div className={classes.statLabel}>Mínimo para Saque</div>
                     </div>

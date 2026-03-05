@@ -153,15 +153,15 @@ const Kanban = () => {
 
   const formatCurrency = (value) => {
     if (value === null || value === undefined || value === "") {
-      return "R$ 0,00";
+      return "$ 0.00";
     }
     const numeric = Number(value);
     if (Number.isNaN(numeric)) {
-      return "R$ 0,00";
+      return "$ 0.00";
     }
-    return numeric.toLocaleString("pt-BR", {
+    return numeric.toLocaleString("en-US", {
       style: "currency",
-      currency: "BRL"
+      currency: "USD"
     });
   };
 

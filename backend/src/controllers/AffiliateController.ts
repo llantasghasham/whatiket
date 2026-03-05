@@ -496,13 +496,13 @@ export const requestWithdrawal = async (req: Request, res: Response): Promise<Re
 
     if (amount < affiliate.minWithdrawAmount) {
       return res.status(400).json({ 
-        error: `Valor mínimo para saque é R$ ${affiliate.minWithdrawAmount}` 
+        error: `Valor mínimo para saque é $ ${affiliate.minWithdrawAmount}` 
       });
     }
 
     if (amount > availableBalance) {
       return res.status(400).json({ 
-        error: `Saldo disponível é R$ ${availableBalance}` 
+        error: `Saldo disponível é $ ${availableBalance}` 
       });
     }
 

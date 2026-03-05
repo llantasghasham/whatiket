@@ -36,7 +36,7 @@ const PixPreview = ({ companyId, avatarUser, avatarName, avatarUrl, name, numero
 
     const formatCurrency = (value) => {
         const formattedValue = (value / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
-        return `R$ ${formattedValue}`;
+        return `$ ${formattedValue}`;
     };
 
     return (

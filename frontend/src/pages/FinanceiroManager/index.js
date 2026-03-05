@@ -896,7 +896,7 @@ const FinanceiroManager = () => {
                       <TableRow key={despesa.id} hover>
                         <TableCell>{despesa.descricao}</TableCell>
                         <TableCell>{despesa.fornecedor?.nome || "-"}</TableCell>
-                        <TableCell>R$ {parseFloat(despesa.valor || 0).toFixed(2)}</TableCell>
+                        <TableCell>$ {parseFloat(despesa.valor || 0).toFixed(2)}</TableCell>
                         <TableCell>{new Date(despesa.dataVencimento).toLocaleDateString('pt-BR')}</TableCell>
                         <TableCell>
                           <Chip
@@ -1112,7 +1112,7 @@ const FinanceiroManager = () => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  label="Valor (R$)"
+                  label="Valor ($)"
                   variant="outlined"
                   fullWidth
                   required

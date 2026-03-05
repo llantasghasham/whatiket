@@ -503,7 +503,7 @@ const Companies = () => {
                                             </div>
                                             <div className={classes.infoRow}>
                                                 <span className={classes.infoLabel}>Valor</span>
-                                                <span className={classes.infoValue}>R$ {renderPlanValue(company)}</span>
+                                                <span className={classes.infoValue}>$ {renderPlanValue(company)}</span>
                                             </div>
                                             <div className={classes.infoRow}>
                                                 <span className={classes.infoLabel}>Vencimento</span>

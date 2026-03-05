@@ -535,9 +535,9 @@ const Faturas = () => {
   const formatCurrency = value =>
     value == null
       ? "-"
-      : Number(value).toLocaleString("pt-BR", {
+      : Number(value).toLocaleString("en-US", {
           style: "currency",
-          currency: "BRL"
+          currency: "USD"
         });
 
   const formatDate = value => {

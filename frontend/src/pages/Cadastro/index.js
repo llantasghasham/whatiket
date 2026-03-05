@@ -932,7 +932,7 @@ const QuizForm = ({ values, errors, touched, setFieldValue, setFieldTouched, nex
                         </Typography>
                       </Box>
                       <Typography variant="h6" color="#3b82f6" fontWeight={700}>
-                        R${plan.value || plan.amount || plan.price || '0'}
+                        {"$ " + (plan.value || plan.amount || plan.price || '0')}
                         <Typography component="span" variant="caption" color="#6b7280">
                           /{plan.recurrence === 'MENSAL' ? 'mês' : 'ano'}
                         </Typography>

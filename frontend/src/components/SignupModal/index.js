@@ -283,7 +283,7 @@ const SignupModal = ({ open, onClose, plan }) => {
               <div className={classes.planInfo}>
                 <Typography className={classes.planName}>{plan.name}</Typography>
                 <Typography className={classes.planPrice}>
-                  R$ {plan.price}
+                  $ {plan.price}
                   <span>/mês</span>
                 </Typography>
               </div>

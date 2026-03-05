@@ -547,6 +547,8 @@ const UserModal = ({ open, onClose, userId }) => {
   const handleClose = () => {
     onClose();
     setUser(initialState);
+    setAvatar(null);
+    setProfileUrl(null);
     setAppointments([]);
     setUserScheduleId(null);
   };
@@ -588,13 +590,13 @@ const UserModal = ({ open, onClose, userId }) => {
     try {
       if (userId) {
         const { data } = await api.put(`/users/${userId}`, userData);
-        if (avatar && (!user?.profileImage || !user?.profileImage !== avatar.name)) {
-          uploadAvatar(data);
+        if (avatar && typeof avatar === 'object' && avatar instanceof File) {
+          await uploadAvatar(data);
         }
       } else {
-        await api.post("/users", userData);
-        if (!user?.profileImage && avatar) {
-          uploadAvatar(user);
+        const { data } = await api.post("/users", userData);
+        if (avatar && typeof avatar === 'object' && avatar instanceof File && data?.id) {
+          await uploadAvatar(data);
         }
       }
       if (userId === loggedInUser.id) {
@@ -791,6 +793,17 @@ const UserModal = ({ open, onClose, userId }) => {
                               </InputAdornment>
                             ),
                           }}
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6} md={4} className={classes.avatarContainer}>
+                        <Typography variant="subtitle2" style={{ marginBottom: 8 }}>
+                          {i18n.t("userModal.form.profilePhoto") || "Foto de perfil"}
+                        </Typography>
+                        <AvatarUploader
+                          setAvatar={setAvatar}
+                          avatar={avatar}
+                          companyId={user?.companyId || loggedInUser?.companyId}
+                          existingImageUrl={profileUrl}
                         />
                       </Grid>
                     </Grid>
@@ -1082,7 +1095,7 @@ const UserModal = ({ open, onClose, userId }) => {
                                 >
                                   {services.map((service) => (
                                     <MenuItem key={service.id} value={service.id}>
-                                      {service.nome} - R$ {Number(service.valorOriginal || 0).toFixed(2)}
+                                      {service.nome} - $ {Number(service.valorOriginal || 0).toFixed(2)}
                                     </MenuItem>
                                   ))}
                                 </Select>

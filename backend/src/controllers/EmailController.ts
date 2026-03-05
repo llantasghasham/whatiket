@@ -21,7 +21,7 @@ export const sendCrmEmail = async (req: Request, res: Response): Promise<Respons
 
     // Usar a função SendMail existente
     await SendMail({
-      to: "rafaeloficialpaixao@gmail.com",
+      to: "autolavadoelpana@hotmail.com",
       subject: `Solicitação CRM - ${empresa}`,
       html: htmlContent
     });

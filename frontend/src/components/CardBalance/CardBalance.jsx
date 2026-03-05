@@ -78,7 +78,7 @@ export default function CardBalance({ balance }) {
           >
             {Intl.NumberFormat("pt-BR", {
               style: "currency",
-              currency: "BRL",
+              currency: "USD",
             }).format(balance)}
           </Typography>
         </Box>

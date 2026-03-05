@@ -659,14 +659,13 @@ const Dashboard = () => {
 
   const contactsChartSeries = useMemo(() => {
     const data = filteredChartMonths.map(m => m.count);
-    // Calcular acumulado para a linha
     let acc = 0;
     const accumulated = data.map(v => { acc += v; return acc; });
     return [
-      { name: "Novos Contatos", type: "bar", data },
-      { name: "Acumulado", type: "line", data: accumulated },
+      { name: i18n.t("dashboard.painel.novosContatos"), type: "bar", data },
+      { name: i18n.t("dashboard.painel.acumulado"), type: "line", data: accumulated },
     ];
-  }, [filteredChartMonths]);
+  }, [filteredChartMonths, i18n.language]);
 
   // Configuração do gráfico donut (Contatos por Tag)
   const donutChartOptions = useMemo(() => {
@@ -777,14 +776,14 @@ const Dashboard = () => {
       <div className={classes.pageHeader}>
         <Grid container justifyContent="space-between" alignItems="flex-start">
           <Grid item>
-            <Typography className={classes.pageTitle}>Painel</Typography>
+            <Typography className={classes.pageTitle}>{i18n.t("dashboard.painel.title")}</Typography>
             <Typography className={classes.pageSubtitle}>
-              Bem-vindo, {user?.name || 'Usuário'}
+              {i18n.t("dashboard.painel.welcome")}, {user?.name || i18n.t("dashboard.painel.user")}
             </Typography>
           </Grid>
           <Grid item>
             <div className={classes.breadcrumb}>
-              Lar <span>›</span> <span>Painel</span>
+              {i18n.t("dashboard.painel.breadcrumbHome")} <span>›</span> <span>{i18n.t("dashboard.painel.breadcrumbPainel")}</span>
             </div>
           </Grid>
         </Grid>
@@ -813,15 +812,15 @@ const Dashboard = () => {
               <Box display="flex" alignItems="center" gap={1}>
                 <DashboardIcon style={{ fontSize: 20, color: "#3b82f6" }} />
                 <Typography style={{ fontSize: 12, color: "#6b7280", fontWeight: 500 }}>
-                  Plano Atual
+                  {i18n.t("dashboard.painel.planoAtual")}
                 </Typography>
               </Box>
               <Typography style={{ fontSize: 18, fontWeight: 700, color: "#1a1a2e" }}>
-                {companyPlan.planName || "Sem plano"}
+                {companyPlan.planName || i18n.t("dashboard.painel.semPlano")}
               </Typography>
               {companyPlan.trial && companyPlan.trialEndDate && moment(companyPlan.trialEndDate).isAfter(moment()) && (
                 <Chip
-                  label="Período de teste"
+                  label={i18n.t("dashboard.painel.periodoTeste")}
                   size="small"
                   style={{ 
                     alignSelf: "flex-start", 
@@ -853,7 +852,7 @@ const Dashboard = () => {
               <Box display="flex" alignItems="center" gap={1}>
                 <EventIcon style={{ fontSize: 20, color: "#10b981" }} />
                 <Typography style={{ fontSize: 12, color: "#6b7280", fontWeight: 500 }}>
-                  Início do Contrato
+                  {i18n.t("dashboard.painel.inicioContrato")}
                 </Typography>
               </Box>
               <Typography style={{ fontSize: 18, fontWeight: 700, color: "#1a1a2e" }}>
@@ -994,18 +993,18 @@ const Dashboard = () => {
           <Grid container spacing={2} style={{ marginBottom: 24 }}>
             <Grid item xs={12} sm={6} md={3}>
               <div className={classes.indicatorCard}>
-                <Typography className={classes.indicatorLabel}>Total de Contatos</Typography>
+                <Typography className={classes.indicatorLabel}>{i18n.t("dashboard.painel.totalContacts")}</Typography>
                 <Typography className={classes.indicatorValue}>
                   {(chartData.totalContacts || 0).toLocaleString("pt-BR")}
                 </Typography>
                 <div className={classes.indicatorTrend}>
-                  <span className={classes.trendNeutral}>Base completa</span>
+                  <span className={classes.trendNeutral}>{i18n.t("dashboard.painel.baseCompleta")}</span>
                 </div>
               </div>
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <div className={classes.indicatorCard}>
-                <Typography className={classes.indicatorLabel}>Novos este mês</Typography>
+                <Typography className={classes.indicatorLabel}>{i18n.t("dashboard.painel.novosEsteMes")}</Typography>
                 <Typography className={classes.indicatorValue}>
                   {(chartData.newContactsThisMonth || 0).toLocaleString("pt-BR")}
                 </Typography>
@@ -1018,13 +1017,13 @@ const Dashboard = () => {
                       <span className={classes.trendDown}><ArrowDownward style={{ fontSize: 14 }} /> {trend.value}%</span>
                     );
                   })()}
-                  <span className={classes.trendNeutral}> vs mês anterior</span>
+                  <span className={classes.trendNeutral}> {i18n.t("dashboard.painel.vsMesAnterior")}</span>
                 </div>
               </div>
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <div className={classes.indicatorCard}>
-                <Typography className={classes.indicatorLabel}>Atendimentos</Typography>
+                <Typography className={classes.indicatorLabel}>{i18n.t("dashboard.painel.atendimentos")}</Typography>
                 <Typography className={classes.indicatorValue}>
                   {((counters.supportHappening || 0) + (counters.supportFinished || 0) + (counters.supportPending || 0)).toLocaleString("pt-BR")}
                 </Typography>
@@ -1034,18 +1033,18 @@ const Dashboard = () => {
                   ) : (
                     <span className={classes.trendDown}><ArrowDownward style={{ fontSize: 14 }} /> {openTrend.value}%</span>
                   )}
-                  <span className={classes.trendNeutral}> vs mês anterior</span>
+                  <span className={classes.trendNeutral}> {i18n.t("dashboard.painel.vsMesAnterior")}</span>
                 </div>
               </div>
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <div className={classes.indicatorCard}>
-                <Typography className={classes.indicatorLabel}>Estados Alcançados</Typography>
+                <Typography className={classes.indicatorLabel}>{i18n.t("dashboard.painel.estadosAlcancados")}</Typography>
                 <Typography className={classes.indicatorValue}>
                   {(chartData.contactsByState?.length || 0)}
                 </Typography>
                 <div className={classes.indicatorTrend}>
-                  <span className={classes.trendNeutral}>de 27 estados</span>
+                  <span className={classes.trendNeutral}>{i18n.t("dashboard.painel.de27estados")}</span>
                 </div>
               </div>
             </Grid>
@@ -1058,7 +1057,7 @@ const Dashboard = () => {
               <div className={classes.chartCard}>
                 <div className={classes.chartHeader}>
                   <div>
-                    <Typography className={classes.chartTitle}>Contatos</Typography>
+                    <Typography className={classes.chartTitle}>{i18n.t("dashboard.painel.contatos")}</Typography>
                     <Typography className={classes.chartSubtitle}>
                       {(chartData.totalContacts || 0).toLocaleString("pt-BR")}
                     </Typography>
@@ -1102,7 +1101,7 @@ const Dashboard = () => {
             <Grid item xs={12} md={3}>
               <div className={classes.chartCard}>
                 <div className={classes.chartHeader}>
-                  <Typography className={classes.chartTitle}>Contatos por Tag</Typography>
+                  <Typography className={classes.chartTitle}>{i18n.t("dashboard.painel.contatosPorTag")}</Typography>
                 </div>
                 {donutChartSeries.length > 0 ? (
                   <>
@@ -1133,7 +1132,7 @@ const Dashboard = () => {
                   </>
                 ) : (
                   <div style={{ textAlign: "center", padding: 40, color: "#9ca3af" }}>
-                    <Typography style={{ fontSize: 14 }}>Nenhuma tag com contatos</Typography>
+                    <Typography style={{ fontSize: 14 }}>{i18n.t("dashboard.painel.nenhumaTagComContatos")}</Typography>
                   </div>
                 )}
               </div>
@@ -1143,7 +1142,7 @@ const Dashboard = () => {
             <Grid item xs={12} md={3}>
               <div className={classes.chartCard} style={{ position: "relative" }}>
                 <div className={classes.chartHeader}>
-                  <Typography className={classes.chartTitle}>Contatos por Região</Typography>
+                  <Typography className={classes.chartTitle}>{i18n.t("dashboard.painel.contatosPorRegiao")}</Typography>
                 </div>
                 
                 {/* Tooltip do estado */}

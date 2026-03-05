@@ -132,3 +132,15 @@ export const findList = async (
 
   return res.status(200).json(records);
 };
+
+export const uploadFile = async (req: Request, res: Response): Promise<Response> => {
+  const { companyId } = req.user;
+  const file = req.file as Express.Multer.File;
+  if (!file || !file.filename) {
+    throw new AppError("Arquivo não enviado ou inválido");
+  }
+  const backendUrl = process.env.BACKEND_URL || process.env.FRONTEND_URL || "";
+  const baseUrl = backendUrl.replace(/\/$/, "");
+  const fileUrl = `${baseUrl}/public/company${companyId}/help/${file.filename.replace(/\//g, "-")}`;
+  return res.status(200).json({ url: fileUrl, filename: file.filename });
+};

@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AvatarUploader = ({ setAvatar, avatar, companyId }) => {
+const AvatarUploader = ({ setAvatar, avatar, companyId, existingImageUrl }) => {
   const classes = useStyles();
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
@@ -26,35 +26,24 @@ const AvatarUploader = ({ setAvatar, avatar, companyId }) => {
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
+    if (!file) return;
     setSelectedFile(file);
     setAvatar(file);
 
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setPreviewImage(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      setPreviewImage(reader.result);
+    };
+    reader.readAsDataURL(file);
   };
+
+  const avatarSrc = previewImage
+    ? previewImage
+    : existingImageUrl || `${process.env.REACT_APP_BACKEND_URL || ''}/public/app/noimage.png`;
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center">
-      {!previewImage && avatar ?
-        <><Avatar
-          src={`${process.env.REACT_APP_BACKEND_URL}/public/company${companyId}/user/${avatar}`}
-          style={{ width: 120, height: 120 }}
-        /></>
-        : !avatar && !previewImage ? <><Avatar
-          src={`${process.env.REACT_APP_BACKEND_URL}/public/app/noimage.png`}
-          style={{ width: 120, height: 120 }}
-        /></> :
-          <Avatar
-            alt="Preview Avatar"
-            src={previewImage ? previewImage : user.avatar}
-            style={{ width: 120, height: 120 }}
-          />
-      }
+      <Avatar alt="Foto de perfil" src={avatarSrc} style={{ width: 120, height: 120 }} />
 
 
       <input

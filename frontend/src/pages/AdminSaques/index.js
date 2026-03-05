@@ -345,7 +345,7 @@ const AdminSaques = () => {
                   <TableCell>{formatDate(withdrawal.createdAt)}</TableCell>
                   <TableCell>{withdrawal.affiliate?.company?.name || "N/A"}</TableCell>
                   <TableCell className={classes.amountCell}>
-                    R$ {parseFloat(withdrawal.amount || 0).toFixed(2)}
+                    $ {parseFloat(withdrawal.amount || 0).toFixed(2)}
                   </TableCell>
                   <TableCell>{withdrawal.paymentMethod?.toUpperCase() || "N/A"}</TableCell>
                   <TableCell>
@@ -414,7 +414,7 @@ const AdminSaques = () => {
             {selectedWithdrawal && (
               <div>
                 <Typography variant="body2" gutterBottom>
-                  <strong>Valor:</strong> R$ {parseFloat(selectedWithdrawal.amount || 0).toFixed(2)}
+                  <strong>Valor:</strong> $ {parseFloat(selectedWithdrawal.amount || 0).toFixed(2)}
                 </Typography>
                 <Typography variant="body2" gutterBottom>
                   <strong>Afiliado:</strong> {selectedWithdrawal.affiliate?.company?.name}

@@ -131,9 +131,9 @@ const PagamentoModal = ({ open, onClose, fatura }) => {
   };
 
   const formatCurrency = value =>
-    Number(value).toLocaleString("pt-BR", {
+    Number(value).toLocaleString("en-US", {
       style: "currency",
-      currency: "BRL"
+      currency: "USD"
     });
 
   const formatDate = value => {
@@ -219,7 +219,7 @@ const PagamentoModal = ({ open, onClose, fatura }) => {
           <Grid item xs={12} sm={6}>
             <TextField
               margin="dense"
-              label="Valor (R$)"
+              label="Valor ($)"
               type="number"
               fullWidth
               value={form.valor}

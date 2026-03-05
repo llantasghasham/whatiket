@@ -142,7 +142,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const currency = value =>
-  new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(
+  new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(
     Number(value) || 0
   );
 

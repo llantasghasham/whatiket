@@ -777,7 +777,7 @@ const EmpresasPage = () => {
                       >
                         {plans.map((plan) => (
                           <MenuItem key={plan.id} value={plan.id}>
-                            {plan.name} — {plan.users} usuários, {plan.connections} conexões — R$ {plan.amount}
+                            {plan.name} — {plan.users} usuários, {plan.connections} conexões — $ {plan.amount}
                           </MenuItem>
                         ))}
                       </Field>

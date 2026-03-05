@@ -126,7 +126,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const currency = value =>
-  new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(
+  new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(
     Number(value) || 0
   );
 
@@ -657,7 +657,7 @@ const ServiceOrderModal = ({ open, onClose, onSaved, orderId = null }) => {
                     </Grid>
                     <Box display="flex" justifyContent="space-between" alignItems="center">
                       <Typography variant="body2" color="textSecondary">
-                        R$ {item.unitPrice.toFixed(2)} un.
+                        $ {item.unitPrice.toFixed(2)} un.
                       </Typography>
                       <Typography variant="subtitle1" style={{ fontWeight: 700 }}>
                         {currency(item.total)}
