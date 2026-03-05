@@ -2,49 +2,66 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sanitizeRemoteJid = exports.buildRemoteJidFromNumber = exports.resolveContactNumber = exports.normalizePhoneNumber = exports.isLidNumber = void 0;
 const DIGIT_REGEX = /\D/g;
+// Código de país por defecto para números locales (sin código de país).
+// Ejemplos: 55 = Brasil, 506 = Costa Rica, 52 = México, 57 = Colombia.
+// Se configura con variable de entorno DEFAULT_COUNTRY_CODE (ej. DEFAULT_COUNTRY_CODE=506).
+const getDefaultCountryCode = () => {
+    const code = process.env.DEFAULT_COUNTRY_CODE;
+    if (code && /^\d{1,3}$/.test(code))
+        return code;
+    return "55"; // fallback Brasil para no romper instalaciones existentes
+};
 const stripDigits = (value) => {
     if (!value)
         return "";
     return value.replace(DIGIT_REGEX, "");
 };
-// Detecta se é um LID (Linked ID) do WhatsApp Business API
-// LIDs geralmente começam com 120 e têm 15+ dígitos
+// Detecta si es un LID (Linked ID) del WhatsApp Business API
+// LIDs suelen comenzar con 120 y tener 15+ dígitos
 const isLidNumber = (digits) => {
     if (!digits)
         return false;
-    // LIDs começam com 120 e têm 15 ou mais dígitos
     if (digits.startsWith("120") && digits.length >= 15) {
         return true;
     }
-    // Também pode ser um WAID que começa com outros padrões
-    // Se tem mais de 15 dígitos e não parece um número de telefone válido
     if (digits.length > 15) {
         return true;
     }
     return false;
 };
 exports.isLidNumber = isLidNumber;
+// Longitud mínima y máxima para número internacional E.164 (con código de país)
+const MIN_INTERNATIONAL_LENGTH = 10;
+const MAX_INTERNATIONAL_LENGTH = 15;
+/**
+ * Normaliza un número de teléfono para WhatsApp (formato internacional, solo dígitos).
+ * Soporta cualquier país: usa DEFAULT_COUNTRY_CODE para números locales.
+ * - Si el número ya tiene 10-15 dígitos y no es LID → se acepta tal cual.
+ * - Si es número local (8-11 dígitos sin código) → se agrega DEFAULT_COUNTRY_CODE.
+ */
 const normalizePhoneNumber = (value) => {
     let digits = stripDigits(value);
     if (!digits) {
         return "";
     }
-    // Se é um LID/WAID, retorna vazio - não é um número de telefone válido
     if ((0, exports.isLidNumber)(digits)) {
         console.log(`[normalizePhoneNumber] Detected LID/WAID, ignoring: ${digits}`);
         return "";
     }
-    // Normaliza números nacionais (ex: 11988887777 -> 5511988887777)
-    if ((digits.length === 10 || digits.length === 11) && !digits.startsWith("55")) {
-        digits = `55${digits}`;
+    // Ya es número internacional (longitud típica 10-15 dígitos)
+    if (digits.length >= MIN_INTERNATIONAL_LENGTH && digits.length <= MAX_INTERNATIONAL_LENGTH) {
+        return digits;
     }
-    // Aceita somente números brasileiros válidos (55 + DDD + número)
-    const isBrazilNumber = digits.startsWith("55") && digits.length >= 12 && digits.length <= 13;
-    if (!isBrazilNumber) {
-        console.log(`[normalizePhoneNumber] Invalid BR number (len/prefix): ${digits}`);
-        return "";
+    // Número local: agregar código de país por defecto (ej. 506 Costa Rica, 55 Brasil)
+    const countryCode = getDefaultCountryCode();
+    if (digits.length >= 8 && digits.length <= 11 && !digits.startsWith(countryCode)) {
+        digits = `${countryCode}${digits}`;
     }
-    return digits;
+    if (digits.length >= MIN_INTERNATIONAL_LENGTH && digits.length <= MAX_INTERNATIONAL_LENGTH) {
+        return digits;
+    }
+    console.log(`[normalizePhoneNumber] Invalid number (length/format): ${digits}`);
+    return "";
 };
 exports.normalizePhoneNumber = normalizePhoneNumber;
 const extractDigitsFromJid = (jid) => {
