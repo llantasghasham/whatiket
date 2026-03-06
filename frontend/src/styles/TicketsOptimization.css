@@ -1,0 +1,318 @@
+/* ===================================================
+   OPTIMIZACI├ôN DE TICKETS - VERSI├ôN COMPLETA
+   =================================================== */
+
+/* 1. OCULTAR "Tickets Abiertos" Y BOT├ôN REFRESH */
+h6:has(+ button),
+.MuiTypography-h6:has(+ button),
+/* :contains no es CSS estándar - omitido */
+
+button[aria-label*="refresh"],
+button[aria-label*="actualizar"],
+button:has(svg[data-testid*="Refresh"]) {
+  display: none !important;
+}
+
+/* 2. REDUCIR ANCHO DE CAJAS DE TICKETS (LISTA IZQUIERDA) */
+.MuiList-root {
+  padding: 4px !important;
+  max-width: 100% !important;
+}
+
+.MuiPaper-root.MuiPaper-elevation {
+  padding: 8px 10px !important;
+  margin-bottom: 6px !important;
+}
+
+.MuiListItem-root {
+  padding: 6px 10px !important;
+  min-height: 55px !important;
+  max-width: 100% !important;
+}
+
+/* Reducir espacio de informaci├│n del ticket */
+.MuiListItem-root > div {
+  padding: 0 !important;
+  gap: 6px !important;
+}
+
+/* Avatar m├ís peque├▒o */
+.MuiListItem-root .MuiAvatar-root {
+  width: 36px !important;
+  height: 36px !important;
+  margin-right: 8px !important;
+}
+
+/* Nombre del contacto m├ís compacto */
+.MuiListItem-root h6,
+.MuiListItem-root .MuiTypography-h6 {
+  font-size: 13px !important;
+  margin-bottom: 2px !important;
+  line-height: 1.2 !important;
+}
+
+/* Mensaje preview m├ís peque├▒o */
+.MuiListItem-root p,
+.MuiListItem-root .MuiTypography-body2 {
+  font-size: 11px !important;
+  line-height: 1.3 !important;
+  margin: 0 !important;
+}
+
+/* Tags/Chips m├ís peque├▒os */
+.MuiChip-root {
+  height: 18px !important;
+  font-size: 9px !important;
+  padding: 0 4px !important;
+  margin: 2px !important;
+}
+
+/* Contenedor de tags en l├¡nea */
+.MuiListItem-root .MuiBox-root {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 2px !important;
+  margin-top: 2px !important;
+}
+
+/* Botones de acci├│n (check, X, transferir) m├ís peque├▒os */
+.MuiListItem-root .MuiIconButton-root {
+  width: 28px !important;
+  height: 28px !important;
+  padding: 2px !important;
+  margin: 0 1px !important;
+}
+
+.MuiListItem-root .MuiIconButton-root svg {
+  font-size: 16px !important;
+}
+
+/* Hora del mensaje m├ís peque├▒a */
+.MuiListItem-root .MuiTypography-caption {
+  font-size: 10px !important;
+}
+
+/* Badge de contador m├ís peque├▒o */
+.MuiBadge-badge {
+  font-size: 9px !important;
+  min-width: 16px !important;
+  height: 16px !important;
+  padding: 0 4px !important;
+}
+
+/* 3. OPTIMIZAR CONTENEDOR DE LISTA DE TICKETS */
+div[class*="ticketsList"],
+div[class*="TicketsList"] {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  padding: 4px !important;
+}
+
+/* Scroll de la lista de tickets */
+div[class*="ticketsList"]::-webkit-scrollbar,
+div[class*="TicketsList"]::-webkit-scrollbar {
+  width: 6px !important;
+}
+
+div[class*="ticketsList"]::-webkit-scrollbar-track,
+div[class*="TicketsList"]::-webkit-scrollbar-track {
+  background-color: #f1f5f9 !important;
+}
+
+div[class*="ticketsList"]::-webkit-scrollbar-thumb,
+div[class*="TicketsList"]::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1 !important;
+  border-radius: 3px !important;
+}
+
+/* 4. SCROLL DEL CHAT MEJORADO (├üREA DERECHA) */
+div[class*="messagesContainer"],
+div[class*="messages-list"],
+.messages-wrapper {
+  overflow-y: auto !important;
+  max-height: calc(100vh - 280px) !important;
+  padding-bottom: 100px !important;
+  scroll-behavior: smooth !important;
+}
+
+/* Mensajes individuales m├ís compactos */
+div[class*="messageItem"],
+div[class*="message-item"] {
+  margin-bottom: 8px !important;
+}
+
+/* 5. ├üREA DE ESCRITURA SIEMPRE VISIBLE */
+div[class*="messageInput"],
+div[class*="message-input"],
+form[class*="messageForm"] {
+  position: sticky !important;
+  bottom: 0 !important;
+  z-index: 100 !important;
+  background-color: white !important;
+  padding: 12px !important;
+  border-top: 1px solid #e2e8f0 !important;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05) !important;
+  margin-top: auto !important;
+}
+
+/* Input de mensaje */
+div[class*="messageInput"] input,
+div[class*="messageInput"] textarea {
+  background-color: #f8fafc !important;
+  border: 2px solid #e2e8f0 !important;
+  border-radius: 8px !important;
+  padding: 10px 12px !important;
+  font-size: 14px !important;
+  min-height: 40px !important;
+}
+
+/* 6. SCROLL PERSONALIZADO DEL CHAT */
+div[class*="messagesContainer"]::-webkit-scrollbar {
+  width: 8px !important;
+}
+
+div[class*="messagesContainer"]::-webkit-scrollbar-track {
+  background-color: #f1f5f9 !important;
+}
+
+div[class*="messagesContainer"]::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1 !important;
+  border-radius: 4px !important;
+}
+
+div[class*="messagesContainer"]::-webkit-scrollbar-thumb:hover {
+  background-color: #94a3b8 !important;
+}
+
+/* 7. RESPONSIVE - M├ôVIL */
+@media (max-width: 768px) {
+  /* Lista de tickets en m├│vil */
+  .MuiListItem-root {
+    padding: 4px 8px !important;
+    min-height: 50px !important;
+  }
+  
+  .MuiListItem-root .MuiAvatar-root {
+    width: 32px !important;
+    height: 32px !important;
+  }
+  
+  .MuiListItem-root h6 {
+    font-size: 12px !important;
+  }
+  
+  .MuiListItem-root p {
+    font-size: 10px !important;
+  }
+  
+  /* Chat en m├│vil */
+  div[class*="messagesContainer"] {
+    max-height: calc(100vh - 220px) !important;
+    padding-bottom: 80px !important;
+  }
+  
+  /* Input m├ís grande en m├│vil (evita zoom en iOS) */
+  div[class*="messageInput"] input,
+  div[class*="messageInput"] textarea {
+    font-size: 16px !important;
+    min-height: 44px !important;
+  }
+  
+  /* Botones de acci├│n m├ís peque├▒os en m├│vil */
+  .MuiListItem-root .MuiIconButton-root {
+    width: 24px !important;
+    height: 24px !important;
+  }
+}
+
+/* 8. LAYOUT GENERAL OPTIMIZADO */
+/* Asegurar que el contenedor principal use todo el espacio */
+.MuiPaper-root {
+  overflow: visible !important;
+}
+
+/* Contenedor de tabs m├ís compacto */
+.MuiTabs-root {
+  min-height: 40px !important;
+}
+
+.MuiTab-root {
+  min-height: 40px !important;
+  padding: 6px 12px !important;
+  font-size: 12px !important;
+}
+
+/* 9. FIX ESPEC├ìFICO PARA EL SCROLL */
+/* Forzar que los ├║ltimos mensajes sean visibles */
+div[class*="messagesContainer"]::after {
+  content: "" !important;
+  display: block !important;
+  height: 20px !important;
+  flex-shrink: 0 !important;
+}
+
+/* Asegurar que el contenedor de chat use toda la altura */
+div[class*="chatContainer"],
+.chat-wrapper {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  max-height: calc(100vh - 150px) !important;
+  overflow: hidden !important;
+}
+
+/* Header del chat sticky */
+div[class*="chatHeader"] {
+  flex-shrink: 0 !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 10 !important;
+  background-color: white !important;
+}
+
+/* 10. OCULTAR ELEMENTOS ESPEC├ìFICOS ADICIONALES */
+/* Si hay un contenedor que envuelve el t├¡tulo y bot├│n */
+div:has(> h6) + button {
+  display: none !important;
+}
+
+/* Ocultar ├¡conos de refresh espec├¡ficos */
+svg[data-testid="RefreshIcon"],
+svg[data-testid="CachedIcon"],
+svg[data-testid="SyncIcon"],
+svg[data-testid="AutorenewIcon"] {
+  display: none !important;
+}
+
+/* 11. OPTIMIZACI├ôN DE ESPACIOS */
+/* Reducir espacios innecesarios entre tickets */
+.MuiList-padding {
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+}
+
+/* Reducir margen de las tarjetas */
+.MuiCard-root {
+  margin-bottom: 4px !important;
+}
+
+/* 12. AJUSTE FINO DE ANCHOS */
+/* Limitar ancho m├íximo de la lista de tickets */
+div[class*="ticketsWrapper"],
+div[class*="TicketsWrapper"] {
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+}
+
+/* Asegurar que los elementos no se salgan */
+.MuiListItem-root * {
+  max-width: 100% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+}
+
+/* Pero permitir que los tags se envuelvan */
+.MuiListItem-root .MuiBox-root * {
+  white-space: normal !important;
+}
