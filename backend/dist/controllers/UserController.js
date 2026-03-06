@@ -56,7 +56,8 @@ const ToggleChangeWidthService_1 = __importDefault(require("../services/UserServ
 const APIShowEmailUserService_1 = __importDefault(require("../services/UserServices/APIShowEmailUserService"));
 const speakeasy = require("speakeasy");
 const QRCode = require("qrcode");
-const publicSignupSchema = Yup.object().shape({
+// Validación flexible: Brasil exige CPF/CNPJ estricto; otros países aceptan documento genérico
+const getPublicSignupSchema = (country) => Yup.object().shape({
     companyName: Yup.string()
         .trim()
         .min(2, "ERR_COMPANY_INVALID_NAME")
@@ -82,15 +83,22 @@ const publicSignupSchema = Yup.object().shape({
     type: Yup.string()
         .oneOf(["pf", "pj"], "ERR_INVALID_TYPE")
         .default("pf"),
+    country: Yup.string().optional().default("BR"),
     document: Yup.string()
-        .when("type", {
-        is: "pf",
-        then: Yup.string()
-            .matches(/^\d{11}$/, "ERR_INVALID_CPF")
-            .required("ERR_CPF_REQUIRED"),
-        otherwise: Yup.string()
-            .matches(/^\d{14}$/, "ERR_INVALID_CNPJ")
-            .required("ERR_CNPJ_REQUIRED")
+        .required("ERR_DOCUMENT_REQUIRED")
+        .test("valid-document", "ERR_INVALID_DOCUMENT", function (value) {
+        const c = this.parent?.country || "BR";
+        const t = this.parent?.type || "pf";
+        const clean = (value || "").replace(/\s/g, "");
+        if (!clean || clean.length < 4)
+            return false;
+        if (c === "BR") {
+            const digits = (value || "").replace(/\D/g, "");
+            if (t === "pf")
+                return digits.length === 11 && /^\d{11}$/.test(digits);
+            return digits.length === 14 && /^\d{14}$/.test(digits);
+        }
+        return clean.length >= 4 && clean.length <= 25;
     }),
     segment: Yup.string().optional(),
     planId: Yup.number()
@@ -140,8 +148,9 @@ const store = async (req, res) => {
     }
     const sanitizedPhone = typeof phone === "string" ? phone.replace(/\D/g, "") : "";
     if (req.url === "/signup") {
+        const country = req.body.country || "BR";
         try {
-            await publicSignupSchema.validate({
+            await getPublicSignupSchema(country).validate({
                 companyName,
                 name,
                 email: normalizedEmail,
@@ -150,6 +159,7 @@ const store = async (req, res) => {
                 phone: sanitizedPhone,
                 type,
                 document,
+                country,
                 segment,
                 planId
             }, { abortEarly: false });
@@ -161,6 +171,8 @@ const store = async (req, res) => {
                 "ERR_INVALID_CNPJ": "CNPJ inválido. Deve conter 14 dígitos numéricos.",
                 "ERR_CPF_REQUIRED": "CPF é obrigatório para pessoa física.",
                 "ERR_CNPJ_REQUIRED": "CNPJ é obrigatório para pessoa jurídica.",
+                "ERR_DOCUMENT_REQUIRED": "Documento é obrigatório.",
+                "ERR_INVALID_DOCUMENT": "Documento inválido. Verifique o formato conforme seu país.",
                 "ERR_INVALID_SEGMENT": "Segmento inválido. Escolha uma das opções disponíveis.",
                 "ERR_SEGMENT_REQUIRED": "Segmento é obrigatório.",
                 "ERR_COMPANY_INVALID_NAME": "Nome da empresa inválido (mínimo 2 caracteres).",
@@ -171,7 +183,8 @@ const store = async (req, res) => {
                 "ERR_INVALID_PHONE": "Telefone inválido (mínimo 10 dígitos).",
                 "ERR_INVALID_PLAN": "Plano inválido."
             };
-            throw new AppError_1.default(errMap[error.errors?.[0]] || "ERR_INVALID_SIGNUP_DATA");
+            const firstErr = error.errors?.[0];
+            throw new AppError_1.default(errMap[firstErr] || "ERR_INVALID_SIGNUP_DATA");
         }
     }
     const generatedCompanyName = (companyName && companyName.trim()) ||
@@ -590,12 +603,15 @@ const mediaUpload = async (req, res) => {
     const file = (0, lodash_1.head)(files);
     try {
         let user = await User_1.default.findByPk(userId);
+        if (!user)
+            throw new AppError_1.default("ERR_NO_USER_FOUND", 404);
         user.profileImage = file.filename.replace('/', '-');
         await user.save();
-        user = await (0, ShowUserService_1.default)(userId, companyId);
+        const targetCompanyId = user.companyId;
+        user = await (0, ShowUserService_1.default)(userId, targetCompanyId);
         const io = (0, socket_1.getIO)();
-        io.of(String(companyId))
-            .emit(`company-${companyId}-user`, {
+        io.of(String(targetCompanyId))
+            .emit(`company-${targetCompanyId}-user`, {
             action: "update",
             user
         });
@@ -642,8 +658,8 @@ const setup2FA = async (req, res) => {
         throw new AppError_1.default("2FA já está ativado para este usuário.", 400);
     }
     const secret = speakeasy.generateSecret({
-        name: `AtendZappy (${user.email})`,
-        issuer: "AtendZappy"
+        name: `Whatiket (${user.email})`,
+        issuer: "Moufid Ghasham"
     });
     // Salvar secret temporariamente (ainda não confirmado)
     await user.update({ twoFactorSecret: secret.base32 });

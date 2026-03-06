@@ -4486,7 +4486,7 @@ const wbotMessageListener = (wbot, companyId) => {
                 else {
                     contactNumber = contact.id.replace(/\D/g, "");
                 }
-                // ✅ Normalizar e validar número brasileiro (sempre 55 + DDD + número)
+                // ✅ Normalizar número internacional (usa DEFAULT_COUNTRY_CODE para números locales)
                 const normalizedNumber = (0, normalizeContactNumber_1.normalizePhoneNumber)(contactNumber);
                 if (!normalizedNumber) {
                     logger_1.default.error(`❌ Número inválido, ignorando: ${contactNumber}`);

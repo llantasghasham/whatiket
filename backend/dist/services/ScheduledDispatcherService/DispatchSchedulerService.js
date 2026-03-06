@@ -129,9 +129,9 @@ const collectOverdueTargets = async (dispatcher, now) => {
 };
 const formatCurrencyPtBr = (value) => {
     const numericValue = Number(value ?? 0);
-    return numericValue.toLocaleString("pt-BR", {
+    return numericValue.toLocaleString("en-US", {
         style: "currency",
-        currency: "BRL",
+        currency: "USD",
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
     });

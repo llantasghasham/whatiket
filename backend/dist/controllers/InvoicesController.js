@@ -199,7 +199,7 @@ const sendBillingNotification = async (req, res) => {
     const dueDate = (0, moment_1.default)(invoice.dueDate).format("DD/MM/YYYY");
     const value = Number(invoice.value).toLocaleString("pt-BR", {
         style: "currency",
-        currency: "BRL"
+        currency: "USD"
     });
     // Determinar tipo de cobrança baseado na data de vencimento
     const hoje = (0, moment_1.default)().startOf("day");

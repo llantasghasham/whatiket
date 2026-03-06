@@ -1125,8 +1125,10 @@ const ActionsWebhookService = async (whatsappId, idFlowDb, companyId, nodes, con
                         sendSignature: sendSignature,
                         closeTicket: closeTicket
                     };
-                    // Enviar requisição para API externa
-                    const response = await fetch("https://api.faedeveloper.com.br/api/messages/send", {
+                    // Envío solo al backend propio (seguridad: no enviar a servidores externos)
+                    const apiBase = process.env.BACKEND_URL || "http://localhost:4000";
+                    const sendUrl = `${apiBase.replace(/\/$/, "")}/api/messages/send`;
+                    const response = await fetch(sendUrl, {
                         method: "POST",
                         headers: {
                             "Authorization": `Bearer ${apiToken}`,
@@ -1138,10 +1140,10 @@ const ActionsWebhookService = async (whatsappId, idFlowDb, companyId, nodes, con
                         throw new Error(`API Error: ${response.status} - ${response.statusText}`);
                     }
                     const responseData = await response.json();
-                    console.log(`SendMessage: Mensagem enviada com sucesso via API externa`, responseData);
+                    console.log(`SendMessage: Mensagem enviada com sucesso`, responseData);
                 }
                 catch (error) {
-                    console.error(`SendMessage: Erro ao enviar mensagem via API externa:`, error);
+                    console.error(`SendMessage: Erro ao enviar mensagem:`, error);
                 }
             }
             // Nó: Requisição API
@@ -1842,7 +1844,7 @@ const ActionsWebhookService = async (whatsappId, idFlowDb, companyId, nodes, con
                                 try {
                                     console.log(`Asaas: Enviando link do boleto como fallback`);
                                     await wbot.sendMessage(contactNumber, {
-                                        text: `📄 Boleto - Vencimento: ${boletoData.dueDate || "N/A"} - Valor: R$ ${boletoData.value?.toFixed(2) || "0.00"}\n\n🔗 Link para o boleto: ${boletoFileSource}\n\n💡 Copie e cole o link no navegador para baixar o PDF.`
+                                        text: `📄 Boleto - Vencimento: ${boletoData.dueDate || "N/A"} - Valor: $ ${boletoData.value?.toFixed(2) || "0.00"}\n\n🔗 Link para o boleto: ${boletoFileSource}\n\n💡 Copie e cole o link no navegador para baixar o PDF.`
                                     });
                                 }
                                 catch (linkError) {
@@ -2239,7 +2241,7 @@ const ActionsWebhookService = async (whatsappId, idFlowDb, companyId, nodes, con
                         message += "*📦 Produtos:*\n";
                         filteredProducts.forEach((product, index) => {
                             const name = product.nome || "Produto sem nome";
-                            const price = product.valor ? `R$ ${parseFloat(product.valor).toFixed(2)}` : "Preço não definido";
+                            const price = product.valor ? `$ ${parseFloat(product.valor).toFixed(2)}` : "Preço não definido";
                             message += `${index + 1}. ${name} - ${price}\n`;
                         });
                         message += "\n";
@@ -2254,10 +2256,10 @@ const ActionsWebhookService = async (whatsappId, idFlowDb, companyId, nodes, con
                             const name = service.nome || "Serviço sem nome";
                             let price = "Preço não definido";
                             if (service.possuiDesconto && service.valorComDesconto) {
-                                price = `R$ ${parseFloat(service.valorComDesconto).toFixed(2)} (com desconto)`;
+                                price = `$ ${parseFloat(service.valorComDesconto).toFixed(2)} (com desconto)`;
                             }
                             else if (service.valorOriginal) {
-                                price = `R$ ${parseFloat(service.valorOriginal).toFixed(2)}`;
+                                price = `$ ${parseFloat(service.valorOriginal).toFixed(2)}`;
                             }
                             message += `${index + 1}. ${name} - ${price}\n`;
                         });

@@ -27,13 +27,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const multer_1 = __importDefault(require("multer"));
 const isAuth_1 = __importDefault(require("../middleware/isAuth"));
+const upload_1 = __importDefault(require("../config/upload"));
 const HelpController = __importStar(require("../controllers/HelpController"));
 const routes = express_1.default.Router();
+const upload = (0, multer_1.default)(upload_1.default);
 routes.get("/helps/list", isAuth_1.default, HelpController.findList);
 routes.get("/helps", isAuth_1.default, HelpController.index);
 routes.get("/helps/:id", isAuth_1.default, HelpController.show);
 routes.post("/helps", isAuth_1.default, HelpController.store);
+routes.post("/helps/upload", isAuth_1.default, upload.single("file"), HelpController.uploadFile);
 routes.put("/helps/:id", isAuth_1.default, HelpController.update);
 routes.delete("/helps/:id", isAuth_1.default, HelpController.remove);
 exports.default = routes;

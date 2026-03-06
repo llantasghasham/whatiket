@@ -166,6 +166,6 @@ const createAffiliateCommission = async (fatura) => {
     await affiliate.update({
         totalEarned: (currentTotal + commissionAmount).toFixed(2)
     });
-    console.log(`[AFFILIATE] Commission created: R$${commissionAmount.toFixed(2)} for affiliate #${affiliate.id} from company #${company.id} (fatura #${fatura.id})`);
+    console.log(`[AFFILIATE] Commission created: $${commissionAmount.toFixed(2)} for affiliate #${affiliate.id} from company #${company.id} (fatura #${fatura.id})`);
 };
 exports.default = HandlePaymentGatewayUpdateService;

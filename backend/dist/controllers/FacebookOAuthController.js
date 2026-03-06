@@ -30,10 +30,11 @@ const facebookCallback = async (req, res) => {
             res.status(400).json({ error: "Empresa não possui permissão para Facebook" });
             return;
         }
-        // Trocar code por access token
+        // Trocar code por access token (redirect_uri deve ser exatamente o mesmo usado no frontend: backend)
         const facebookAppId = process.env.FACEBOOK_APP_ID;
         const facebookAppSecret = process.env.FACEBOOK_APP_SECRET;
-        const redirectUri = `${process.env.FRONTEND_URL}/facebook-callback`;
+        const backendUrl = process.env.BACKEND_URL || process.env.FRONTEND_URL || "http://localhost:4000";
+        const redirectUri = `${backendUrl.replace(/\/$/, "")}/facebook-callback`;
         const tokenResponse = await fetch(`https://graph.facebook.com/v18.0/oauth/access_token?client_id=${facebookAppId}&client_secret=${facebookAppSecret}&redirect_uri=${encodeURIComponent(redirectUri)}&code=${code}`);
         const tokenData = await tokenResponse.json();
         if (!tokenData.access_token) {
@@ -42,8 +43,9 @@ const facebookCallback = async (req, res) => {
             return;
         }
         const userToken = tokenData.access_token;
-        // Obter páginas do usuário
-        const pages = await (0, graphAPI_1.getPageProfile)(tokenData.user_id || "me", userToken);
+        // Obter páginas do usuário (Graph API retorna { data: [ ... ] })
+        const pagesResponse = await (0, graphAPI_1.getPageProfile)(tokenData.user_id || "me", userToken);
+        const pages = Array.isArray(pagesResponse?.data) ? pagesResponse.data : [];
         if (pages.length === 0) {
             res.status(400).json({ error: "Nenhuma página encontrada" });
             return;
@@ -129,10 +131,11 @@ const instagramCallback = async (req, res) => {
             res.status(400).json({ error: "Empresa não possui permissão para Instagram" });
             return;
         }
-        // Trocar code por access token
+        // Trocar code por access token (redirect_uri deve ser o backend, igual ao usado no frontend)
         const facebookAppId = process.env.FACEBOOK_APP_ID;
         const facebookAppSecret = process.env.FACEBOOK_APP_SECRET;
-        const redirectUri = `${process.env.FRONTEND_URL}/instagram-callback`;
+        const backendUrl = process.env.BACKEND_URL || process.env.FRONTEND_URL || "http://localhost:4000";
+        const redirectUri = `${backendUrl.replace(/\/$/, "")}/instagram-callback`;
         const tokenResponse = await fetch(`https://graph.facebook.com/v18.0/oauth/access_token?client_id=${facebookAppId}&client_secret=${facebookAppSecret}&redirect_uri=${encodeURIComponent(redirectUri)}&code=${code}`);
         const tokenData = await tokenResponse.json();
         if (!tokenData.access_token) {
@@ -141,8 +144,9 @@ const instagramCallback = async (req, res) => {
             return;
         }
         const userToken = tokenData.access_token;
-        // Obter páginas do usuário (Instagram está vinculado a páginas do Facebook)
-        const pages = await (0, graphAPI_1.getPageProfile)(tokenData.user_id || "me", userToken);
+        // Obter páginas (Graph API retorna { data: [ ... ] })
+        const pagesResponse = await (0, graphAPI_1.getPageProfile)(tokenData.user_id || "me", userToken);
+        const pages = Array.isArray(pagesResponse?.data) ? pagesResponse.data : [];
         if (pages.length === 0) {
             res.status(400).json({ error: "Nenhuma página com Instagram encontrada" });
             return;

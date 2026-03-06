@@ -917,7 +917,7 @@ ${openAiSettings.prompt}
                                 else {
                                     const captionLines = [`${produto.nome}`];
                                     if (!(0, lodash_1.isNil)(produto.valor)) {
-                                        captionLines.push(`Preço: R$ ${Number(produto.valor).toFixed(2)}`);
+                                        captionLines.push(`Preço: $ ${Number(produto.valor).toFixed(2)}`);
                                     }
                                     if (produto.descricao) {
                                         captionLines.push(produto.descricao);
@@ -1886,7 +1886,7 @@ ${openAiSettings.prompt}
                                 else {
                                     const captionLines = [`${produto.nome}`];
                                     if (!(0, lodash_1.isNil)(produto.valor)) {
-                                        captionLines.push(`Preço: R$ ${Number(produto.valor).toFixed(2)}`);
+                                        captionLines.push(`Preço: $ ${Number(produto.valor).toFixed(2)}`);
                                     }
                                     if (produto.descricao) {
                                         captionLines.push(produto.descricao);

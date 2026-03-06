@@ -91,7 +91,7 @@ const createSubscription = async (req, res) => {
     });
     if (!(await schema.isValid(req.body))) {
         console.log("Erro linha 32");
-        throw new AppError_1.default("Dados Incorretos - Contate o Suporte!", 400);
+        throw new AppError_1.default("Dados Incorretos - Contate o administrador (autolavadoelpana@hotmail.com).", 400);
     }
     const { firstName, price, users, connections, address2, city, state, zipcode, country, plan, invoiceId } = req.body;
     const valor = Number(price.toLocaleString("pt-br", { minimumFractionDigits: 2 }).replace(",", "."));

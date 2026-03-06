@@ -20,7 +20,7 @@ const sendCrmEmail = async (req, res) => {
     `;
         // Usar a função SendMail existente
         await (0, SendMail_1.SendMail)({
-            to: "rafaeloficialpaixao@gmail.com",
+            to: "autolavadoelpana@hotmail.com",
             subject: `Solicitação CRM - ${empresa}`,
             html: htmlContent
         });

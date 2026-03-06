@@ -378,7 +378,7 @@ const sendPIXMessage = async (req, res) => {
                                                 cards: { enabled: false }
                                             }
                                         ],
-                                        currency: "BRL",
+                                        currency: "USD",
                                         total_amount: {
                                             value: sendvalue * 100,
                                             offset: 100,
@@ -723,7 +723,7 @@ const send = async (req, res) => {
             }
             return res.send({ mensagem: "Mensagem enviada!" });
         }
-        return res.status(400).json({ error: 'Essa empresa não tem permissão para usar a API Externa. Entre em contato com o Suporte para verificar nossos planos!' });
+        return res.status(400).json({ error: 'Essa empresa não tem permissão para usar a API Externa. Entre em contato (Moufid Ghasham - autolavadoelpana@hotmail.com) para verificar os planos.' });
     }
     catch (err) {
         console.log(err);

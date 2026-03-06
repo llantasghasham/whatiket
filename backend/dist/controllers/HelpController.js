@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.findList = exports.remove = exports.update = exports.show = exports.store = exports.index = void 0;
+exports.uploadFile = exports.findList = exports.remove = exports.update = exports.show = exports.store = exports.index = void 0;
 const Yup = __importStar(require("yup"));
 const socket_1 = require("../libs/socket");
 const ListService_1 = __importDefault(require("../services/HelpServices/ListService"));
@@ -119,3 +119,15 @@ const findList = async (req, res) => {
     return res.status(200).json(records);
 };
 exports.findList = findList;
+const uploadFile = async (req, res) => {
+    const { companyId } = req.user;
+    const file = req.file;
+    if (!file || !file.filename) {
+        throw new AppError_1.default("Arquivo não enviado ou inválido");
+    }
+    const backendUrl = process.env.BACKEND_URL || process.env.FRONTEND_URL || "";
+    const baseUrl = backendUrl.replace(/\/$/, "");
+    const fileUrl = `${baseUrl}/public/company${companyId}/help/${file.filename.replace(/\//g, "-")}`;
+    return res.status(200).json({ url: fileUrl, filename: file.filename });
+};
+exports.uploadFile = uploadFile;

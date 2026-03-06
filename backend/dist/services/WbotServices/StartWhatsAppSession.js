@@ -56,7 +56,7 @@ const StartWhatsAppSession = async (whatsapp, companyId) => {
             // Integrar WAVoIP Voice Calls se token configurado
             if (useVoiceCallsBaileys && whatsapp.wavoip) {
                 try {
-                    await useVoiceCallsBaileys(whatsapp.wavoip, wbot, "atendzappy", "open", true);
+                    await useVoiceCallsBaileys(whatsapp.wavoip, wbot, "whatiket", "open", true);
                     logger_1.default.info(`[WAVoIP] Voice calls ativado para WhatsApp ${whatsapp.name} (company ${companyId})`);
                 }
                 catch (voipErr) {

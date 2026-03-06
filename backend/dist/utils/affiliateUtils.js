@@ -77,7 +77,7 @@ const validateCoupon = async (code, planAmount) => {
     }
     // Verificar valor mínimo
     if (coupon.minPlanAmount && planAmount < coupon.minPlanAmount) {
-        return { valid: false, error: `Valor mínimo de R$ ${coupon.minPlanAmount}` };
+        return { valid: false, error: `Valor mínimo de $ ${coupon.minPlanAmount}` };
     }
     // Calcular desconto
     let discountAmount;
