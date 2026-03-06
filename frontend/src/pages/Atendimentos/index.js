@@ -104,6 +104,7 @@ import { socketConnection } from "../../services/socket";
 import { format, formatDistanceToNow, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import TicketActionsMenu from "../../components/TicketActionsMenu";
+import NewTicketModal from "../../components/NewTicketModal";
 import useQuickMessages from "../../hooks/useQuickMessages";
 import { toast } from "react-toastify";
 import { useSystemAlert } from "../../components/SystemAlert";
@@ -712,6 +713,7 @@ const Atendimentos = () => {
 	const [replyingTo, setReplyingTo] = useState(null);
 	const [viewingDeletedMessage, setViewingDeletedMessage] = useState(null);
 	const [ticketMenuAnchor, setTicketMenuAnchor] = useState(null);
+	const [newTicketModalOpen, setNewTicketModalOpen] = useState(false);
 	const [selectedTicketForMenu, setSelectedTicketForMenu] = useState(null);
 	const [tagsKanbanModalOpen, setTagsKanbanModalOpen] = useState(false);
 	const [mediaGalleryOpen, setMediaGalleryOpen] = useState(false);
@@ -3470,6 +3472,24 @@ useEffect(() => {
 						<Avatar src={user?.profileImage} alt={user?.name}>
 							{user?.name?.charAt(0)}
 						</Avatar>
+						<Tooltip title={i18n.t("newTicketModal.title")}>
+							<Button
+								variant="contained"
+								size="small"
+								startIcon={<AddIcon />}
+								onClick={() => setNewTicketModalOpen(true)}
+								style={{
+									marginLeft: 8,
+									backgroundColor: "#00a884",
+									color: "#fff",
+									textTransform: "none",
+									fontWeight: 600,
+									boxShadow: "none",
+								}}
+							>
+								{i18n.t("newTicketModal.title")}
+							</Button>
+						</Tooltip>
 						<div style={{ flex: 1 }} />
 						<div style={{ display: "flex", gap: 6, marginRight: 8 }}>
 							{channelQuickOptions.map(option => {
@@ -4543,6 +4563,19 @@ useEffect(() => {
 					contactId={selectedTicket.contact?.id}
 				/>
 			)}
+
+			{/* Modal Crear Ticket - enviar mensaje a cliente por número */}
+			<NewTicketModal
+				modalOpen={newTicketModalOpen}
+				onClose={(ticket) => {
+					setNewTicketModalOpen(false);
+					if (ticket?.id) {
+						loadTickets();
+						loadUnreadCounts();
+						history.push(`/atendimentos/${ticket.id}`);
+					}
+				}}
+			/>
 
 			{/* Modal de Respostas Rápidas */}
 			<Dialog
