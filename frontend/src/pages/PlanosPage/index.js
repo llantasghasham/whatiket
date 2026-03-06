@@ -294,10 +294,10 @@ const PlanosPage = () => {
 
   const renderRecurrence = (value) => {
     const map = {
-      MENSAL: "Mensal",
+      MENSAL: i18n.t("plans.monthly"),
       TRIMESTRAL: "Trimestral",
       SEMESTRAL: "Semestral",
-      ANUAL: "Anual",
+      ANUAL: i18n.t("plans.yearly"),
     };
     return map[value] || value || "—";
   };
@@ -467,9 +467,7 @@ const PlanosPage = () => {
           {filteredRecords.length > 0 && (
             <Box className={classes.paginationBar}>
               <Typography variant="body2" style={{ color: "#666" }}>
-                Exibindo {tablePage * rowsPerPage + 1} a{" "}
-                {Math.min((tablePage + 1) * rowsPerPage, filteredRecords.length)} de{" "}
-                {filteredRecords.length} resultado(s)
+                {i18n.t("common.showingResults", { from: tablePage * rowsPerPage + 1, to: Math.min((tablePage + 1) * rowsPerPage, filteredRecords.length), total: filteredRecords.length })}
               </Typography>
               <Box display="flex" alignItems="center" style={{ gap: 8 }}>
                 <Button

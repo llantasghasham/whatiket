@@ -25,6 +25,7 @@ import { listFinanceiroCategorias } from "../../services/financeiroCategorias";
 import { listFinanceiroFornecedores } from "../../services/financeiroFornecedores";
 
 import toastError from "../../errors/toastError";
+import { i18n } from "../../translate/i18n";
 
 const STATUS_OPTIONS = [
   { value: "aberta", label: "Aberta" },
@@ -708,7 +709,7 @@ const FaturaModal = ({ open, onClose, fatura, onSaved, initialData }) => {
                   </MenuItem>
                   {categorias.length === 0 ? (
                     <MenuItem disabled>
-                      <em>Nenhuma categoria encontrada</em>
+                      <em>{i18n.t("accountsPayable.noCategoryFound")}</em>
                     </MenuItem>
                   ) : (
                     categorias.map(categoria => (

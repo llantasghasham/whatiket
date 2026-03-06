@@ -597,9 +597,7 @@ const QueueIntegration = () => {
           {queueIntegration.length > 0 && (
             <Box className={classes.paginationBar}>
               <Typography variant="body2" style={{ color: "#666" }}>
-                Exibindo {tablePage * rowsPerPage + 1} a{" "}
-                {Math.min((tablePage + 1) * rowsPerPage, queueIntegration.length)} de{" "}
-                {queueIntegration.length} resultado(s)
+                {i18n.t("common.showingResults", { from: tablePage * rowsPerPage + 1, to: Math.min((tablePage + 1) * rowsPerPage, queueIntegration.length), total: queueIntegration.length })}
               </Typography>
               <Box display="flex" alignItems="center" style={{ gap: 8 }}>
                 <Button

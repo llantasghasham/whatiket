@@ -420,7 +420,7 @@ const Queues = () => {
           ) : filteredQueues.length === 0 ? (
             <Box className={classes.emptyState}>
               <QueueIcon />
-              <Typography>Nenhuma fila encontrada</Typography>
+              <Typography>{i18n.t("connections.noQueueFound")}</Typography>
             </Box>
           ) : (
             filteredQueues.map((queue) => (

@@ -178,9 +178,9 @@ const Settings = () => {
   return (
     <div className={classes.container}>
       <div className={classes.pageHeader}>
-        <Typography className={classes.pageTitle}>Configurações</Typography>
+        <Typography className={classes.pageTitle}>{i18n.t("settingsPage.title")}</Typography>
         <Typography className={classes.pageSubtitle}>
-          Gerencie as configurações do sistema
+          {i18n.t("settingsPage.subtitle")}
         </Typography>
       </div>
 

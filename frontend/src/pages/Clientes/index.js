@@ -32,6 +32,7 @@ import ConfirmationModal from "../../components/ConfirmationModal";
 import FaturaModal from "../../components/FaturaModal";
 import TableRowSkeleton from "../../components/TableRowSkeleton";
 import toastError from "../../errors/toastError";
+import { i18n } from "../../translate/i18n";
 
 const STATUS_OPTIONS = [
   { label: "Todos", value: "" },
@@ -597,9 +598,7 @@ const Clients = () => {
           {clients.length > 0 && (
             <Box className={classes.paginationBar}>
               <Typography variant="body2" style={{ color: "#666" }}>
-                Exibindo {tablePage * rowsPerPage + 1} a{" "}
-                {Math.min((tablePage + 1) * rowsPerPage, clients.length)} de{" "}
-                {clients.length} resultado(s)
+                {i18n.t("common.showingResults", { from: tablePage * rowsPerPage + 1, to: Math.min((tablePage + 1) * rowsPerPage, clients.length), total: clients.length })}
               </Typography>
               <Box display="flex" alignItems="center" style={{ gap: 8 }}>
                 <Button

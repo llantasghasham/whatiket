@@ -35,6 +35,7 @@ import {
   Paper
 } from "@material-ui/core";
 import { useTheme } from "@material-ui/core/styles";
+import { i18n } from "../../translate/i18n";
 import {
   Add as AddIcon,
   Edit as EditIcon,
@@ -505,7 +506,7 @@ const CatalogoProdutos = () => {
                       <TableCell colSpan={4}>
                         <Box className={classes.emptyState}>
                           <CategoryIcon style={{ fontSize: 40, opacity: 0.4 }} />
-                          <Typography variant="subtitle1">Nenhuma categoria encontrada</Typography>
+                          <Typography variant="subtitle1">{i18n.t("accountsPayable.noCategoryFound")}</Typography>
                         </Box>
                       </TableCell>
                     </TableRow>

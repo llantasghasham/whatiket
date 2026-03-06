@@ -35,6 +35,7 @@ import {
     Step,
     StepLabel,
     Paper,
+    MenuItem,
 } from "@material-ui/core";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
@@ -66,66 +67,7 @@ import 'react-phone-number-input/style.css';
 import wallfundo from "../../assets/f002.png";
 import Link from "@material-ui/core/Link";
 
-// Função para validar CPF
-const isValidCPF = (cpf) => {
-  cpf = cpf.replace(/[^\d]/g, '');
-  if (cpf.length !== 11) return false;
-  if (/^(\d)\1+$/.test(cpf)) return false;
-  
-  let sum = 0;
-  for (let i = 0; i < 9; i++) {
-    sum += parseInt(cpf.charAt(i)) * (10 - i);
-  }
-  let remainder = (sum * 10) % 11;
-  if (remainder === 10 || remainder === 11) remainder = 0;
-  if (remainder !== parseInt(cpf.charAt(9))) return false;
-  
-  sum = 0;
-  for (let i = 0; i < 10; i++) {
-    sum += parseInt(cpf.charAt(i)) * (11 - i);
-  }
-  remainder = (sum * 10) % 11;
-  if (remainder === 10 || remainder === 11) remainder = 0;
-  if (remainder !== parseInt(cpf.charAt(10))) return false;
-  
-  return true;
-};
-
-// Função para validar CNPJ
-const isValidCNPJ = (cnpj) => {
-  cnpj = cnpj.replace(/[^\d]/g, '');
-  if (cnpj.length !== 14) return false;
-  if (/^(\d)\1+$/.test(cnpj)) return false;
-  
-  let size = cnpj.length - 2;
-  let numbers = cnpj.substring(0, size);
-  const digits = cnpj.substring(size);
-  let sum = 0;
-  let pos = size - 7;
-  
-  for (let i = size; i >= 1; i--) {
-    sum += parseInt(numbers.charAt(size - i)) * pos--;
-    if (pos < 2) pos = 9;
-  }
-  
-  let result = sum % 11 < 2 ? 0 : 11 - (sum % 11);
-  if (result !== parseInt(digits.charAt(0))) return false;
-  
-  size = size + 1;
-  numbers = cnpj.substring(0, size);
-  sum = 0;
-  pos = size - 7;
-  
-  for (let i = size; i >= 1; i--) {
-    sum += parseInt(numbers.charAt(size - i)) * pos--;
-    if (pos < 2) pos = 9;
-  }
-  
-  result = sum % 11 < 2 ? 0 : 11 - (sum % 11);
-  if (result !== parseInt(digits.charAt(1))) return false;
-  
-  return true;
-};
+import { COUNTRIES, getDocConfig, validateDocument } from "../../config/countryDocuments";
 
 // Segmentos disponíveis
 const segments = [
@@ -410,7 +352,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SignUpSchema = Yup.object().shape({
+const createSignUpSchema = (country) => Yup.object().shape({
   name: Yup.string()
     .min(2, "Nome muito curto")
     .required("Nome é obrigatório"),
@@ -430,18 +372,17 @@ const SignUpSchema = Yup.object().shape({
   companyName: Yup.string()
     .min(2, "Nome da empresa muito curto")
     .required("Nome da empresa é obrigatório"),
+  country: Yup.string()
+    .required("País é obrigatório"),
   type: Yup.string()
     .oneOf(["pf", "pj"], "Tipo inválido")
     .required("Tipo é obrigatório"),
   document: Yup.string()
-    .when("type", {
-      is: "pf",
-      then: Yup.string()
-        .test("cpf", "CPF inválido", (value) => !value || isValidCPF(value))
-        .required("CPF é obrigatório"),
-      otherwise: Yup.string()
-        .test("cnpj", "CNPJ inválido", (value) => !value || isValidCNPJ(value))
-        .required("CNPJ é obrigatório")
+    .required("Documento é obrigatório")
+    .test("valid-document", "Documento inválido", (value, ctx) => {
+      const c = ctx.parent?.country || "BR";
+      const t = ctx.parent?.type || "pf";
+      return !value || validateDocument(value, c, t);
     }),
   segment: Yup.string(),
   planId: Yup.number()
@@ -577,6 +518,36 @@ const QuizForm = ({ values, errors, touched, setFieldValue, nextStep, prevStep, 
           <Fade in={true}>
             <Box className={classes.stepContent}>
               <Typography variant="h5" gutterBottom>
+                🌍 Selecione seu país
+              </Typography>
+              <Typography variant="body2" color="textSecondary" style={{ marginBottom: 16 }}>
+                O documento solicitado será conforme as leis do seu país
+              </Typography>
+              <Field
+                as={TextField}
+                name="country"
+                variant="outlined"
+                fullWidth
+                select
+                error={touched.country && Boolean(errors.country)}
+                helperText={touched.country && errors.country}
+                className={classes.inputField}
+              >
+                {COUNTRIES.map((c) => (
+                  <MenuItem key={c.code} value={c.code}>
+                    {c.flag} {c.name}
+                  </MenuItem>
+                ))}
+              </Field>
+            </Box>
+          </Fade>
+        );
+
+      case 4:
+        return (
+          <Fade in={true}>
+            <Box className={classes.stepContent}>
+              <Typography variant="h5" gutterBottom>
                 📱 Seu telefone para contato
               </Typography>
               <div className={classes.phoneInputContainer}>
@@ -585,7 +556,7 @@ const QuizForm = ({ values, errors, touched, setFieldValue, nextStep, prevStep, 
                     <PhoneInput
                       {...field}
                       international
-                      defaultCountry="BR"
+                      defaultCountry={(values.country && ["BR","US","MX","AR","CO","CL","PE","EC","UY","PY","VE","BO","ES","PT"].includes(values.country)) ? values.country : "BR"}
                       onChange={(value) => setFieldValue('phone', value)}
                       className={classes.phoneInput}
                       placeholder="(00) 00000-0000"
@@ -610,7 +581,7 @@ const QuizForm = ({ values, errors, touched, setFieldValue, nextStep, prevStep, 
           </Fade>
         );
 
-      case 4:
+      case 5:
         return (
           <Fade in={true}>
             <Box className={classes.stepContent}>
@@ -648,19 +619,19 @@ const QuizForm = ({ values, errors, touched, setFieldValue, nextStep, prevStep, 
           </Fade>
         );
 
-      case 5:
+      case 6:
         return (
           <Fade in={true}>
             <Box className={classes.stepContent}>
               <Typography variant="h5" gutterBottom>
-                📋 {values.type === 'pf' ? 'Seu CPF' : 'Seu CNPJ'}
+                📋 {getDocConfig(values.country || "BR", values.type).label}
               </Typography>
               <Field
                 as={TextField}
                 name="document"
                 variant="outlined"
                 fullWidth
-                placeholder={values.type === 'pf' ? '000.000.000-00' : '00.000.000/0000-00'}
+                placeholder={getDocConfig(values.country || "BR", values.type).placeholder}
                 error={touched.document && Boolean(errors.document)}
                 helperText={touched.document && errors.document}
                 InputProps={{
@@ -676,7 +647,7 @@ const QuizForm = ({ values, errors, touched, setFieldValue, nextStep, prevStep, 
           </Fade>
         );
 
-      case 6:
+      case 7:
         return (
           <Fade in={true}>
             <Box className={classes.stepContent}>
@@ -753,25 +724,27 @@ const SignUp = () => {
   const params = qs.parse(window.location.search);
   const companyId = params.companyId ?? null;
   const affiliateCode = params.aff || null;
-  const initialState = { 
-    name: "", 
-    email: "", 
-    password: "", 
-    confirmPassword: "", 
-    phone: "", 
-    companyId, 
-    companyName: "", 
-    planId: params.planId || "", 
+  const initialState = {
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    phone: "",
+    companyId,
+    companyName: "",
+    planId: params.planId || "",
     document: "",
     type: "pf",
+    country: "BR",
     segment: ""
   };
 
   const [plans, setPlans] = useState([]);
   const steps = [
     "Nome",
-    "E-mail", 
+    "E-mail",
     "Senha",
+    "País",
     "Telefone",
     "Tipo",
     "Documento",
@@ -882,6 +855,8 @@ const SignUp = () => {
     const dataToSend = {
       ...values,
       phone: values.phone ? values.phone.replace(/\D/g, '') : '',
+      country: values.country || "BR",
+      document: values.document ? (values.country === "BR" ? values.document.replace(/\D/g, '') : values.document.replace(/\s/g, '')) : '',
       recurrence: "MENSAL",
       dueDate: dueDate,
       status: "t",
@@ -975,7 +950,17 @@ const SignUp = () => {
 
               <Formik
                 initialValues={initialState}
-                validationSchema={SignUpSchema}
+                validate={async (values) => {
+                  const schema = createSignUpSchema(values.country || "BR");
+                  try {
+                    await schema.validate(values, { abortEarly: false });
+                    return {};
+                  } catch (err) {
+                    const errors = {};
+                    err.inner?.forEach(e => { if (e.path) errors[e.path] = e.message; });
+                    return errors;
+                  }
+                }}
                 onSubmit={handleSignUp}
               >
                 {({ values, errors, touched, setFieldValue }) => (

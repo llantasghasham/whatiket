@@ -32,6 +32,7 @@ import { listCompanyPaymentSettings } from "../../services/companyPaymentSetting
 import { toast } from "react-toastify";
 
 import moment from "moment";
+import { i18n } from "../../translate/i18n";
 
 const reducer = (state, action) => {
   if (action.type === "LOAD_INVOICES") {
@@ -507,14 +508,14 @@ const Invoices = () => {
           {filteredInvoices.length === 0 && !loading && (
             <Box className={classes.emptyState}>
               <Typography variant="h6" color="textSecondary">
-                Nenhuma fatura encontrada
+                {i18n.t("invoices.noInvoiceFound")}
               </Typography>
             </Box>
           )}
 
           <Box className={classes.paginationBar}>
             <Typography variant="body2" color="textSecondary">
-              Exibindo {tablePage * rowsPerPage + 1} a {Math.min((tablePage + 1) * rowsPerPage, filteredInvoices.length)} de {filteredInvoices.length} resultado(s)
+              {i18n.t("common.showingResults", { from: tablePage * rowsPerPage + 1, to: Math.min((tablePage + 1) * rowsPerPage, filteredInvoices.length), total: filteredInvoices.length })}
             </Typography>
             <Box display="flex" alignItems="center" style={{ gap: 8 }}>
               <Button

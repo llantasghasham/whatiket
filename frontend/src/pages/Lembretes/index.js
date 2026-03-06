@@ -619,7 +619,7 @@ const Schedules = () => {
           {filteredSchedules.length === 0 ? (
             <Box className={classes.emptyState}>
               <ScheduleIcon style={{ fontSize: 48, marginBottom: 8 }} />
-              <Typography>Nenhum agendamento encontrado</Typography>
+              <Typography>{i18n.t("schedules.noScheduleFound")}</Typography>
             </Box>
           ) : (
             filteredSchedules.map((schedule) => (

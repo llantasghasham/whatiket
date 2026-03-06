@@ -30,6 +30,7 @@ import {
 } from "@material-ui/icons";
 
 import ConfirmationModal from "../../components/ConfirmationModal";
+import { i18n } from "../../translate/i18n";
 import ScheduledDispatcherModal from "../../components/AutomationModal";
 import TableRowSkeleton from "../../components/TableRowSkeleton";
 import {
@@ -355,7 +356,7 @@ const Automations = () => {
                 <TableRow>
                   <TableCell colSpan={8}>
                     <Box className={classes.emptyState}>
-                      <Typography>Nenhum disparo encontrado</Typography>
+                      <Typography>{i18n.t("automations.noAutomationFound")}</Typography>
                     </Box>
                   </TableCell>
                 </TableRow>
@@ -439,9 +440,7 @@ const Automations = () => {
           {filtered.length > 0 && (
             <Box className={classes.paginationBar}>
               <Typography variant="body2" style={{ color: "#666" }}>
-                Exibindo {tablePage * rowsPerPage + 1} a{" "}
-                {Math.min((tablePage + 1) * rowsPerPage, filtered.length)} de{" "}
-                {filtered.length} resultado(s)
+                {i18n.t("common.showingResults", { from: tablePage * rowsPerPage + 1, to: Math.min((tablePage + 1) * rowsPerPage, filtered.length), total: filtered.length })}
               </Typography>
               <Box display="flex" alignItems="center" style={{ gap: 8 }}>
                 <Button

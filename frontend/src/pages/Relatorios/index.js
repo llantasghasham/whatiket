@@ -53,6 +53,7 @@ import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
 import BuildIcon from '@material-ui/icons/Build';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import moment from "moment";
+import { i18n } from "../../translate/i18n";
 
 import api from "../../services/api";
 import { listFinanceiroFaturas } from "../../services/financeiroFaturas";
@@ -2183,7 +2184,7 @@ const Reports = () => {
             <Box textAlign="center" py={4}>
               <ReceiptIcon style={{ fontSize: 64, color: '#9ca3af', marginBottom: 16 }} />
               <Typography style={{ color: '#6b7280' }}>
-                Nenhuma fatura encontrada no período selecionado
+                {i18n.t("invoices.noInvoiceInPeriod")}
               </Typography>
             </Box>
           )}

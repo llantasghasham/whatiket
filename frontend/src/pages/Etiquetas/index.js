@@ -484,9 +484,7 @@ const Tags = () => {
           {tags.length > 0 && (
             <Box className={classes.paginationBar}>
               <Typography variant="body2" style={{ color: "#666" }}>
-                Exibindo {tablePage * rowsPerPage + 1} a{" "}
-                {Math.min((tablePage + 1) * rowsPerPage, tags.length)} de{" "}
-                {tags.length} resultado(s)
+                {i18n.t("common.showingResults", { from: tablePage * rowsPerPage + 1, to: Math.min((tablePage + 1) * rowsPerPage, tags.length), total: tags.length })}
               </Typography>
               <Box display="flex" alignItems="center" style={{ gap: 8 }}>
                 <Button

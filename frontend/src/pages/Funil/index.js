@@ -39,6 +39,7 @@ import {
   Add as AddIcon,
 } from "@material-ui/icons";
 import api from "../../services/api";
+import { i18n } from "../../translate/i18n";
 import useUsers from "../../hooks/useUsers";
 import TagModal from "../../components/TagModal";
 import TableRowSkeleton from "../../components/TableRowSkeleton";
@@ -438,8 +439,7 @@ const NegociosPage = () => {
     return (
       <Box className={classes.paginationBar}>
         <Typography variant="body2" style={{ color: "#666" }}>
-          Exibindo {page * rowsPerPage + 1} a{" "}
-          {Math.min((page + 1) * rowsPerPage, total)} de {total} resultado(s)
+          {i18n.t("common.showingResults", { from: page * rowsPerPage + 1, to: Math.min((page + 1) * rowsPerPage, total), total })}
         </Typography>
         <Box display="flex" alignItems="center" style={{ gap: 8 }}>
           <Button size="small" disabled={page === 0} onClick={() => setPage(page - 1)} className={classes.actionBtn}>

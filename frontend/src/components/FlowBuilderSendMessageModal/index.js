@@ -214,7 +214,7 @@ const FlowBuilderSendMessageModal = ({
                 ))
               ) : (
                 <MenuItem disabled value="">
-                  Nenhuma fila encontrada
+                  {i18n.t("connections.noQueueFound")}
                 </MenuItem>
               )}
             </Select>

@@ -2,6 +2,7 @@ import { Paper } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
 import ContactImport from "../../components/ContactImport";
+import { i18n } from "../../translate/i18n";
 import MainContainer from "../../components/MainContainer";
 import MainHeader from "../../components/MainHeader";
 import Title from "../../components/Title";
@@ -21,7 +22,7 @@ const ContactImportPage = () => {
     const classes = useStyles();
     return <MainContainer className={classes.mainContainer}>
         <MainHeader>
-            <Title>Importar contatos de arquivo</Title>
+            <Title>{i18n.t("contactImport.title")}</Title>
         </MainHeader>
         <Paper
             className={classes.mainPaper}

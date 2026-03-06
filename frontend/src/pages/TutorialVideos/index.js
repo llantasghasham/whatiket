@@ -29,6 +29,7 @@ import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { toast } from "react-toastify";
 
 import TutorialVideoModal from "../../components/TutorialVideoModal";
+import { i18n } from "../../translate/i18n";
 import { AuthContext } from "../../context/Auth/AuthContext";
 import {
   listTutorialVideos,
@@ -373,7 +374,7 @@ const TutorialVideos = () => {
                 <TableRow>
                   <TableCell colSpan={8}>
                     <Box className={classes.emptyState}>
-                      <Typography>Nenhum vídeo tutorial encontrado</Typography>
+                      <Typography>{i18n.t("helps.noVideoTutorial")}</Typography>
                     </Box>
                   </TableCell>
                 </TableRow>
@@ -469,9 +470,7 @@ const TutorialVideos = () => {
           {filteredVideos.length > 0 && (
             <Box className={classes.paginationBar}>
               <Typography variant="body2" style={{ color: "#666" }}>
-                Exibindo {tablePage * rowsPerPage + 1} a{" "}
-                {Math.min((tablePage + 1) * rowsPerPage, filteredVideos.length)} de{" "}
-                {filteredVideos.length} resultado(s)
+                {i18n.t("common.showingResults", { from: tablePage * rowsPerPage + 1, to: Math.min((tablePage + 1) * rowsPerPage, filteredVideos.length), total: filteredVideos.length })}
               </Typography>
               <Box display="flex" alignItems="center" style={{ gap: 8 }}>
                 <Button

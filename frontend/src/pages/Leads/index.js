@@ -28,6 +28,7 @@ import LeadModal from "../../components/LeadModal";
 import ConfirmationModal from "../../components/ConfirmationModal";
 import TableRowSkeleton from "../../components/TableRowSkeleton";
 import toastError from "../../errors/toastError";
+import { i18n } from "../../translate/i18n";
 
 const STATUS_OPTIONS = [
   { label: "Todos", value: "" },
@@ -514,9 +515,7 @@ const Leads = () => {
           {leads.length > 0 && (
             <Box className={classes.paginationBar}>
               <Typography variant="body2" style={{ color: "#666" }}>
-                Exibindo {tablePage * rowsPerPage + 1} a{" "}
-                {Math.min((tablePage + 1) * rowsPerPage, leads.length)} de{" "}
-                {leads.length} resultado(s)
+                {i18n.t("common.showingResults", { from: tablePage * rowsPerPage + 1, to: Math.min((tablePage + 1) * rowsPerPage, leads.length), total: leads.length })}
               </Typography>
               <Box display="flex" alignItems="center" style={{ gap: 8 }}>
                 <Button

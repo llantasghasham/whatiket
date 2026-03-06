@@ -38,6 +38,7 @@ import {
   Cancel
 } from "@material-ui/icons";
 import { toast } from "react-toastify";
+import { i18n } from "../../translate/i18n";
 
 import api from "../../services/api";
 import MainContainer from "../../components/MainContainer";
@@ -283,7 +284,7 @@ const AdminCommissions = () => {
       <Container className={classes.container}>
         <div className={classes.header}>
           <Typography variant="h4" className={classes.title}>
-            Gerenciar Comissões
+            {i18n.t("affiliates.manageCommissions")}
           </Typography>
           <Box display="flex" gap={2} alignItems="center">
             <FormControl size="small" style={{ minWidth: 120 }}>

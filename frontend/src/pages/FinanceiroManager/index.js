@@ -35,6 +35,7 @@ import {
   Paper
 } from "@material-ui/core";
 import { useTheme } from "@material-ui/core/styles";
+import { i18n } from "../../translate/i18n";
 import {
   Add as AddIcon,
   Edit as EditIcon,
@@ -154,13 +155,12 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const tabs = [
-  { value: "categorias", label: "Categorias", icon: <CategoryIcon /> },
-  { value: "fornecedores", label: "Fornecedores", icon: <BusinessIcon /> },
-  { value: "despesas", label: "Contas a Pagar", icon: <ReceiptIcon /> }
-];
-
 const FinanceiroManager = () => {
+  const tabs = [
+    { value: "categorias", label: i18n.t("accountsPayable.categories"), icon: <CategoryIcon /> },
+    { value: "fornecedores", label: i18n.t("accountsPayable.suppliers"), icon: <BusinessIcon /> },
+    { value: "despesas", label: i18n.t("accountsPayable.title"), icon: <ReceiptIcon /> }
+  ];
   const classes = useStyles();
   const theme = useTheme();
   const sidebarColor = theme.palette.primary.main || "#3b82f6";
@@ -641,7 +641,7 @@ const FinanceiroManager = () => {
       <Box className={classes.header}>
         <Box className={classes.headerLeft}>
           <Box>
-            <Typography className={classes.headerTitle}>Contas a Pagar</Typography>
+            <Typography className={classes.headerTitle}>{i18n.t("accountsPayable.title")}</Typography>
             <Typography className={classes.headerSubtitle}>
               Gerencie categorias, fornecedores e despesas financeiras.
             </Typography>
@@ -650,7 +650,7 @@ const FinanceiroManager = () => {
 
         <Box className={classes.headerRight}>
           <TextField
-            placeholder="Buscar..."
+            placeholder={i18n.t("common.search")}
             variant="outlined"
             size="small"
             value={searchTerm}
@@ -743,7 +743,7 @@ const FinanceiroManager = () => {
                       <TableCell colSpan={5}>
                         <Box className={classes.emptyState}>
                           <CategoryIcon style={{ fontSize: 40, opacity: 0.4 }} />
-                          <Typography variant="subtitle1">Nenhuma categoria encontrada</Typography>
+                          <Typography variant="subtitle1">{i18n.t("accountsPayable.noCategoryFound")}</Typography>
                         </Box>
                       </TableCell>
                     </TableRow>

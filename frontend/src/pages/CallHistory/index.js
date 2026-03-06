@@ -39,6 +39,7 @@ import {
 import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import api from "../../services/api";
+import { i18n } from "../../translate/i18n";
 import { AuthContext } from "../../context/Auth/AuthContext";
 import { socketConnection } from "../../services/socket";
 import Title from "../../components/Title";
@@ -234,7 +235,7 @@ const CallHistory = () => {
 
   return (
     <div className={classes.root}>
-      <Title>Histórico de Chamadas</Title>
+      <Title>{i18n.t("callHistory.title")}</Title>
 
       {/* Summary Cards */}
       <div className={classes.summaryContainer}>

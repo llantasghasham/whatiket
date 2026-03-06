@@ -25,6 +25,7 @@ import {
   Search as SearchIcon,
 } from "@material-ui/icons";
 import { toast } from "react-toastify";
+import { i18n } from "../../translate/i18n";
 
 import SliderBannerModal from "../../components/SliderBannerModal";
 import TableRowSkeleton from "../../components/TableRowSkeleton";
@@ -449,9 +450,7 @@ const SliderBannersPage = () => {
           {filteredBanners.length > 0 && (
             <Box className={classes.paginationBar}>
               <Typography variant="body2" style={{ color: "#666" }}>
-                Exibindo {tablePage * rowsPerPage + 1} a{" "}
-                {Math.min((tablePage + 1) * rowsPerPage, filteredBanners.length)} de{" "}
-                {filteredBanners.length} resultado(s)
+                {i18n.t("common.showingResults", { from: tablePage * rowsPerPage + 1, to: Math.min((tablePage + 1) * rowsPerPage, filteredBanners.length), total: filteredBanners.length })}
               </Typography>
               <Box display="flex" alignItems="center" style={{ gap: 8 }}>
                 <Button

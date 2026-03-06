@@ -26,6 +26,7 @@ import {
   upsertCompanyPaymentSetting
 } from "../../services/companyPaymentSettings";
 import toastError from "../../errors/toastError";
+import { i18n } from "../../translate/i18n";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -312,7 +313,7 @@ const PaymentSettings = () => {
 
       <Paper className={classes.listPaper} elevation={0}>
         <Box display="flex" alignItems="center" justifyContent="space-between">
-          <Typography variant="h6">Configurações salvas</Typography>
+          <Typography variant="h6">{i18n.t("settingsPage.saved")}</Typography>
           {loading && <CircularProgress size={20} />}
         </Box>
         <Divider style={{ margin: "16px 0" }} />
@@ -320,7 +321,7 @@ const PaymentSettings = () => {
           <Box className={classes.emptyState}>
             {loading
               ? "Carregando configurações..."
-              : "Nenhuma configuração cadastrada ainda."}
+              : i18n.t("settingsPage.noConfig")}
           </Box>
         ) : (
           <Grid container spacing={2}>

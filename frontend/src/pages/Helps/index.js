@@ -22,6 +22,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import VideoLibraryIcon from "@material-ui/icons/VideoLibrary";
 import VideoModal from "../../components/VideoModal";
+import { i18n } from "../../translate/i18n";
 
 import {
   listTutorialVideos,
@@ -265,7 +266,7 @@ const Helps = () => {
           ) : tutorialVideos.length === 0 ? (
             <Box className={classes.emptyState}>
               <VideoLibraryIcon />
-              <Typography>Nenhum vídeo tutorial encontrado</Typography>
+              <Typography>{i18n.t("helps.noVideoTutorial")}</Typography>
             </Box>
           ) : (
             <Grid container spacing={3} className={classes.cardsGrid}>

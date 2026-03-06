@@ -568,7 +568,7 @@ const TagModal = ({ open, onClose, tagId, kanban }) => {
                         <>
                           <Grid item xs={12}>
                             <Typography variant="h6" className={classes.sectionTitle}>
-                              <Gradient /> Configurações de Kanban
+                              <Gradient /> {i18n.t("kanban.settings")}
                             </Typography>
                           </Grid>
                           

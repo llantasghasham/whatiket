@@ -17,6 +17,7 @@ import {
   TableRow,
 } from "@material-ui/core";
 import api from "../../services/api";
+import { i18n } from "../../translate/i18n";
 import upload from "../../assets/upload.gif";
 import { useHistory } from "react-router-dom";
 import toastError from "../../errors/toastError";
@@ -430,9 +431,9 @@ const ContactImport = () => {
             }}
           >
             <img src={upload} height={200} alt="Upload" />
-            <h5>Clique ou arraste um arquivo</h5>
+            <h5>{i18n.t("contactImport.clickOrDrag")}</h5>
             <p style={{ color: "#e74c3c", fontWeight: "bold", textAlign: "center" }}>
-              * Importante: Arquivos somente com extensões são aceitas: xls, xslx, csv, txt
+              * {i18n.t("contactImport.importantExtensions")} {i18n.t("contactImport.extensions")}
             </p>
           </div>
 
@@ -440,7 +441,7 @@ const ContactImport = () => {
 
           <div className={classes.backButtonContainer}>
             <Button variant="contained" color="secondary" disabled={uploading} onClick={handleCloseImport}>
-              Voltar
+              {i18n.t("common.back")}
             </Button>
           </div>
         </>

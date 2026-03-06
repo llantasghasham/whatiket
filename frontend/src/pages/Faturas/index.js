@@ -33,6 +33,7 @@ import { listFinanceiroFaturas, deleteFinanceiroFatura } from "../../services/fi
 import toastError from "../../errors/toastError";
 import { toast } from "react-toastify";
 import { AuthContext } from "../../context/Auth/AuthContext";
+import { i18n } from "../../translate/i18n";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -678,7 +679,7 @@ const Faturas = () => {
         ) : faturas.length === 0 ? (
           <Box className={classes.emptyState}>
             <ReceiptIcon />
-            <Typography>Nenhuma fatura encontrada</Typography>
+            <Typography>{i18n.t("invoices.noInvoiceFound")}</Typography>
           </Box>
         ) : (
           <>
