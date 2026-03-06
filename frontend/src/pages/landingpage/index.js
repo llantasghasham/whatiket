@@ -1,5 +1,6 @@
-  import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useHistory } from "react-router-dom";
+import { i18n } from "../../translate/i18n";
 import usePlans from "../../hooks/usePlans";
 import useSettings from "../../hooks/useSettings";
 import heroVideo from "../../assets/video1.mp4";
@@ -33,18 +34,18 @@ export default function LandingPage() {
   };
 
   const features = [
-    { icon: "ai", title: "Super IA", desc: "Inteligência artificial avançada que entende contexto e responde como humano" },
-    { icon: "kanban", title: "Kanban", desc: "Gerencie seus leads e atendimentos em quadros visuais" },
-    { icon: "users", title: "Multi Atendimento", desc: "Vários atendentes no mesmo WhatsApp simultaneamente" },
-    { icon: "bot", title: "Chatbot Inteligente", desc: "Fluxos automatizados com respostas personalizadas", slug: "chatbot-inteligente" },
-    { icon: "chart", title: "Relatórios", desc: "Métricas e dashboards em tempo real" },
-    { icon: "transfer", title: "Fluxos Omnichannel", desc: "Transfira chats entre setores e canais com regras inteligentes", slug: "fluxos-omnichannel" },
-    { icon: "phone", title: "Múltiplos Números", desc: "Gerencie vários WhatsApp no mesmo painel" },
-    { icon: "folder", title: "Setorização", desc: "Organize atendimentos por departamentos" },
-    { icon: "megaphone", title: "Campanhas com IA", desc: "Dispare mensagens com textos otimizados automaticamente", slug: "campanhas-com-ia" },
-    { icon: "tag", title: "Tags e Etiquetas", desc: "Organize contatos com tags personalizadas" },
-    { icon: "clock", title: "Agendamentos", desc: "Agende mensagens e lembretes automáticos" },
-    { icon: "api", title: "API & Webhooks", desc: "Integre com qualquer sistema via API REST", slug: "api-e-webhooks" },
+    { icon: "ai", title: i18n.t("landing.features.superIA"), desc: i18n.t("landing.features.superIADesc") },
+    { icon: "kanban", title: i18n.t("landing.features.kanban"), desc: i18n.t("landing.features.kanbanDesc") },
+    { icon: "users", title: i18n.t("landing.features.multiAtendimento"), desc: i18n.t("landing.features.multiAtendimentoDesc") },
+    { icon: "bot", title: i18n.t("landing.features.chatbot"), desc: i18n.t("landing.features.chatbotDesc"), slug: "chatbot-inteligente" },
+    { icon: "chart", title: i18n.t("landing.features.relatorios"), desc: i18n.t("landing.features.relatoriosDesc") },
+    { icon: "transfer", title: i18n.t("landing.features.fluxosOmnichannel"), desc: i18n.t("landing.features.fluxosOmnichannelDesc"), slug: "fluxos-omnichannel" },
+    { icon: "phone", title: i18n.t("landing.features.multiplosNumeros"), desc: i18n.t("landing.features.multiplosNumerosDesc") },
+    { icon: "folder", title: i18n.t("landing.features.setorizacao"), desc: i18n.t("landing.features.setorizacaoDesc") },
+    { icon: "megaphone", title: i18n.t("landing.features.campanhasIA"), desc: i18n.t("landing.features.campanhasIADesc"), slug: "campanhas-com-ia" },
+    { icon: "tag", title: i18n.t("landing.features.tagsEtiquetas"), desc: i18n.t("landing.features.tagsEtiquetasDesc") },
+    { icon: "clock", title: i18n.t("landing.features.agendamentos"), desc: i18n.t("landing.features.agendamentosDesc") },
+    { icon: "api", title: i18n.t("landing.features.apiWebhooks"), desc: i18n.t("landing.features.apiWebhooksDesc"), slug: "api-e-webhooks" },
   ];
 
   const FeatureIcon = ({ name }) => {

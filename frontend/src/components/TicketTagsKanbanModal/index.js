@@ -32,6 +32,7 @@ import { TagsKanbanContainer } from "../TagsKanbanContainer";
 import { ContactNotes } from "../ContactNotes";
 import api from "../../services/api";
 import { toast } from "react-toastify";
+import { i18n } from "../../translate/i18n";
 
 const channelStyles = {
   whatsapp: { label: "WhatsApp", color: "#25d366" },
@@ -358,7 +359,7 @@ const TicketTagsKanbanModal = ({ open, onClose, contact, ticket, onUpdate }) => 
       await api.put(`/tickets/${ticket.id}`, {
         queueId: queueId || null,
       });
-      toast.success("Fila atualizada!");
+      toast.success(i18n.t("tagsKanban.queueUpdated"));
       setTicketDetails((prev) =>
         prev ? { ...prev, queueId: queueId || null } : prev
       );
@@ -367,7 +368,7 @@ const TicketTagsKanbanModal = ({ open, onClose, contact, ticket, onUpdate }) => 
       }
     } catch (err) {
       console.error(err);
-      toast.error("Erro ao atualizar fila.");
+      toast.error(i18n.t("tagsKanban.queueUpdateError"));
       setSelectedQueue(ticket?.queueId || "");
     } finally {
       setLoadingQueue(false);
@@ -518,7 +519,7 @@ const TicketTagsKanbanModal = ({ open, onClose, contact, ticket, onUpdate }) => 
     }
 
     if (fileMessages.length === 0) {
-      return renderEmptyState("Nenhum arquivo encontrado nesta conversa.");
+      return renderEmptyState(i18n.t("tagsKanban.noFilesFound"));
     }
 
     const visibleFiles = fileMessages.slice(0, fileVisibleCount);
@@ -583,7 +584,7 @@ const TicketTagsKanbanModal = ({ open, onClose, contact, ticket, onUpdate }) => 
     }
 
     if (imageMessages.length === 0) {
-      return renderEmptyState("Nenhuma imagem encontrada nesta conversa.");
+      return renderEmptyState(i18n.t("tagsKanban.noImagesFound"));
     }
 
     const visibleImages = imageMessages.slice(0, imageVisibleCount);
@@ -651,7 +652,7 @@ const TicketTagsKanbanModal = ({ open, onClose, contact, ticket, onUpdate }) => 
     }
 
     if (linkMessages.length === 0) {
-      return renderEmptyState("Nenhum link encontrado nesta conversa.");
+      return renderEmptyState(i18n.t("tagsKanban.noLinksFound"));
     }
 
     const visibleLinks = linkMessages.slice(0, linkVisibleCount);
@@ -968,11 +969,11 @@ const TicketTagsKanbanModal = ({ open, onClose, contact, ticket, onUpdate }) => 
         <Box className={classes.section}>
           <Typography className={classes.sectionTitle}>Fila do ticket</Typography>
           <FormControl fullWidth variant="outlined" size="small">
-            <InputLabel>Selecione a fila</InputLabel>
+            <InputLabel>{i18n.t("tagsKanban.selectQueue")}</InputLabel>
             <Select
               value={selectedQueue}
               onChange={handleQueueChange}
-              label="Selecione a fila"
+              label={i18n.t("tagsKanban.selectQueue")}
               disabled={loading || loadingQueue}
             >
               <MenuItem value="">
@@ -1068,7 +1069,7 @@ const TicketTagsKanbanModal = ({ open, onClose, contact, ticket, onUpdate }) => 
             <Box display="flex" flexDirection="column" gap={10}>
               {extraInfoFields.length === 0 && (
                 <Typography style={{ color: "#64748b", fontSize: 14 }}>
-                  Nenhuma informação cadastrada.
+                  {i18n.t("tagsKanban.noInfoRegistered")}
                 </Typography>
               )}
               {extraInfoFields.map((info) => (

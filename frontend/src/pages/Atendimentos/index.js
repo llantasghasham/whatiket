@@ -1070,7 +1070,7 @@ const Atendimentos = () => {
 								const confirmIgnorar = await showConfirm({
 									type: "warning",
 									title: "Ignorar Ticket",
-									message: "Deseja realmente ignorar este ticket?",
+									message: i18n.t("atendimentos.confirmIgnore"),
 									confirmText: "Sim, ignorar",
 									cancelText: "Cancelar",
 								});
@@ -1142,7 +1142,7 @@ const Atendimentos = () => {
 								const confirmFechar = await showConfirm({
 									type: "warning",
 									title: "Fechar Ticket",
-									message: "Deseja realmente fechar este ticket?",
+									message: i18n.t("atendimentos.confirmClose"),
 									confirmText: "Sim, fechar",
 									cancelText: "Cancelar",
 								});
@@ -1174,7 +1174,7 @@ const Atendimentos = () => {
 								const confirmExcluir = await showConfirm({
 									type: "error",
 									title: "Excluir Ticket",
-									message: "Deseja realmente excluir este ticket?",
+									message: i18n.t("atendimentos.confirmDelete"),
 									confirmText: "Sim, excluir",
 									cancelText: "Cancelar",
 								});
@@ -3348,7 +3348,7 @@ useEffect(() => {
 			await Promise.all([loadTickets(), loadUnreadCounts()]);
 			setCloseAllDialogOpen(false);
 		} catch (err) {
-			toast.error("Não foi possível encerrar os tickets. Tente novamente.");
+			toast.error(i18n.t("atendimentos.toast.closeError"));
 		} finally {
 			setClosingAllTickets(false);
 		}
@@ -3407,7 +3407,7 @@ useEffect(() => {
 			}
 			history.push(`/atendimentos/${selectedTicket.id}`);
 		} catch (err) {
-			toast.error("Não foi possível reabrir o ticket.");
+			toast.error(i18n.t("atendimentos.toast.reopenError"));
 		}
 	};
 
@@ -4434,7 +4434,7 @@ useEffect(() => {
 								>
 									<Box style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 12px', borderBottom: '1px solid #e0e0e0' }}>
 										<Typography variant="caption" style={{ fontWeight: 600 }}>
-											Mensagens Rápidas
+											{i18n.t("atendimentos.quickReplies")}
 										</Typography>
 										<IconButton size="small" onClick={() => {
 											setShowQuickReplies(false);
@@ -4482,7 +4482,7 @@ useEffect(() => {
 										size="small"
 										onClick={handleCancelRecording}
 										style={{ color: '#f44336' }}
-										title="Cancelar gravação"
+										title={i18n.t("atendimentos.cancelRecording")}
 									>
 										<CloseIcon />
 									</IconButton>
@@ -4502,7 +4502,7 @@ useEffect(() => {
 										color="primary"
 										onClick={handleStopRecording}
 										style={{ backgroundColor: '#00a884', color: '#fff' }}
-										title="Enviar áudio"
+										title={i18n.t("atendimentos.sendAudio")}
 									>
 										<SendIcon />
 									</IconButton>
@@ -4552,7 +4552,7 @@ useEffect(() => {
 				fullWidth
 			>
 				<DialogTitle style={{ backgroundColor: "#5b68ea", color: "#fff", textAlign: "center", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-					<span>Mensagens Rápidas</span>
+									<span>{i18n.t("atendimentos.quickReplies")}</span>
 					<IconButton onClick={() => setQuickMessagesOpen(false)} style={{ color: "#fff" }}>
 						<CloseIcon />
 					</IconButton>

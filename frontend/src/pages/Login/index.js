@@ -272,14 +272,13 @@ const Login = () => {
   const [twoFactorCode, setTwoFactorCode] = useState("");
   const [twoFactorLoading, setTwoFactorLoading] = useState(false);
 
-  // Dados do painel esquerdo
   const leftPanelContent = {
-    title: "Melhore o Desempenho do Seu Negócio",
-    subtitle: "Soluções completas para atendimento ao cliente",
+    title: i18n.t("login.leftPanel.title"),
+    subtitle: i18n.t("login.leftPanel.subtitle"),
     features: [
-      "Acompanhe o progresso em tempo real",
-      "Obtenha insights valiosos",
-      "Colabore com sua equipe"
+      i18n.t("login.leftPanel.features.0"),
+      i18n.t("login.leftPanel.features.1"),
+      i18n.t("login.leftPanel.features.2"),
     ]
   };
 
@@ -358,9 +357,9 @@ const Login = () => {
   };
 
   const getPasswordStrengthText = (strength) => {
-    if (strength <= 2) return "Senha fraca";
-    if (strength > 2 && strength <= 4) return "Senha média";
-    return "Senha forte";
+    if (strength <= 2) return i18n.t("login.passwordStrength.weak");
+    if (strength > 2 && strength <= 4) return i18n.t("login.passwordStrength.medium");
+    return i18n.t("login.passwordStrength.strong");
   };
 
   return (
@@ -406,12 +405,12 @@ const Login = () => {
       <div className={classes.rightPanel}>
         <div className={classes.welcome}>
           <Typography variant="h4" className={classes.formTitle}>
-            {twoFactorMode ? "Verificação em Duas Etapas" : "Olá, Seja Bem-vindo! 👋"}
+            {twoFactorMode ? i18n.t("login.twoFactor.title") : i18n.t("login.welcome.title")}
           </Typography>
           <Typography variant="body1" className={classes.formSubtitle}>
             {twoFactorMode 
-              ? "Digite o código de 6 dígitos do seu aplicativo autenticador" 
-              : "Digite seu e-mail e senha para acessar"}
+              ? i18n.t("login.welcome.subtitle2FA") 
+              : i18n.t("login.welcome.subtitle")}
           </Typography>
         </div>
         
@@ -424,7 +423,7 @@ const Login = () => {
               variant="outlined"
               fullWidth
               id="twoFactorCode"
-              label="Código 2FA"
+              label={i18n.t("login.twoFactor.codeLabel")}
               name="twoFactorCode"
               autoComplete="one-time-code"
               value={twoFactorCode}
@@ -456,7 +455,7 @@ const Login = () => {
               size="large"
               disabled={twoFactorCode.length !== 6 || twoFactorLoading}
             >
-              {twoFactorLoading ? "Verificando..." : "Verificar"}
+              {twoFactorLoading ? i18n.t("login.twoFactor.verifying") : i18n.t("login.twoFactor.verify")}
             </Button>
 
             <Box mt={2} textAlign="center">
@@ -474,7 +473,7 @@ const Login = () => {
                   fontSize: '0.875rem'
                 }}
               >
-                Voltar ao login
+                {i18n.t("login.twoFactor.backToLogin")}
               </Link>
             </Box>
           </form>
@@ -484,7 +483,7 @@ const Login = () => {
               variant="outlined"
               fullWidth
               id="email"
-              label="E-mail"
+              label={i18n.t("login.form.email")}
               name="email"
               autoComplete="email"
               value={user.email}
@@ -504,7 +503,7 @@ const Login = () => {
               variant="outlined"
               fullWidth
               name="password"
-              label="Senha"
+              label={i18n.t("login.form.password")}
               type={showPassword ? 'text' : 'password'}
               id="password"
               autoComplete="current-password"
@@ -520,7 +519,7 @@ const Login = () => {
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
-                      aria-label="alternar visibilidade da senha"
+                      aria-label={i18n.t("login.togglePasswordVisibility")}
                       onClick={handleClickShowPassword}
                       onMouseDown={handleMouseDownPassword}
                       edge="end"
@@ -560,7 +559,7 @@ const Login = () => {
                 to="/forgetpsw"
                 className={classes.forgotPassword}
               >
-                Esqueceu a senha?
+                {i18n.t("login.forgotPassword")}
               </Link>
             </Box>
 
@@ -571,12 +570,12 @@ const Login = () => {
                 className={classes.button}
                 size="large"
               >
-                Acessar
+                {i18n.t("login.form.button")}
               </Button>
 
               <Box mt={3} textAlign="center">
                 <Typography variant="body2" style={{ color: '#667085' }}>
-                  Ainda não tem uma conta?{" "}
+                  {i18n.t("login.noAccount")}{" "}
                   <Link
                     component={RouterLink}
                     to="/cadastro"
@@ -586,7 +585,7 @@ const Login = () => {
                       textDecoration: 'none'
                     }}
                   >
-                    Cadastre-se
+                    {i18n.t("login.signup")}
                   </Link>
                 </Typography>
               </Box>

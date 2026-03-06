@@ -12,6 +12,7 @@ import {
   Slide,
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
+import { i18n } from "../../translate/i18n";
 import WarningIcon from "@material-ui/icons/Warning";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import InfoIcon from "@material-ui/icons/Info";
@@ -181,8 +182,8 @@ export const SystemAlertProvider = ({ children }) => {
     type = "warning",
     title,
     message,
-    confirmText = "Confirmar",
-    cancelText = "Cancelar",
+    confirmText = i18n.t("systemAlert.confirmText"),
+    cancelText = i18n.t("common.cancel"),
   }) => {
     return new Promise((resolve) => {
       resolveRef.current = resolve;

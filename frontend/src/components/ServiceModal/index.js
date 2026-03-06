@@ -15,6 +15,7 @@ import {
   createServico,
   updateServico
 } from "../../services/servicosService";
+import { i18n } from "../../translate/i18n";
 
 const ServiceModal = ({ open, onClose, service, onSuccess }) => {
   const [nome, setNome] = useState("");
@@ -79,7 +80,7 @@ const ServiceModal = ({ open, onClose, service, onSuccess }) => {
       onClose();
     } catch (err) {
       console.error(err);
-      toast.error("Erro ao salvar serviço");
+      toast.error(i18n.t("serviceModal.saveError"));
     } finally {
       setSaving(false);
     }
@@ -87,7 +88,7 @@ const ServiceModal = ({ open, onClose, service, onSuccess }) => {
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle>{service ? "Editar Serviço" : "Novo Serviço"}</DialogTitle>
+      <DialogTitle>{service ? i18n.t("serviceModal.editService") : i18n.t("serviceModal.newService")}</DialogTitle>
       <DialogContent>
         <TextField
           label="Nome"
@@ -135,9 +136,9 @@ const ServiceModal = ({ open, onClose, service, onSuccess }) => {
         )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} disabled={saving}>Cancelar</Button>
+        <Button onClick={onClose} disabled={saving}>{i18n.t("common.cancel")}</Button>
         <Button color="primary" variant="contained" onClick={handleSubmit} disabled={saving}>
-          {service ? "Salvar" : "Cadastrar"}
+          {service ? i18n.t("common.save") : i18n.t("common.register")}
         </Button>
       </DialogActions>
     </Dialog>

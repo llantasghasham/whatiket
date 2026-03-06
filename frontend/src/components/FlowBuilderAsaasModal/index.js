@@ -11,6 +11,7 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Receipt } from "@mui/icons-material";
+import { i18n } from "../../translate/i18n";
 
 const useStyles = makeStyles((theme) => ({
   dialog: {
@@ -111,17 +112,17 @@ const useStyles = makeStyles((theme) => ({
 const FlowBuilderAsaasModal = ({ open, onSave, data, onUpdate, close }) => {
   const classes = useStyles();
   const [message, setMessage] = useState("Por favor, informe seu CPF para buscarmos seu boleto:");
-  const [errorMessage, setErrorMessage] = useState("Desculpe, não encontramos nenhum boleto pendente para este CPF.");
+  const [errorMessage, setErrorMessage] = useState(i18n.t("flowBuilder.noBoletoFound"));
   const [successMessage, setSuccessMessage] = useState("Encontramos seu boleto! Enviando os dados...");
 
   useEffect(() => {
     if (open === "edit" && data?.data) {
       setMessage(data.data.message || "Por favor, informe seu CPF para buscarmos seu boleto:");
-      setErrorMessage(data.data.errorMessage || "Desculpe, não encontramos nenhum boleto pendente para este CPF.");
+      setErrorMessage(data.data.errorMessage || i18n.t("flowBuilder.noBoletoFound"));
       setSuccessMessage(data.data.successMessage || "Encontramos seu boleto! Enviando os dados...");
     } else if (open === "create") {
       setMessage("Por favor, informe seu CPF para buscarmos seu boleto:");
-      setErrorMessage("Desculpe, não encontramos nenhum boleto pendente para este CPF.");
+      setErrorMessage(i18n.t("flowBuilder.noBoletoFound"));
       setSuccessMessage("Encontramos seu boleto! Enviando os dados...");
     }
   }, [open, data]);
@@ -146,7 +147,7 @@ const FlowBuilderAsaasModal = ({ open, onSave, data, onUpdate, close }) => {
 
   const handleClose = () => {
     setMessage("Por favor, informe seu CPF para buscarmos seu boleto:");
-    setErrorMessage("Desculpe, não encontramos nenhum boleto pendente para este CPF.");
+    setErrorMessage(i18n.t("flowBuilder.noBoletoFound"));
     setSuccessMessage("Encontramos seu boleto! Enviando os dados...");
     close();
   };
@@ -186,7 +187,7 @@ const FlowBuilderAsaasModal = ({ open, onSave, data, onUpdate, close }) => {
         </Box>
 
         <div className={classes.field}>
-          <label className={classes.label}>Mensagem de solicitação do CPF</label>
+          <label className={classes.label}>{i18n.t("flowBuilder.cpfRequestMessage")}</label>
           <TextField
             fullWidth
             multiline
@@ -202,7 +203,7 @@ const FlowBuilderAsaasModal = ({ open, onSave, data, onUpdate, close }) => {
         </div>
 
         <div className={classes.field}>
-          <label className={classes.label}>Mensagem de sucesso</label>
+          <label className={classes.label}>{i18n.t("flowBuilder.successMessage")}</label>
           <TextField
             fullWidth
             multiline
@@ -210,7 +211,7 @@ const FlowBuilderAsaasModal = ({ open, onSave, data, onUpdate, close }) => {
             variant="outlined"
             value={successMessage}
             onChange={(e) => setSuccessMessage(e.target.value)}
-            placeholder="Mensagem quando o boleto for encontrado..."
+            placeholder={i18n.t("flowBuilder.successMessagePlaceholder")}
           />
           <Typography className={classes.helpText}>
             Enviada antes de enviar o boleto e QR Code PIX
@@ -218,7 +219,7 @@ const FlowBuilderAsaasModal = ({ open, onSave, data, onUpdate, close }) => {
         </div>
 
         <div className={classes.field}>
-          <label className={classes.label}>Mensagem de erro</label>
+          <label className={classes.label}>{i18n.t("flowBuilder.errorMessage")}</label>
           <TextField
             fullWidth
             multiline
@@ -226,7 +227,7 @@ const FlowBuilderAsaasModal = ({ open, onSave, data, onUpdate, close }) => {
             variant="outlined"
             value={errorMessage}
             onChange={(e) => setErrorMessage(e.target.value)}
-            placeholder="Mensagem quando não encontrar boleto..."
+            placeholder={i18n.t("flowBuilder.errorMessagePlaceholder")}
           />
           <Typography className={classes.helpText}>
             Enviada quando não houver boleto pendente ou CPF inválido
@@ -236,7 +237,7 @@ const FlowBuilderAsaasModal = ({ open, onSave, data, onUpdate, close }) => {
 
       <DialogActions className={classes.dialogActions}>
         <Button onClick={handleClose} className={classes.cancelButton}>
-          Cancelar
+          {i18n.t("common.cancel")}
         </Button>
         <Button
           onClick={handleSave}

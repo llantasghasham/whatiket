@@ -1156,7 +1156,7 @@ const LoggedInLayout = ({ children }) => {
         showAlert({
           type: "error",
           title: "Acesso Negado",
-          message: "Você não tem permissão para acessar esta página.",
+          message: i18n.t("layout.noPermission"),
           confirmText: "Entendi",
         });
         return;

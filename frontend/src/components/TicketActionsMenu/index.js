@@ -20,6 +20,7 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import api from "../../services/api";
 import { useHistory } from "react-router-dom";
+import { i18n } from "../../translate/i18n";
 
 const useStyles = makeStyles((theme) => ({
 	dropdownArrow: {
@@ -198,7 +199,7 @@ const TicketActionsMenu = ({ ticket, onUpdate, anchorEl: externalAnchorEl, open:
 								style={{ padding: "10px 16px" }}
 							>
 								<DeleteIcon style={{ fontSize: 18, marginRight: 10, color: "#f44336" }} />
-								<Typography style={{ fontSize: 14 }}>Excluir Ticket</Typography>
+								<Typography style={{ fontSize: 14 }}>{i18n.t("ticketOptionsMenu.delete")} {i18n.t("ticketsList.called")}</Typography>
 							</MenuItem>
 							<MenuItem onClick={handleIgnoreTicket} style={{ padding: "10px 16px" }}>
 								<BlockIcon style={{ fontSize: 18, marginRight: 10, color: "#ff9800" }} />
@@ -215,11 +216,11 @@ const TicketActionsMenu = ({ ticket, onUpdate, anchorEl: externalAnchorEl, open:
 								style={{ padding: "10px 16px" }}
 							>
 								<DeleteIcon style={{ fontSize: 18, marginRight: 10, color: "#f44336" }} />
-								<Typography style={{ fontSize: 14 }}>Excluir Ticket</Typography>
+								<Typography style={{ fontSize: 14 }}>{i18n.t("ticketOptionsMenu.delete")} {i18n.t("ticketsList.called")}</Typography>
 							</MenuItem>
 							<MenuItem onClick={handleCloseTicket} style={{ padding: "10px 16px" }}>
 								<CloseIcon style={{ fontSize: 18, marginRight: 10, color: "#ff9800" }} />
-								<Typography style={{ fontSize: 14 }}>Fechar Ticket</Typography>
+								<Typography style={{ fontSize: 14 }}>{i18n.t("ticketActionsMenu.closeTicket")}</Typography>
 							</MenuItem>
 						</>
 					) : (
@@ -231,7 +232,7 @@ const TicketActionsMenu = ({ ticket, onUpdate, anchorEl: externalAnchorEl, open:
 							style={{ padding: "10px 16px" }}
 						>
 							<DeleteIcon style={{ fontSize: 18, marginRight: 10, color: "#f44336" }} />
-							<Typography style={{ fontSize: 14 }}>Excluir Ticket</Typography>
+							<Typography style={{ fontSize: 14 }}>{i18n.t("ticketOptionsMenu.delete")} {i18n.t("ticketsList.called")}</Typography>
 						</MenuItem>
 					)}
 				</div>
@@ -239,19 +240,18 @@ const TicketActionsMenu = ({ ticket, onUpdate, anchorEl: externalAnchorEl, open:
 
 			{/* Dialog de Confirmação de Exclusão */}
 			<Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
-				<DialogTitle>Confirmar Exclusão</DialogTitle>
+				<DialogTitle>{i18n.t("ticketActionsMenu.confirmDelete")}</DialogTitle>
 				<DialogContent>
 					<Typography>
-						Tem certeza que deseja deletar este ticket? Esta ação não pode ser
-						desfeita.
+						{i18n.t("ticketOptionsMenu.confirmationModal.message")}
 					</Typography>
 				</DialogContent>
 				<DialogActions>
 					<Button onClick={() => setDeleteDialogOpen(false)} color="primary">
-						Cancelar
+						{i18n.t("common.cancel")}
 					</Button>
 					<Button onClick={handleDeleteTicket} color="secondary" variant="contained">
-						Deletar
+						{i18n.t("ticketOptionsMenu.delete")}
 					</Button>
 				</DialogActions>
 			</Dialog>

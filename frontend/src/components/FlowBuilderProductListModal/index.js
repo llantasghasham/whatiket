@@ -22,6 +22,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import { AuthContext } from "../../context/Auth/AuthContext";
 import api from "../../services/api";
 import toastError from "../../errors/toastError";
+import { i18n } from "../../translate/i18n";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -257,7 +258,7 @@ const FlowBuilderProductListModal = ({ open, onClose, onSave, data }) => {
     <Dialog open={open} onClose={onClose} className={classes.root}>
       <DialogTitle className={classes.dialogTitle}>
         <Typography variant="h6" style={{ fontSize: "18px", fontWeight: "600" }}>
-          Configurar Lista de Produtos
+          {i18n.t("flowBuilder.configureProductList")}
         </Typography>
         <IconButton onClick={onClose} size="small">
           <CloseIcon />
@@ -266,7 +267,7 @@ const FlowBuilderProductListModal = ({ open, onClose, onSave, data }) => {
 
       <DialogContent className={classes.dialogContent}>
         {/* Título Personalizado */}
-        <Typography className={classes.sectionTitle}>Título da Mensagem</Typography>
+        <Typography className={classes.sectionTitle}>{i18n.t("flowBuilder.messageTitle")}</Typography>
         <TextField
           fullWidth
           variant="outlined"
@@ -303,7 +304,7 @@ const FlowBuilderProductListModal = ({ open, onClose, onSave, data }) => {
           <SearchIcon className={classes.searchIcon} />
           <input
             type="text"
-            placeholder="Buscar produtos ou serviços..."
+            placeholder={i18n.t("flowBuilder.searchProductsOrServices")}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className={classes.searchInput}
@@ -338,7 +339,7 @@ const FlowBuilderProductListModal = ({ open, onClose, onSave, data }) => {
               <>
                 <Box display="flex" alignItems="center" justifyContent="space-between">
                   <Typography className={classes.sectionTitle}>
-                    Produtos
+                    {i18n.t("flowBuilder.products")}
                     <span className={classes.selectedCount}>
                       {selectedProductsCount} de {filteredProducts.length}
                     </span>
@@ -367,7 +368,7 @@ const FlowBuilderProductListModal = ({ open, onClose, onSave, data }) => {
                           {product.valor ? `$ ${parseFloat(product.valor).toFixed(2)}` : "Preço não definido"}
                         </Typography>
                         <span className={`${classes.itemType} ${classes.productType}`}>
-                          Produto
+                          {i18n.t("flowBuilder.product")}
                         </span>
                       </div>
                     );
@@ -450,7 +451,7 @@ const FlowBuilderProductListModal = ({ open, onClose, onSave, data }) => {
             variant="outlined"
             className={classes.cancelButton}
           >
-            Cancelar
+            {i18n.t("common.cancel")}
           </Button>
           <Button
             onClick={handleSave}
@@ -458,7 +459,7 @@ const FlowBuilderProductListModal = ({ open, onClose, onSave, data }) => {
             className={classes.saveButton}
             disabled={listType === "selected" && selectedItems.length === 0}
           >
-            Salvar
+            {i18n.t("common.save")}
           </Button>
         </Box>
       </div>

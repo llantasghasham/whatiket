@@ -298,9 +298,9 @@ const Contacts = () => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const getDisplayName = (c) => {
-    if (!c || !c.name) return "Contato sem nome";
+    if (!c || !c.name) return i18n.t("contacts.noName");
     const onlyDigits = /^\+?\d+$/.test(c.name.replace(/\s+/g, ""));
-    return onlyDigits ? "Contato sem nome" : c.name;
+    return onlyDigits ? i18n.t("contacts.noName") : c.name;
   };
 
   useEffect(() => {
@@ -436,7 +436,7 @@ const Contacts = () => {
   const handleBlockContact = async (contactId) => {
     try {
       await api.put(`/contacts/block/${contactId}`, { active: false });
-      toast.success("Contato bloqueado");
+      toast.success(i18n.t("contacts.toasts.blocked"));
     } catch (err) {
       toastError(err);
     }
@@ -448,7 +448,7 @@ const Contacts = () => {
   const handleUnBlockContact = async (contactId) => {
     try {
       await api.put(`/contacts/block/${contactId}`, { active: true });
-      toast.success("Contato desbloqueado");
+      toast.success(i18n.t("contacts.toasts.unblocked"));
     } catch (err) {
       toastError(err);
     }
@@ -522,9 +522,9 @@ const Contacts = () => {
           deletingContact
             ? `${i18n.t("contacts.confirmationModal.deleteTitle")} ${getDisplayName(deletingContact)}?`
             : blockingContact
-            ? `Bloquear Contato ${getDisplayName(blockingContact)}?`
+            ? `${i18n.t("contacts.blockContactTitle")} ${getDisplayName(blockingContact)}?`
             : unBlockingContact
-            ? `Desbloquear Contato ${getDisplayName(unBlockingContact)}?`
+            ? `${i18n.t("contacts.unblockContactTitle")} ${getDisplayName(unBlockingContact)}?`
             : ImportContacts
             ? `${i18n.t("contacts.confirmationModal.importTitlte")}`
             : `${i18n.t("contactListItems.confirmationModal.importTitlte")}`
@@ -556,12 +556,12 @@ const Contacts = () => {
           : `${i18n.t("contactListItems.confirmationModal.importMessage")}`}
       </ConfirmationModal>
       <ConfirmationModal
-        title="Excluir contatos selecionados"
+        title={i18n.t("contacts.excludeSelectedTitle")}
         open={confirmBulkDeleteOpen}
         onClose={setConfirmBulkDeleteOpen}
         onConfirm={handleDeleteSelectedContacts}
       >
-        {`Você tem ${selectedContacts.length} contato(s) selecionado(s). Deseja realmente excluir todos?`}
+        {i18n.t("contacts.excludeSelectedMessage", { count: selectedContacts.length })}
       </ConfirmationModal>
 
       {importContactModalOpen && (
@@ -656,7 +656,7 @@ const Contacts = () => {
             onClick={handleOpenContactModal}
             className={classes.addButton}
           >
-            Novo Contato
+            {i18n.t("contacts.newContact")}
           </Button>
         </Box>
       </Box>
@@ -674,7 +674,7 @@ const Contacts = () => {
             onClick={() => setConfirmBulkDeleteOpen(true)}
             style={{ borderRadius: 6, textTransform: "none" }}
           >
-            Excluir selecionados
+            {i18n.t("contacts.deleteSelected")}
           </Button>
           <Button
             size="small"

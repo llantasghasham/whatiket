@@ -1056,7 +1056,7 @@ const path = require('path');
 const AUDIO_MEDIA_TYPES = new Set(["audio", "ptt", "pttConverted", "voice", "voiceMessage"]);
 
 const buildReactionDescription = (message, isFromMe) => {
-  const actorName = isFromMe ? "Você" : message?.contact?.name || "Contato";
+  const actorName = isFromMe ? i18n.t("messagesList.you") : message?.contact?.name || i18n.t("messagesList.contact");
   const reactionEmoji = message?.body || "";
   const emojiPart = reactionEmoji ? ` com ${reactionEmoji}` : "";
 
@@ -1104,7 +1104,7 @@ const renderQuotedMessage = (message) => {
     }
 
     if (quoted.mediaType === "contactMessage") {
-      return "Contato";
+      return i18n.t("messagesList.contact");
     }
 
     if (quoted.mediaType === "application" && quoted.mediaUrl) {
@@ -1126,7 +1126,7 @@ const renderQuotedMessage = (message) => {
       return <MarkdownWrapper>{quoted.body}</MarkdownWrapper>;
     }
 
-    return <span>Mensagem não disponível</span>;
+    return <span>{i18n.t("messagesList.messageNotAvailable")}</span>;
   };
 
   return (

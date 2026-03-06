@@ -199,9 +199,9 @@ const ContactDrawer = ({ open, handleDrawerClose, contact, ticket, loading }) =>
 	const [modalOpen, setModalOpen] = useState(false);
 	const [blockingContact, setBlockingContact] = useState(safeContact.active);
 	const getDisplayName = c => {
-		if (!c || !c.name) return "Contato sem nome";
+		if (!c || !c.name) return i18n.t("contactDrawer.noName");
 		const onlyDigits = /^\+?\d+$/.test(c.name.replace(/\s+/g, ""));
-		return onlyDigits ? "Contato sem nome" : c.name;
+		return onlyDigits ? i18n.t("contactDrawer.noName") : c.name;
 	};
 	const [openForm, setOpenForm] = useState(false);
 	const { get } = useCompanySettings();
@@ -290,7 +290,7 @@ const ContactDrawer = ({ open, handleDrawerClose, contact, ticket, loading }) =>
 		setLoadingQueue(true);
 		try {
 			await api.put(`/tickets/${ticket.id}`, { queueId: queueId || null });
-			toast.success("Fila atualizada!");
+			toast.success(i18n.t("contactDrawer.queueUpdated"));
 		} catch (err) {
 			console.error(err);
 			toast.error("Erro ao atualizar fila.");
@@ -368,7 +368,7 @@ const ContactDrawer = ({ open, handleDrawerClose, contact, ticket, loading }) =>
 	const handleBlockContact = async (contactId) => {
 		try {
 			await api.put(`/contacts/block/${contactId}`, { active: false });
-			toast.success("Contato bloqueado");
+			toast.success(i18n.t("contactDrawer.blocked"));
 		} catch (err) {
 			toastError(err);
 		}
@@ -378,7 +378,7 @@ const ContactDrawer = ({ open, handleDrawerClose, contact, ticket, loading }) =>
 	const handleUnBlockContact = async (contactId) => {
 		try {
 			await api.put(`/contacts/block/${contactId}`, { active: true });
-			toast.success("Contato desbloqueado");
+			toast.success(i18n.t("contactDrawer.unblocked"));
 		} catch (err) {
 			toastError(err);
 		}
