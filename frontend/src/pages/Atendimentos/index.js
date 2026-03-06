@@ -3473,22 +3473,20 @@ useEffect(() => {
 							{user?.name?.charAt(0)}
 						</Avatar>
 						<Tooltip title={i18n.t("newTicketModal.title")}>
-							<Button
-								variant="contained"
+							<IconButton
 								size="small"
-								startIcon={<AddIcon />}
 								onClick={() => setNewTicketModalOpen(true)}
 								style={{
 									marginLeft: 8,
+									border: "1px solid #00a884",
+									color: "#ffffff",
 									backgroundColor: "#00a884",
-									color: "#fff",
-									textTransform: "none",
-									fontWeight: 600,
-									boxShadow: "none",
+									width: 34,
+									height: 34,
 								}}
 							>
-								{i18n.t("newTicketModal.title")}
-							</Button>
+								<AddIcon style={{ fontSize: 20 }} />
+							</IconButton>
 						</Tooltip>
 						<div style={{ flex: 1 }} />
 						<div style={{ display: "flex", gap: 6, marginRight: 8 }}>

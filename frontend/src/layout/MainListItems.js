@@ -1118,28 +1118,26 @@ const MainListItems = ({ collapsed, drawerClose, onSubmenuOpen, submenuOpen, onT
                   )}
                 />
               )}
-              {planExpired && (
-                <Can
-                  role={user.profile}
-                  perform="dashboard:view"
-                  yes={() => (
-                    <>
-                      <ListItemLink
-                        to="/users"
-                        primary={i18n.t("Usuarios")}
-                        icon={<PeopleOutlineIcon />}
-                        onNavigate={handleNavigateFromSubmenu}
-                      />
-                      <ListItemLink
-                        to="/queues"
-                        primary={i18n.t("Departamentos")}
-                        icon={<AccountTreeOutlinedIcon />}
-                        onNavigate={handleNavigateFromSubmenu}
-                      />
-                    </>
-                  )}
-                />
-              )}
+              <Can
+                role={user.profile}
+                perform="dashboard:view"
+                yes={() => (
+                  <>
+                    <ListItemLink
+                      to="/users"
+                      primary={i18n.t("Usuarios")}
+                      icon={<PeopleOutlineIcon />}
+                      onNavigate={handleNavigateFromSubmenu}
+                    />
+                    <ListItemLink
+                      to="/queues"
+                      primary={i18n.t("Departamentos")}
+                      icon={<AccountTreeOutlinedIcon />}
+                      onNavigate={handleNavigateFromSubmenu}
+                    />
+                  </>
+                )}
+              />
               {showIntegrations && planExpired && (
                 <Can
                   role={user.profile}
