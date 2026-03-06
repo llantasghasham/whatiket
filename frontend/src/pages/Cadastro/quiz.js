@@ -957,7 +957,11 @@ const SignUp = () => {
                     return {};
                   } catch (err) {
                     const errors = {};
-                    err.inner?.forEach(e => { if (e.path) errors[e.path] = e.message; });
+                    if (err.inner) {
+                      err.inner.forEach((e) => {
+                        if (e.path) errors[e.path] = e.message;
+                      });
+                    }
                     return errors;
                   }
                 }}
