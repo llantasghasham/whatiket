@@ -28,6 +28,13 @@ export const webHook = async (
   try {
     const { body } = req;
 
+    // Log para verificar que Meta envía eventos
+    if (body?.object) {
+      const entryCount = body.entry?.length ?? 0;
+      const hasMessaging = body.entry?.some((e: any) => (e.messaging?.length ?? 0) > 0);
+      console.log(`[WEBHOOK] POST /webhook - object: ${body.object} | entries: ${entryCount} | hasMessaging: ${hasMessaging}`);
+    }
+
     if (body.object === "page" || body.object === "instagram") {
       let channel: string;
 
@@ -46,9 +53,12 @@ export const webHook = async (
         });
 
         if (getTokenPage) {
+          console.log(`[WEBHOOK] Page/Insta found for entry.id=${entry.id}, channel=${channel}, companyId=${getTokenPage.companyId}`);
           for (const data of entry.messaging || []) {
             await handleMessage(getTokenPage, data, channel, getTokenPage.companyId);
           }
+        } else {
+          console.log(`[WEBHOOK] No connection found for entry.id=${entry.id}, channel=${channel}`);
         }
       }
 
