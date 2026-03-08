@@ -27,21 +27,25 @@ El flujo OAuth **no debe** usar sesión ni cookies. El `state` (con `companyId`)
 ### `backend/src/controllers/FacebookOAuthController.ts`
 - Log de diagnóstico al recibir el callback
 
-## 3. Código exacto añadido en app.ts
+## 3. Código exacto en app.ts
+
+Las rutas OAuth se montan **inmediatamente después** de `app.set("trust proxy", 1)`, **antes** de compression, bodyParser, cors y el resto de middlewares:
 
 ```typescript
-// Trust proxy (nginx/reverse proxy)
+const app = express();
 app.set("trust proxy", 1);
 
-// ... (middlewares existentes) ...
+// OAUTH - PRIMERO, antes de CUALQUIER middleware
+app.get("/facebook-callback", (req, res, next) => {
+  FacebookOAuthController.facebookCallback(req, res).catch(next);
+});
+app.get("/instagram-callback", ...);
+app.get("/api/facebook-callback", ...);
+app.get("/api/instagram-callback", ...);
 
-// OAUTH FACEBOOK/INSTAGRAM - Montado ANTES de routes para evitar isAuth
-app.get("/facebook-callback", FacebookOAuthController.facebookCallback);
-app.get("/instagram-callback", FacebookOAuthController.instagramCallback);
-app.get("/api/facebook-callback", FacebookOAuthController.facebookCallback);
-app.get("/api/instagram-callback", FacebookOAuthController.instagramCallback);
-
-// Rotas
+// Luego: compression, bodyParser, cors, routes...
+app.use(compression());
+// ...
 app.use(routes);
 ```
 
