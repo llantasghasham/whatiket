@@ -274,6 +274,7 @@ const messages = {
         copyUrl: "Copiar URL",
         copyToken: "Copiar Token",
         copiedClipboard: "Copiado para a área de transferência!",
+        saveRequiresConnection: "Primeiro conecte o Facebook ou Instagram para salvar o nome.",
       },
       plans: {
         monthly: "Mensal",

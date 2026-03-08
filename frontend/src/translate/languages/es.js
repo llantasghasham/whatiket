@@ -282,6 +282,7 @@ const messages = {
         step2Requirements: "Requisitos",
         step2RequirementsDesc: "Para conectar Instagram, necesita:",
         requirementsList: "• Cuenta Instagram Business\n• Cuenta Facebook vinculada\n• Permisos de mensajes",
+        saveRequiresConnection: "Primero conecte Facebook o Instagram para guardar el nombre.",
       },
       plans: {
         monthly: "Mensual",

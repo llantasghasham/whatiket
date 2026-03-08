@@ -30,13 +30,19 @@ const toastError = err => {
 			});
 			return
 		}
-	} if (isString(err)) {
-		toast.error(err);
-		return
-	} else {
-		toast.error("An error occurred!");
-		return
 	}
+	if (err.response?.status === 500 && !errorMsg) {
+		toast.error(err.response?.data?.message || "Error interno del servidor. Revise los logs del backend.", {
+			toastId: "internal-error",
+			autoClose: 4000,
+		});
+		return;
+	}
+	if (isString(err)) {
+		toast.error(err);
+		return;
+	}
+	toast.error(errorMsg || "Ha ocurrido un error.");
 };
 
 export default toastError;

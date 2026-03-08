@@ -176,6 +176,10 @@ const FacebookInstagramModal = ({ open, onClose, whatsAppId, channel, companyId 
   };
 
   const handleSave = async () => {
+    if (!whatsAppId) {
+      toast.error(i18n.t("facebookInstagram.saveRequiresConnection") || "Primero conecte Facebook o Instagram.");
+      return;
+    }
     try {
       await api.put(`/whatsapp/${whatsAppId}`, {
         name,
@@ -381,7 +385,8 @@ const FacebookInstagramModal = ({ open, onClose, whatsAppId, channel, companyId 
           onClick={handleSave}
           color="primary"
           variant="contained"
-          disabled={loading}
+          disabled={loading || !whatsAppId}
+          title={!whatsAppId ? (i18n.t("facebookInstagram.saveRequiresConnection") || "Conecte primero para guardar el nombre") : ""}
         >
           {i18n.t("common.save")}
         </Button>

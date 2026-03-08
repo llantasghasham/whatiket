@@ -6,6 +6,9 @@
 
 | Problema | Causa | Solución |
 |----------|-------|----------|
+| **ERR_SESSION_EXPIRED en callback** | Las rutas OAuth dentro de `routes` podían ser interceptadas por otro router con `isAuth` antes de llegar al callback | Rutas OAuth montadas directamente en `app.ts` ANTES de `app.use(routes)`; así nunca pasan por ningún middleware de auth |
+| **Internal server error al Guardar** | Al agregar conexión nueva, `whatsAppId` es undefined; PUT /whatsapp/undefined falla | Botón Guardar deshabilitado cuando no hay whatsAppId; validación antes de llamar API |
+| **Dominio no incluido en la app** | api.shakarbakar.com no está en App Domains de Meta | Añadir en Meta: Configuración → Básica → Dominios de la app |
 | **FB.login() called before FB.init()** | El menú usaba `FacebookLogin` que llama a `FB.login()` antes de que el SDK cargue | Reemplazado por flujo OAuth: clic abre modal → botón redirige a Facebook OAuth → backend recibe callback |
 | **Modal no abría** | Los botones Facebook/Instagram ejecutaban `FB.login()` directamente | Ahora abren `FacebookInstagramModal` que usa OAuth redirect (sin SDK) |
 | **Error 500 en hub-channel** | ListChannels podía fallar con token faltante | Ya devolvía `[]` en catch; se mantiene el manejo |
@@ -37,6 +40,11 @@
   - `connections.facebook.error`
 
 ### Backend
+- **`backend/src/app.ts`**
+  - Rutas OAuth montadas directamente: `app.get("/facebook-callback", ...)`, `app.get("/instagram-callback", ...)`, más `/api/facebook-callback` y `/api/instagram-callback` (por si el proxy añade prefijo)
+  - Montadas ANTES de `app.use(routes)` para que nunca pasen por isAuth
+  - `app.set("trust proxy", 1)` para correcto manejo detrás de nginx
+
 - **`backend/src/controllers/FacebookOAuthController.ts`**
   - Plan: si `useFacebook`/`useInstagram` es false, se permite (solo log)
   - `backendUrl` sin barra final
@@ -106,17 +114,36 @@ En [developers.facebook.com](https://developers.facebook.com) → Tu App → App
 - `instagram_manage_messages` - Mensajes de Instagram Direct
 - Los mismos de páginas que arriba
 
-### Configuración del producto
-1. **Facebook Login** → Configuración → Valid OAuth Redirect URIs:  
-   `https://tu-backend.com/facebook-callback`  
-   `https://tu-backend.com/instagram-callback`
+### Configuración del producto (CRÍTICO para evitar errores)
 
-2. **Webhooks** → Configurar:
-   - URL de callback: `https://tu-backend.com/webhook`
-   - Verify token: `whaticket` (o el valor de `VERIFY_TOKEN`)
+#### 1. Dominios de la app (evita "El dominio de esta URL no está incluido en los dominios de la app")
+- **Configuración** → **Básica** → **Dominios de la app**
+- Añadir EXACTAMENTE (uno por línea, sin https://):
+  ```
+  api.shakarbakar.com
+  chatwoot.shakarbakar.com
+  shakarbakar.com
+  ```
+
+#### 2. URIs de redirección OAuth
+- **Facebook Login** → **Configuración** → **URIs de redirección OAuth válidos**, añadir:
+  ```
+  https://api.shakarbakar.com/facebook-callback
+  https://api.shakarbakar.com/instagram-callback
+  ```
+- Si tu proxy usa /api, añadir también:
+  ```
+  https://api.shakarbakar.com/api/facebook-callback
+  https://api.shakarbakar.com/api/instagram-callback
+  ```
+
+#### 3. Webhooks
+- **Webhooks** → Configurar:
+   - URL de callback: `https://api.shakarbakar.com/webhook`
+   - Token de verificación: `whaticket` (debe coincidir con VERIFY_TOKEN en .env)
    - Suscribir: `messages`, `messaging_postbacks`, `message_deliveries`, `message_reads`, `message_echoes`
 
-3. **Instagram** (si usas Instagram):
+#### 4. Instagram (si usas Instagram)
    - Añadir producto "Instagram Graph API"
    - Webhook igual que Facebook (misma URL)
    - La página debe tener cuenta Instagram Business vinculada
