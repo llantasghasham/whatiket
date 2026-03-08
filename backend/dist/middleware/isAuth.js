@@ -8,8 +8,10 @@ const AppError_1 = __importDefault(require("../errors/AppError"));
 const auth_1 = __importDefault(require("../config/auth"));
 const updateUser_1 = require("../helpers/updateUser");
 const isAuth = async (req, res, next) => {
+    console.log("HIT isAuth | ORIGINAL URL:", req.originalUrl, "| req.query:", JSON.stringify(req.query), "| req.headers.authorization:", req.headers.authorization ?? "MISSING");
     const authHeader = req.headers.authorization;
     if (!authHeader) {
+        console.log("ERR_SESSION_EXPIRED THROWN FROM isAuth.ts LINE", 26);
         throw new AppError_1.default("ERR_SESSION_EXPIRED", 401);
     }
     // const check = await verifyHelper();
@@ -51,6 +53,7 @@ const isAuth = async (req, res, next) => {
             }
             catch (renewError) {
                 console.error("Erro ao renovar token:", renewError);
+                console.log("ERR_SESSION_EXPIRED THROWN FROM isAuth.ts LINE", 78, "(renewError)");
                 throw new AppError_1.default("ERR_SESSION_EXPIRED", 401);
             }
         }

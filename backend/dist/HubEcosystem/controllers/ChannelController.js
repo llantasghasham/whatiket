@@ -38,10 +38,11 @@ const index = async (req, res) => {
     const { companyId } = req.user;
     try {
         const channels = await (0, ListChannels_1.default)(companyId.toString());
-        return res.status(200).json(channels);
+        return res.status(200).json(Array.isArray(channels) ? channels : []);
     }
     catch (error) {
-        return res.status(500).json({ error: error.message });
+        console.error("[hub-channel] Error listing channels:", error?.message || error);
+        return res.status(200).json([]);
     }
 };
 exports.index = index;

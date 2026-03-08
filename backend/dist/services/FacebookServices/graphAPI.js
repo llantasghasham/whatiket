@@ -127,7 +127,7 @@ const getPageProfile = async (id, token) => {
         return data;
     }
     catch (error) {
-        console.log(error);
+        console.error("[graphAPI] getPageProfile error:", error);
         throw new Error("ERR_FETCHING_FB_PAGES");
     }
 };

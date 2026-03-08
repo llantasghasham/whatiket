@@ -77,7 +77,6 @@ const produtoRoutes_1 = __importDefault(require("./produtoRoutes"));
 const ferramentaRoutes_1 = __importDefault(require("./ferramentaRoutes"));
 const googleCalendarRoutes_1 = __importDefault(require("./googleCalendarRoutes"));
 const userGoogleCalendarRoutes_1 = __importDefault(require("./userGoogleCalendarRoutes"));
-const facebookOAuthRoutes_1 = __importDefault(require("./facebookOAuthRoutes"));
 // import mobileWebhookRoutes from "./mobileWebhookRoutes";
 const emailRoutes_1 = __importDefault(require("./emailRoutes"));
 const tutorialVideoRoutes_1 = __importDefault(require("./tutorialVideoRoutes"));
@@ -118,6 +117,7 @@ const financeiroFornecedorRoutes_1 = __importDefault(require("./financeiroFornec
 const financeiroDespesaRoutes_1 = __importDefault(require("./financeiroDespesaRoutes"));
 const financeiroPagamentoDespesaRoutes_1 = __importDefault(require("./financeiroPagamentoDespesaRoutes"));
 const routes = (0, express_1.Router)();
+// OAuth Facebook/Instagram: montado en app.ts directamente (antes de routes) para evitar ERR_SESSION_EXPIRED
 routes.use(userRoutes_1.default);
 routes.use("/auth", authRoutes_1.default);
 routes.use("/api/messages", apiRoutes_1.default);
@@ -226,8 +226,6 @@ routes.use(hubChannelRoutes_1.default);
 routes.use(hubMessageRoutes_1.default);
 routes.use(hubWebhookRoutes_1.default);
 routes.use(automationRoutes_1.default);
-// OAuth Facebook/Instagram
-routes.use(facebookOAuthRoutes_1.default);
 // Configurações e Analytics de Contatos
 routes.use(contactSettingsRoutes_1.default);
 routes.use(contactAnalyticsRoutes_1.default);

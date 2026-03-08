@@ -6,11 +6,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.showHubToken = void 0;
 const CompaniesSettings_1 = __importDefault(require("../../models/CompaniesSettings"));
 const showHubToken = async (companyId) => {
-    const notificameHubToken = await CompaniesSettings_1.default.findOne({
+    const settings = await CompaniesSettings_1.default.findOne({
         where: {
             companyId,
         }
     });
-    return notificameHubToken.notificameHub;
+    if (!settings || !settings.notificameHub) {
+        return null;
+    }
+    return settings.notificameHub;
 };
 exports.showHubToken = showHubToken;

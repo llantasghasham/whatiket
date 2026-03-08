@@ -25,7 +25,12 @@ exports.index = index;
 const webHook = async (req, res) => {
     try {
         const { body } = req;
-        console.log(30, "WebHookController", { body });
+        // Log para verificar que Meta envía eventos
+        if (body?.object) {
+            const entryCount = body.entry?.length ?? 0;
+            const hasMessaging = body.entry?.some((e) => (e.messaging?.length ?? 0) > 0);
+            console.log(`[WEBHOOK] POST /webhook - object: ${body.object} | entries: ${entryCount} | hasMessaging: ${hasMessaging}`);
+        }
         if (body.object === "page" || body.object === "instagram") {
             let channel;
             if (body.object === "page") {
@@ -34,7 +39,7 @@ const webHook = async (req, res) => {
             else {
                 channel = "instagram";
             }
-            body.entry?.forEach(async (entry) => {
+            for (const entry of body.entry || []) {
                 const getTokenPage = await Whatsapp_1.default.findOne({
                     where: {
                         facebookPageUserId: entry.id,
@@ -42,22 +47,27 @@ const webHook = async (req, res) => {
                     }
                 });
                 if (getTokenPage) {
-                    entry.messaging?.forEach((data) => {
-                        (0, facebookMessageListener_1.handleMessage)(getTokenPage, data, channel, getTokenPage.companyId);
-                    });
+                    console.log(`[WEBHOOK] Page/Insta found for entry.id=${entry.id}, channel=${channel}, companyId=${getTokenPage.companyId}`);
+                    for (const data of entry.messaging || []) {
+                        await (0, facebookMessageListener_1.handleMessage)(getTokenPage, data, channel, getTokenPage.companyId);
+                    }
                 }
-            });
+                else {
+                    console.log(`[WEBHOOK] No connection found for entry.id=${entry.id}, channel=${channel}`);
+                }
+            }
             return res.status(200).json({
                 message: "EVENT_RECEIVED"
             });
         }
         return res.status(404).json({
-            message: body
+            message: "Webhook object not supported"
         });
     }
     catch (error) {
+        console.error("[WebHook] Error:", error?.message || error);
         return res.status(500).json({
-            message: error
+            message: error?.message || "Internal error"
         });
     }
 };
