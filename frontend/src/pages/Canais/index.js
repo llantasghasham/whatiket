@@ -57,7 +57,6 @@ import ChannelModal from "../../HubEcosystem/components/ChannelModal";
 import notificame_logo from "../../assets/notificame_logo.png";
 import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
 import FacebookInstagramModal from "../../components/FacebookInstagramModal";
-import useFacebookReady from "../../hooks/useFacebookReady";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -415,7 +414,6 @@ const Connections = () => {
     confirmationModalInitialState
   );
   const [planConfig, setPlanConfig] = useState(false);
-  const fbReady = useFacebookReady();
 
   const { user, socket } = useContext(AuthContext);
 
@@ -1037,51 +1035,34 @@ const Connections = () => {
                           <img src={notificame_logo} alt="NotificaMe Hub" style={{ width: 16, height: 16, marginRight: 10, marginLeft: 2 }} />
                           NotificaMe Hub
                         </MenuItem>
-                        {process.env.REACT_APP_FACEBOOK_APP_ID ? (
-                          fbReady ? (
-                            <>
-                              <FacebookLogin
-                                appId={process.env.REACT_APP_FACEBOOK_APP_ID}
-                                autoLoad={false}
-                                fields="name,email,picture"
-                                version="13.0"
-                                scope="public_profile,pages_messaging,pages_show_list,pages_manage_metadata,pages_read_engagement,business_management"
-                                callback={responseFacebook}
-                                render={(renderProps) => (
-                                  <MenuItem onClick={renderProps.onClick}>
-                                    <Facebook fontSize="small" style={{ marginRight: 10, color: "#3b5998" }} />
-                                    Facebook
-                                  </MenuItem>
-                                )}
-                              />
-                              <FacebookLogin
-                                appId={process.env.REACT_APP_FACEBOOK_APP_ID}
-                                autoLoad={false}
-                                fields="name,email,picture"
-                                version="13.0"
-                                scope="public_profile,instagram_basic,instagram_manage_messages,pages_messaging,pages_show_list,pages_manage_metadata,pages_read_engagement,business_management"
-                                callback={responseInstagram}
-                                render={(renderProps) => (
-                                  <MenuItem onClick={renderProps.onClick}>
-                                    <Instagram fontSize="small" style={{ marginRight: 10, color: "#e1306c" }} />
-                                    Instagram
-                                  </MenuItem>
-                                )}
-                              />
-                            </>
-                          ) : (
-                            <>
-                              <MenuItem disabled>
-                                <Facebook fontSize="small" style={{ marginRight: 10, color: "#3b5998" }} />
-                                Facebook (cargando...)
-                              </MenuItem>
-                              <MenuItem disabled>
-                                <Instagram fontSize="small" style={{ marginRight: 10, color: "#e1306c" }} />
-                                Instagram (cargando...)
-                              </MenuItem>
-                            </>
-                          )
-                        ) : null}
+                        <FacebookLogin
+                          appId={process.env.REACT_APP_FACEBOOK_APP_ID}
+                          autoLoad={false}
+                          fields="name,email,picture"
+                          version="13.0"
+                          scope="public_profile,pages_messaging,pages_show_list,pages_manage_metadata,pages_read_engagement,business_management"
+                          callback={responseFacebook}
+                          render={(renderProps) => (
+                            <MenuItem onClick={renderProps.onClick}>
+                              <Facebook fontSize="small" style={{ marginRight: 10, color: "#3b5998" }} />
+                              Facebook
+                            </MenuItem>
+                          )}
+                        />
+                        <FacebookLogin
+                          appId={process.env.REACT_APP_FACEBOOK_APP_ID}
+                          autoLoad={false}
+                          fields="name,email,picture"
+                          version="13.0"
+                          scope="public_profile,instagram_basic,instagram_manage_messages,pages_messaging,pages_show_list,pages_manage_metadata,pages_read_engagement,business_management"
+                          callback={responseInstagram}
+                          render={(renderProps) => (
+                            <MenuItem onClick={renderProps.onClick}>
+                              <Instagram fontSize="small" style={{ marginRight: 10, color: "#e1306c" }} />
+                              Instagram
+                            </MenuItem>
+                          )}
+                        />
                       </Menu>
                     </>
                   )}
