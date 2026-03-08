@@ -112,29 +112,45 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const FacebookInstagramModal = ({ open, onClose, whatsAppId }) => {
+const FacebookInstagramModal = ({ open, onClose, whatsAppId, channel, companyId }) => {
   const classes = useStyles();
 
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState("");
-  const [activeTab, setActiveTab] = useState(0); // 0 = Facebook, 1 = Instagram
+  const [activeTab, setActiveTab] = useState(channel === "instagram" ? 1 : 0); // 0 = Facebook, 1 = Instagram
 
-  // Informações do webhook - usando a URL do backend
+  // URL del backend - debe coincidir con BACKEND_URL del servidor
   const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-  const webhookUrl = `${backendUrl}/webhook`;
+  const webhookUrl = `${backendUrl.replace(/\/$/, "")}/webhook`;
   const verifyToken = "whaticket";
 
-  // Função para login direto no Instagram Business
+  // companyId para OAuth state - desde props o localStorage
+  const oauthState = companyId || localStorage.getItem("companyId") || "";
+
   const handleInstagramLogin = () => {
-    const instagramOAuthUrl = `https://www.facebook.com/v18.0/dialog/oauth?client_id=${process.env.REACT_APP_FACEBOOK_APP_ID}&redirect_uri=${encodeURIComponent(backendUrl + '/instagram-callback')}&scope=instagram_basic,instagram_manage_messages,pages_messaging,pages_show_list,pages_manage_metadata,pages_read_engagement,business_management&response_type=code&state=${localStorage.getItem("companyId") || ""}`;
+    if (!oauthState) {
+      toast.error("No se pudo obtener el ID de la empresa. Cierre sesión y vuelva a entrar.");
+      return;
+    }
+    const redirectUri = `${backendUrl.replace(/\/$/, "")}/instagram-callback`;
+    const instagramOAuthUrl = `https://www.facebook.com/v18.0/dialog/oauth?client_id=${process.env.REACT_APP_FACEBOOK_APP_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=instagram_basic,instagram_manage_messages,pages_messaging,pages_show_list,pages_manage_metadata,pages_read_engagement,business_management&response_type=code&state=${oauthState}`;
     window.location.href = instagramOAuthUrl;
   };
 
-  // Função para login direto no Facebook (response_type=code para o backend trocar por token)
   const handleFacebookLogin = () => {
-    const facebookOAuthUrl = `https://www.facebook.com/v18.0/dialog/oauth?client_id=${process.env.REACT_APP_FACEBOOK_APP_ID}&redirect_uri=${encodeURIComponent(backendUrl + "/facebook-callback")}&scope=public_profile,pages_messaging,pages_show_list,pages_manage_metadata,pages_read_engagement,business_management&response_type=code&state=${localStorage.getItem("companyId") || ""}`;
+    if (!oauthState) {
+      toast.error("No se pudo obtener el ID de la empresa. Cierre sesión y vuelva a entrar.");
+      return;
+    }
+    const redirectUri = `${backendUrl.replace(/\/$/, "")}/facebook-callback`;
+    const facebookOAuthUrl = `https://www.facebook.com/v18.0/dialog/oauth?client_id=${process.env.REACT_APP_FACEBOOK_APP_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=public_profile,pages_messaging,pages_show_list,pages_manage_metadata,pages_read_engagement,business_management&response_type=code&state=${oauthState}`;
     window.location.href = facebookOAuthUrl;
   };
+
+  useEffect(() => {
+    if (channel === "instagram") setActiveTab(1);
+    else if (channel === "facebook") setActiveTab(0);
+  }, [channel]);
 
   useEffect(() => {
     const fetchData = async () => {

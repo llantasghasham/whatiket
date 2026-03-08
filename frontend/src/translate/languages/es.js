@@ -582,6 +582,10 @@ const messages = {
       },
       connections: {
         title: "Conexiones",
+        facebook: {
+          success: "Facebook/Instagram conectado correctamente",
+          error: "Error al conectar. Verifique la configuración de la app de Meta.",
+        },
         waitConnection: "Espere... Las conexiones serán reiniciadas!",
         newConnection: "Nueva Conexión",
         restartConnections: "Reiniciar Conexiones",

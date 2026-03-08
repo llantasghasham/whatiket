@@ -27,7 +27,6 @@ export const webHook = async (
 ): Promise<Response> => {
   try {
     const { body } = req;
-    console.log(30, "WebHookController", { body })
 
     if (body.object === "page" || body.object === "instagram") {
       let channel: string;
@@ -38,7 +37,7 @@ export const webHook = async (
         channel = "instagram";
       }
 
-      body.entry?.forEach(async (entry: any) => {
+      for (const entry of body.entry || []) {
         const getTokenPage = await Whatsapp.findOne({
           where: {
             facebookPageUserId: entry.id,
@@ -47,11 +46,11 @@ export const webHook = async (
         });
 
         if (getTokenPage) {
-          entry.messaging?.forEach((data: any) => {
-            handleMessage(getTokenPage, data, channel, getTokenPage.companyId);
-          });
+          for (const data of entry.messaging || []) {
+            await handleMessage(getTokenPage, data, channel, getTokenPage.companyId);
+          }
         }
-      });
+      }
 
       return res.status(200).json({
         message: "EVENT_RECEIVED"
@@ -59,11 +58,12 @@ export const webHook = async (
     }
 
     return res.status(404).json({
-      message: body
+      message: "Webhook object not supported"
     });
-  } catch (error) {
+  } catch (error: any) {
+    console.error("[WebHook] Error:", error?.message || error);
     return res.status(500).json({
-      message: error
+      message: error?.message || "Internal error"
     });
   }
 };

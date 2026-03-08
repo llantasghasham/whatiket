@@ -141,14 +141,14 @@ export const getProfile = async (id: string, token: string): Promise<any> => {
 export const getPageProfile = async (
   id: string,
   token: string
-): Promise<any> => {
+): Promise<{ data: any[] }> => {
   try {
     const { data } = await apiBase(token).get(
       `${id}/accounts?fields=name,access_token,instagram_business_account{id,username,profile_picture_url,name}`
     );
     return data;
   } catch (error) {
-    console.log(error);
+    console.error("[graphAPI] getPageProfile error:", error);
     throw new Error("ERR_FETCHING_FB_PAGES");
   }
 };

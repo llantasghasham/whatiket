@@ -31,16 +31,14 @@ export const facebookCallback = async (
     const company = await ShowCompanyService(companyId);
     const plan = await ShowPlanService(company.planId);
 
-    if (!plan.useFacebook) {
-      res.status(400).json({ error: "Empresa não possui permissão para Facebook" });
-      return;
+    if (plan && plan.useFacebook === false) {
+      console.warn("[Facebook OAuth] Plan useFacebook=false, allowing anyway");
     }
 
-    // Trocar code por access token (redirect_uri deve ser exatamente o mesmo usado no frontend: backend)
     const facebookAppId = process.env.FACEBOOK_APP_ID;
     const facebookAppSecret = process.env.FACEBOOK_APP_SECRET;
-    const backendUrl = process.env.BACKEND_URL || process.env.FRONTEND_URL || "http://localhost:4000";
-    const redirectUri = `${backendUrl.replace(/\/$/, "")}/facebook-callback`;
+    const backendUrl = (process.env.BACKEND_URL || process.env.FRONTEND_URL || "http://localhost:4000").replace(/\/$/, "");
+    const redirectUri = `${backendUrl}/facebook-callback`;
 
     const tokenResponse = await fetch(
       `https://graph.facebook.com/v18.0/oauth/access_token?client_id=${facebookAppId}&client_secret=${facebookAppSecret}&redirect_uri=${encodeURIComponent(redirectUri)}&code=${code}`
@@ -49,83 +47,101 @@ export const facebookCallback = async (
     const tokenData = await tokenResponse.json();
     
     if (!tokenData.access_token) {
-      console.error("Erro ao obter access token:", tokenData);
-      res.status(400).json({ error: "Erro ao obter token de acesso" });
+      console.error("[Facebook OAuth] Erro ao obter access token:", JSON.stringify(tokenData));
+      res.redirect(`${process.env.FRONTEND_URL}/canais?error=facebook-failed`);
       return;
     }
 
     const userToken = tokenData.access_token;
 
-    // Obter páginas do usuário (Graph API retorna { data: [ ... ] })
     const pagesResponse = await getPageProfile(tokenData.user_id || "me", userToken);
     const pages = Array.isArray(pagesResponse?.data) ? pagesResponse.data : [];
 
     if (pages.length === 0) {
-      res.status(400).json({ error: "Nenhuma página encontrada" });
+      console.error("[Facebook OAuth] Nenhuma página encontrada");
+      res.redirect(`${process.env.FRONTEND_URL}/canais?error=facebook-failed`);
       return;
     }
 
-    // Criar conexões para cada página
     const io = getIO();
     const createdConnections = [];
 
-    for await (const page of pages) {
+    for (const page of pages) {
       const { name, access_token, id, instagram_business_account } = page;
       const pageToken = await getAccessTokenFromPage(access_token);
 
-      // Criar conexão Facebook
-      const facebookConnection = await Whatsapp.create({
-        companyId,
-        name: `FB ${name}`,
-        facebookUserId: tokenData.user_id || "me",
-        facebookPageUserId: id,
-        facebookUserToken: pageToken,
-        tokenMeta: userToken,
-        isDefault: false,
-        channel: "facebook",
-        status: "CONNECTED",
-        greetingMessage: "",
-        farewellMessage: "",
-        queueIds: [],
-        isMultidevice: false
-      });
-
-      // Inscrever webhook
-      await subscribeApp(id, pageToken);
-
-      createdConnections.push(facebookConnection);
-
-      // Se tiver Instagram, criar conexão também
-      if (instagram_business_account) {
-        const { id: instagramId, username, name: instagramName } = instagram_business_account;
-
-        const instagramConnection = await Whatsapp.create({
-          companyId,
-          name: `Insta ${username || instagramName}`,
+      let facebookConnection;
+      const existFb = await Whatsapp.findOne({ where: { facebookPageUserId: id, channel: "facebook", companyId } });
+      if (existFb) {
+        await existFb.update({
           facebookUserId: tokenData.user_id || "me",
-          facebookPageUserId: instagramId,
+          facebookUserToken: pageToken,
+          tokenMeta: userToken,
+          status: "CONNECTED",
+        });
+        facebookConnection = existFb;
+      } else {
+        facebookConnection = await Whatsapp.create({
+          companyId,
+          name: `FB ${name}`,
+          facebookUserId: tokenData.user_id || "me",
+          facebookPageUserId: id,
           facebookUserToken: pageToken,
           tokenMeta: userToken,
           isDefault: false,
-          channel: "instagram",
+          channel: "facebook",
           status: "CONNECTED",
           greetingMessage: "",
           farewellMessage: "",
           queueIds: [],
           isMultidevice: false
         });
+      }
 
+      await subscribeApp(id, pageToken);
+      createdConnections.push(facebookConnection);
+
+      if (instagram_business_account) {
+        const { id: instagramId, username, name: instagramName } = instagram_business_account;
+
+        let instagramConnection;
+        const existIg = await Whatsapp.findOne({ where: { facebookPageUserId: instagramId, channel: "instagram", companyId } });
+        if (existIg) {
+          await existIg.update({
+            facebookUserToken: pageToken,
+            tokenMeta: userToken,
+            status: "CONNECTED",
+          });
+          instagramConnection = existIg;
+        } else {
+          instagramConnection = await Whatsapp.create({
+            companyId,
+            name: `Insta ${username || instagramName}`,
+            facebookUserId: tokenData.user_id || "me",
+            facebookPageUserId: instagramId,
+            facebookUserToken: pageToken,
+            tokenMeta: userToken,
+            isDefault: false,
+            channel: "instagram",
+            status: "CONNECTED",
+            greetingMessage: "",
+            farewellMessage: "",
+            queueIds: [],
+            isMultidevice: false
+          });
+        }
         createdConnections.push(instagramConnection);
+      }
       }
     }
 
-    // Emitir evento para atualizar frontend
-    io.to(`company-${companyId}`).emit("whatsapp", {
-      action: "update",
-      whatsapp: createdConnections
+    createdConnections.forEach((conn) => {
+      io.of(String(companyId)).emit(`company-${companyId}-whatsapp`, {
+        action: "update",
+        whatsapp: conn
+      });
     });
 
-    // Redirecionar para frontend com sucesso
     res.redirect(`${process.env.FRONTEND_URL}/canais?success=facebook-connected`);
 
   } catch (error) {
@@ -160,16 +176,14 @@ export const instagramCallback = async (
     const company = await ShowCompanyService(companyId);
     const plan = await ShowPlanService(company.planId);
 
-    if (!plan.useInstagram) {
-      res.status(400).json({ error: "Empresa não possui permissão para Instagram" });
-      return;
+    if (plan && plan.useInstagram === false) {
+      console.warn("[Instagram OAuth] Plan useInstagram=false, allowing anyway");
     }
 
-    // Trocar code por access token (redirect_uri deve ser o backend, igual ao usado no frontend)
     const facebookAppId = process.env.FACEBOOK_APP_ID;
     const facebookAppSecret = process.env.FACEBOOK_APP_SECRET;
-    const backendUrl = process.env.BACKEND_URL || process.env.FRONTEND_URL || "http://localhost:4000";
-    const redirectUri = `${backendUrl.replace(/\/$/, "")}/instagram-callback`;
+    const backendUrl = (process.env.BACKEND_URL || process.env.FRONTEND_URL || "http://localhost:4000").replace(/\/$/, "");
+    const redirectUri = `${backendUrl}/instagram-callback`;
 
     const tokenResponse = await fetch(
       `https://graph.facebook.com/v18.0/oauth/access_token?client_id=${facebookAppId}&client_secret=${facebookAppSecret}&redirect_uri=${encodeURIComponent(redirectUri)}&code=${code}`
@@ -178,27 +192,26 @@ export const instagramCallback = async (
     const tokenData = await tokenResponse.json();
     
     if (!tokenData.access_token) {
-      console.error("Erro ao obter access token:", tokenData);
-      res.status(400).json({ error: "Erro ao obter token de acesso" });
+      console.error("[Instagram OAuth] Erro ao obter access token:", JSON.stringify(tokenData));
+      res.redirect(`${process.env.FRONTEND_URL}/canais?error=instagram-failed`);
       return;
     }
 
     const userToken = tokenData.access_token;
 
-    // Obter páginas (Graph API retorna { data: [ ... ] })
     const pagesResponse = await getPageProfile(tokenData.user_id || "me", userToken);
     const pages = Array.isArray(pagesResponse?.data) ? pagesResponse.data : [];
 
     if (pages.length === 0) {
-      res.status(400).json({ error: "Nenhuma página com Instagram encontrada" });
+      console.error("[Instagram OAuth] Nenhuma página com Instagram encontrada");
+      res.redirect(`${process.env.FRONTEND_URL}/canais?error=instagram-failed`);
       return;
     }
 
-    // Criar conexões apenas para páginas com Instagram
     const io = getIO();
     const createdConnections = [];
 
-    for await (const page of pages) {
+    for (const page of pages) {
       const { name, access_token, id, instagram_business_account } = page;
 
       // Apenas criar se tiver Instagram Business
@@ -206,38 +219,48 @@ export const instagramCallback = async (
         const { id: instagramId, username, name: instagramName } = instagram_business_account;
         const pageToken = await getAccessTokenFromPage(access_token);
 
-        const instagramConnection = await Whatsapp.create({
-          companyId,
-          name: `Insta ${username || instagramName}`,
-          facebookUserId: tokenData.user_id || "me",
-          facebookPageUserId: instagramId,
-          facebookUserToken: pageToken,
-          tokenMeta: userToken,
-          isDefault: false,
-          channel: "instagram",
-          status: "CONNECTED",
-          greetingMessage: "",
-          farewellMessage: "",
-          queueIds: [],
-          isMultidevice: false
-        });
-
+        let instagramConnection;
+        const existIg = await Whatsapp.findOne({ where: { facebookPageUserId: instagramId, channel: "instagram", companyId } });
+        if (existIg) {
+          await existIg.update({
+            facebookUserToken: pageToken,
+            tokenMeta: userToken,
+            status: "CONNECTED",
+          });
+          instagramConnection = existIg;
+        } else {
+          instagramConnection = await Whatsapp.create({
+            companyId,
+            name: `Insta ${username || instagramName}`,
+            facebookUserId: tokenData.user_id || "me",
+            facebookPageUserId: instagramId,
+            facebookUserToken: pageToken,
+            tokenMeta: userToken,
+            isDefault: false,
+            channel: "instagram",
+            status: "CONNECTED",
+            greetingMessage: "",
+            farewellMessage: "",
+            queueIds: [],
+            isMultidevice: false
+          });
+        }
         createdConnections.push(instagramConnection);
-
-        // Inscrever webhook
         await subscribeApp(id, pageToken);
       }
     }
 
     if (createdConnections.length === 0) {
-      res.status(400).json({ error: "Nenhuma conta Instagram Business encontrada" });
+      console.error("[Instagram OAuth] Nenhuma conta Instagram Business encontrada");
+      res.redirect(`${process.env.FRONTEND_URL}/canais?error=instagram-failed`);
       return;
     }
 
-    // Emitir evento para atualizar frontend
-    io.to(`company-${companyId}`).emit("whatsapp", {
-      action: "update",
-      whatsapp: createdConnections
+    createdConnections.forEach((conn) => {
+      io.of(String(companyId)).emit(`company-${companyId}-whatsapp`, {
+        action: "update",
+        whatsapp: conn
+      });
     });
 
     // Redirecionar para frontend com sucesso
