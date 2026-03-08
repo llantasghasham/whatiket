@@ -3,7 +3,7 @@ const path = require('path');
 module.exports = [{
   script: 'dist/server.js',
   cwd: path.resolve(__dirname),
-  name: 'multipremium-back',
+  name: 'empresa-backend',
   exec_mode: 'fork',
   cron_restart: '05 00 * * *',
   max_memory_restart: '769M',
