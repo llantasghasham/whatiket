@@ -360,7 +360,7 @@ const AdminCommissions = () => {
                   <TableCell>{commission.affiliate?.company?.name || "N/A"}</TableCell>
                   <TableCell>{commission.referredCompany?.name || "N/A"}</TableCell>
                   <TableCell className={classes.amountCell}>
-                    R$ {parseFloat(commission.commissionAmount || 0).toFixed(2)}
+                    $ {parseFloat(commission.commissionAmount || 0).toFixed(2)}
                   </TableCell>
                   <TableCell>{commission.commissionRate}%</TableCell>
                   <TableCell>
@@ -429,7 +429,7 @@ const AdminCommissions = () => {
             {selectedCommission && (
               <div>
                 <Typography variant="body2" gutterBottom>
-                  <strong>Comissão:</strong> R$ {parseFloat(selectedCommission.commissionAmount || 0).toFixed(2)}
+                  <strong>Comissão:</strong> $ {parseFloat(selectedCommission.commissionAmount || 0).toFixed(2)}
                 </Typography>
                 <Typography variant="body2" gutterBottom>
                   <strong>Afiliado:</strong> {selectedCommission.affiliate?.company?.name}

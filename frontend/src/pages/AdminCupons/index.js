@@ -345,7 +345,7 @@ const AdminCupons = () => {
                   <TableCell className={classes.amountCell}>
                     {coupon.discountType === "percentage" 
                       ? `${coupon.discountValue}%` 
-                      : `R$ ${coupon.discountValue.toFixed(2)}`
+                      : `$ ${coupon.discountValue.toFixed(2)}`
                     }
                   </TableCell>
                   <TableCell>
@@ -434,14 +434,14 @@ const AdminCupons = () => {
                     label="Tipo de Desconto"
                   >
                     <MenuItem value="percentage">Percentual (%)</MenuItem>
-                    <MenuItem value="fixed">Fixo (R$)</MenuItem>
+                    <MenuItem value="fixed">Fixo (USD)</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
               <Grid item xs={6}>
                 <TextField
                   fullWidth
-                  label={formData.discountType === "percentage" ? "Percentual (%)" : "Valor (R$)"}
+                  label={formData.discountType === "percentage" ? "Percentual (%)" : "Valor (USD)"}
                   type="number"
                   value={formData.discountValue}
                   onChange={(e) => setFormData({ ...formData, discountValue: e.target.value })}
@@ -450,7 +450,7 @@ const AdminCupons = () => {
               <Grid item xs={6}>
                 <TextField
                   fullWidth
-                  label="Valor Mínimo do Plano (R$)"
+                  label="Valor Mínimo do Plano (USD)"
                   type="number"
                   value={formData.minPlanAmount}
                   onChange={(e) => setFormData({ ...formData, minPlanAmount: e.target.value })}
@@ -550,14 +550,14 @@ const AdminCupons = () => {
                     label="Tipo de Desconto"
                   >
                     <MenuItem value="percentage">Percentual (%)</MenuItem>
-                    <MenuItem value="fixed">Fixo (R$)</MenuItem>
+                    <MenuItem value="fixed">Fixo (USD)</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
               <Grid item xs={6}>
                 <TextField
                   fullWidth
-                  label={formData.discountType === "percentage" ? "Percentual (%)" : "Valor (R$)"}
+                  label={formData.discountType === "percentage" ? "Percentual (%)" : "Valor (USD)"}
                   type="number"
                   value={formData.discountValue}
                   onChange={(e) => setFormData({ ...formData, discountValue: e.target.value })}
@@ -566,7 +566,7 @@ const AdminCupons = () => {
               <Grid item xs={6}>
                 <TextField
                   fullWidth
-                  label="Valor Mínimo do Plano (R$)"
+                  label="Valor Mínimo do Plano (USD)"
                   type="number"
                   value={formData.minPlanAmount}
                   onChange={(e) => setFormData({ ...formData, minPlanAmount: e.target.value })}

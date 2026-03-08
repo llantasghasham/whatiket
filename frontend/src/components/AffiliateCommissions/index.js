@@ -106,7 +106,7 @@ const AffiliateCommissions = ({ commissions, onRefresh }) => {
             <div key={commission.id} className={classes.commissionItem}>
               <div>
                 <Typography variant="body1" className={classes.commissionAmount}>
-                  R$ {commission.commissionAmount?.toFixed(2)}
+                  $ {commission.commissionAmount?.toFixed(2)}
                 </Typography>
                 <Typography variant="body2">
                   {commission.referredCompany?.name || "Empresa não identificada"}

@@ -431,7 +431,7 @@ const AffiliateDetails = () => {
               </div>
               <div className={classes.infoItem}>
                 <span className={classes.infoLabel}>Valor Mínimo Saque:</span>
-                <span className={classes.infoValue}>R$ {parseFloat(affiliateInfo.minWithdrawAmount || 0).toFixed(2)}</span>
+                <span className={classes.infoValue}>$ {parseFloat(affiliateInfo.minWithdrawAmount || 0).toFixed(2)}</span>
               </div>
               <div className={classes.infoItem}>
                 <span className={classes.infoLabel}>Status:</span>
@@ -451,16 +451,16 @@ const AffiliateDetails = () => {
               <Typography variant="h6">Resumo Financeiro</Typography>
               <div className={classes.infoItem}>
                 <span className={classes.infoLabel}>Total Ganho:</span>
-                <span className={classes.infoValue}>R$ {parseFloat(affiliateInfo.totalEarned || 0).toFixed(2)}</span>
+                <span className={classes.infoValue}>$ {parseFloat(affiliateInfo.totalEarned || 0).toFixed(2)}</span>
               </div>
               <div className={classes.infoItem}>
                 <span className={classes.infoLabel}>Total Sacado:</span>
-                <span className={classes.infoValue}>R$ {parseFloat(affiliateInfo.totalWithdrawn || 0).toFixed(2)}</span>
+                <span className={classes.infoValue}>$ {parseFloat(affiliateInfo.totalWithdrawn || 0).toFixed(2)}</span>
               </div>
               <div className={classes.infoItem}>
                 <span className={classes.infoLabel}>Saldo Disponível:</span>
                 <span className={classes.infoValue}>
-                  R$ {(parseFloat(affiliateInfo.totalEarned || 0) - parseFloat(affiliateInfo.totalWithdrawn || 0)).toFixed(2)}
+                  $ {(parseFloat(affiliateInfo.totalEarned || 0) - parseFloat(affiliateInfo.totalWithdrawn || 0)).toFixed(2)}
                 </span>
               </div>
               <div className={classes.progressCard}>
@@ -553,7 +553,7 @@ const AffiliateDetails = () => {
                   <div className={classes.commissionHeader}>
                     <div>
                       <Typography variant="body1" className={classes.commissionAmount}>
-                        R$ {parseFloat(commission.commissionAmount || 0).toFixed(2)}
+                        $ {parseFloat(commission.commissionAmount || 0).toFixed(2)}
                       </Typography>
                       <Typography variant="body2">
                         {commission.referredCompany?.name || "Empresa não identificada"}
@@ -618,7 +618,7 @@ const AffiliateDetails = () => {
                   <div className={classes.commissionHeader}>
                     <div>
                       <Typography variant="body1" className={classes.commissionAmount}>
-                        R$ {parseFloat(withdrawal.amount || 0).toFixed(2)}
+                        $ {parseFloat(withdrawal.amount || 0).toFixed(2)}
                       </Typography>
                       <Typography variant="body2">
                         {withdrawal.paymentMethod.toUpperCase()}
@@ -652,7 +652,7 @@ const AffiliateDetails = () => {
           {selectedCommission && (
             <div className={classes.modalContent}>
               <Typography variant="body2" gutterBottom>
-                <strong>Comissão:</strong> R$ {parseFloat(selectedCommission.commissionAmount || 0).toFixed(2)}
+                <strong>Comissão:</strong> $ {parseFloat(selectedCommission.commissionAmount || 0).toFixed(2)}
               </Typography>
               <Typography variant="body2" gutterBottom>
                 <strong>Empresa:</strong> {selectedCommission.referredCompany?.name}

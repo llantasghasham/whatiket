@@ -45,6 +45,7 @@ import { toast } from "react-toastify";
 import api from "../../services/api";
 import toastError from "../../errors/toastError";
 import MainContainer from "../../components/MainContainer";
+import { i18n } from "../../translate/i18n";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -169,7 +170,7 @@ const AdminAffiliates = () => {
       setAffiliates(response.data);
     } catch (error) {
       console.error("Error loading affiliates:", error);
-      toast.error("Erro ao carregar afiliados");
+      toast.error(i18n.t("adminAffiliates.errorLoad"));
     } finally {
       setLoading(false);
     }
@@ -187,7 +188,7 @@ const AdminAffiliates = () => {
   const handleCreateAffiliate = async () => {
     try {
       await api.post("/affiliate", formData);
-      toast.success("Afiliado criado com sucesso!");
+      toast.success(i18n.t("adminAffiliates.successCreate"));
       setShowCreateDialog(false);
       setFormData({
         companyId: "",
@@ -199,35 +200,35 @@ const AdminAffiliates = () => {
       loadStats();
     } catch (error) {
       console.error("Error creating affiliate:", error);
-      toast.error(error.response?.data?.error || "Erro ao criar afiliado");
+      toast.error(error.response?.data?.error || i18n.t("adminAffiliates.errorCreate"));
     }
   };
 
   const handleUpdateAffiliate = async () => {
     try {
       await api.put(`/affiliate/${selectedAffiliate.id}`, formData);
-      toast.success("Afiliado atualizado com sucesso!");
+      toast.success(i18n.t("adminAffiliates.successUpdate"));
       setShowEditDialog(false);
       setSelectedAffiliate(null);
       loadAffiliates();
       loadStats();
     } catch (error) {
       console.error("Error updating affiliate:", error);
-      toast.error("Erro ao atualizar afiliado");
+      toast.error(i18n.t("adminAffiliates.errorUpdate"));
     }
   };
 
   const handleDeleteAffiliate = async () => {
     try {
       await api.delete(`/affiliate/${selectedAffiliate.id}`);
-      toast.success("Afiliado excluído com sucesso!");
+      toast.success(i18n.t("adminAffiliates.successDelete"));
       setShowDeleteDialog(false);
       setSelectedAffiliate(null);
       loadAffiliates();
       loadStats();
     } catch (error) {
       console.error("Error deleting affiliate:", error);
-      toast.error("Erro ao excluir afiliado");
+      toast.error(i18n.t("adminAffiliates.errorDelete"));
     }
   };
 
@@ -251,11 +252,11 @@ const AdminAffiliates = () => {
   const getStatusText = (status) => {
     switch (status) {
       case "active":
-        return "Ativo";
+        return i18n.t("adminAffiliates.statusActive");
       case "inactive":
-        return "Inativo";
+        return i18n.t("adminAffiliates.statusInactive");
       case "suspended":
-        return "Suspenso";
+        return i18n.t("adminAffiliates.statusSuspended");
       default:
         return status;
     }
@@ -304,7 +305,7 @@ const AdminAffiliates = () => {
       <Container className={classes.container}>
         <div className={classes.header}>
           <Typography variant="h4" className={classes.title}>
-            Gerenciar Afiliados
+            {i18n.t("adminAffiliates.title")}
           </Typography>
           <Button
             variant="contained"
@@ -312,7 +313,7 @@ const AdminAffiliates = () => {
             startIcon={<Add />}
             onClick={() => setShowCreateDialog(true)}
           >
-            Novo Afiliado
+            {i18n.t("adminAffiliates.newAffiliate")}
           </Button>
         </div>
 
@@ -321,25 +322,25 @@ const AdminAffiliates = () => {
           <Card className={classes.statCard}>
             <CardContent>
               <div className={classes.statValue}>{stats.total}</div>
-              <div className={classes.statLabel}>Total</div>
+              <div className={classes.statLabel}>{i18n.t("adminAffiliates.total")}</div>
             </CardContent>
           </Card>
           <Card className={classes.statCard}>
             <CardContent>
               <div className={classes.statValue}>{stats.active}</div>
-              <div className={classes.statLabel}>Ativos</div>
+              <div className={classes.statLabel}>{i18n.t("adminAffiliates.active")}</div>
             </CardContent>
           </Card>
           <Card className={classes.statCard}>
             <CardContent>
               <div className={classes.statValue}>{stats.inactive}</div>
-              <div className={classes.statLabel}>Inativos</div>
+              <div className={classes.statLabel}>{i18n.t("adminAffiliates.inactive")}</div>
             </CardContent>
           </Card>
           <Card className={classes.statCard}>
             <CardContent>
               <div className={classes.statValue}>{stats.suspended}</div>
-              <div className={classes.statLabel}>Suspensos</div>
+              <div className={classes.statLabel}>{i18n.t("adminAffiliates.suspended")}</div>
             </CardContent>
           </Card>
         </div>
@@ -349,14 +350,14 @@ const AdminAffiliates = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Empresa</TableCell>
-                <TableCell>Código</TableCell>
-                <TableCell>Taxa de Comissão</TableCell>
-                <TableCell>Valor Mínimo Saque</TableCell>
-                <TableCell>Total Ganho</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Data de Criação</TableCell>
-                <TableCell>Ações</TableCell>
+                <TableCell>{i18n.t("adminAffiliates.company")}</TableCell>
+                <TableCell>{i18n.t("adminAffiliates.code")}</TableCell>
+                <TableCell>{i18n.t("adminAffiliates.commissionRate")}</TableCell>
+                <TableCell>{i18n.t("adminAffiliates.minWithdrawAmount")}</TableCell>
+                <TableCell>{i18n.t("adminAffiliates.totalEarned")}</TableCell>
+                <TableCell>{i18n.t("adminAffiliates.status")}</TableCell>
+                <TableCell>{i18n.t("adminAffiliates.createdAt")}</TableCell>
+                <TableCell>{i18n.t("adminAffiliates.actions")}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -369,9 +370,9 @@ const AdminAffiliates = () => {
                     </Typography>
                   </TableCell>
                   <TableCell>{affiliate.commissionRate}%</TableCell>
-                  <TableCell>R$ {parseFloat(affiliate.minWithdrawAmount || 0).toFixed(2)}</TableCell>
+                  <TableCell>$ {parseFloat(affiliate.minWithdrawAmount || 0).toFixed(2)}</TableCell>
                   <TableCell className={classes.amountCell}>
-                    R$ {parseFloat(affiliate.totalEarned || 0).toFixed(2)}
+                    $ {parseFloat(affiliate.totalEarned || 0).toFixed(2)}
                   </TableCell>
                   <TableCell>
                     <Chip
@@ -383,7 +384,7 @@ const AdminAffiliates = () => {
                   <TableCell>{formatDate(affiliate.createdAt)}</TableCell>
                   <TableCell>
                     <div className={classes.actions}>
-                      <Tooltip title="Ver Detalhes">
+                      <Tooltip title={i18n.t("adminAffiliates.viewDetails")}>
                         <IconButton
                           size="small"
                           onClick={() => handleViewDetails(affiliate)}
@@ -391,7 +392,7 @@ const AdminAffiliates = () => {
                           <Visibility />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title="Editar">
+                      <Tooltip title={i18n.t("adminAffiliates.edit")}>
                         <IconButton
                           size="small"
                           onClick={() => openEditDialog(affiliate)}
@@ -399,7 +400,7 @@ const AdminAffiliates = () => {
                           <Edit />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title="Excluir">
+                      <Tooltip title={i18n.t("adminAffiliates.delete")}>
                         <IconButton
                           size="small"
                           onClick={() => openDeleteDialog(affiliate)}
@@ -419,10 +420,10 @@ const AdminAffiliates = () => {
           <Card className={classes.emptyState}>
             <CardContent>
               <Typography variant="body1" color="textSecondary">
-                Nenhum afiliado encontrado.
+                {i18n.t("adminAffiliates.noAffiliatesFound")}
               </Typography>
               <Typography variant="body2" color="textSecondary" style={{ marginTop: 8 }}>
-                Clique em "Novo Afiliado" para criar o primeiro afiliado.
+                {i18n.t("adminAffiliates.clickToCreate")}
               </Typography>
             </CardContent>
           </Card>
@@ -435,16 +436,16 @@ const AdminAffiliates = () => {
           maxWidth="sm"
           fullWidth
         >
-          <DialogTitle>Novo Afiliado</DialogTitle>
+          <DialogTitle>{i18n.t("adminAffiliates.createDialogTitle")}</DialogTitle>
           <DialogContent>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <FormControl fullWidth>
-                  <InputLabel>Empresa</InputLabel>
+                  <InputLabel>{i18n.t("adminAffiliates.company")}</InputLabel>
                   <Select
                     value={formData.companyId}
                     onChange={(e) => setFormData({ ...formData, companyId: e.target.value })}
-                    label="Empresa"
+                    label={i18n.t("adminAffiliates.company")}
                   >
                     {companies.map((company) => (
                       <MenuItem key={company.id} value={company.id}>
@@ -457,7 +458,7 @@ const AdminAffiliates = () => {
               <Grid item xs={6}>
                 <TextField
                   fullWidth
-                  label="Taxa de Comissão (%)"
+                  label={`${i18n.t("adminAffiliates.commissionRate")} (%)`}
                   type="number"
                   value={formData.commissionRate}
                   onChange={(e) => setFormData({ ...formData, commissionRate: e.target.value })}
@@ -466,7 +467,7 @@ const AdminAffiliates = () => {
               <Grid item xs={6}>
                 <TextField
                   fullWidth
-                  label="Valor Mínimo Saque (R$)"
+                  label={`${i18n.t("adminAffiliates.minWithdrawAmount")} (USD)`}
                   type="number"
                   value={formData.minWithdrawAmount}
                   onChange={(e) => setFormData({ ...formData, minWithdrawAmount: e.target.value })}
@@ -474,7 +475,7 @@ const AdminAffiliates = () => {
               </Grid>
               <Grid item xs={12}>
                 <FormControl fullWidth>
-                  <InputLabel>Status</InputLabel>
+                  <InputLabel>{i18n.t("adminAffiliates.status")}</InputLabel>
                   <Select
                     value={formData.status}
                     onChange={(e) => setFormData({ ...formData, status: e.target.value })}
@@ -490,14 +491,14 @@ const AdminAffiliates = () => {
           </DialogContent>
           <DialogActions>
             <Button onClick={() => setShowCreateDialog(false)}>
-              Cancelar
+              {i18n.t("adminAffiliates.cancel")}
             </Button>
             <Button
               variant="contained"
               color="primary"
               onClick={handleCreateAffiliate}
             >
-              Criar
+              {i18n.t("adminAffiliates.create")}
             </Button>
           </DialogActions>
         </Dialog>
@@ -509,13 +510,13 @@ const AdminAffiliates = () => {
           maxWidth="sm"
           fullWidth
         >
-          <DialogTitle>Editar Afiliado</DialogTitle>
+          <DialogTitle>{i18n.t("adminAffiliates.editDialogTitle")}</DialogTitle>
           <DialogContent>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  label="Taxa de Comissão (%)"
+                  label={`${i18n.t("adminAffiliates.commissionRate")} (%)`}
                   type="number"
                   value={formData.commissionRate}
                   onChange={(e) => setFormData({ ...formData, commissionRate: e.target.value })}
@@ -524,7 +525,7 @@ const AdminAffiliates = () => {
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  label="Valor Mínimo Saque (R$)"
+                  label={`${i18n.t("adminAffiliates.minWithdrawAmount")} (USD)`}
                   type="number"
                   value={formData.minWithdrawAmount}
                   onChange={(e) => setFormData({ ...formData, minWithdrawAmount: e.target.value })}
@@ -532,7 +533,7 @@ const AdminAffiliates = () => {
               </Grid>
               <Grid item xs={12}>
                 <FormControl fullWidth>
-                  <InputLabel>Status</InputLabel>
+                  <InputLabel>{i18n.t("adminAffiliates.status")}</InputLabel>
                   <Select
                     value={formData.status}
                     onChange={(e) => setFormData({ ...formData, status: e.target.value })}
@@ -548,14 +549,14 @@ const AdminAffiliates = () => {
           </DialogContent>
           <DialogActions>
             <Button onClick={() => setShowEditDialog(false)}>
-              Cancelar
+              {i18n.t("adminAffiliates.cancel")}
             </Button>
             <Button
               variant="contained"
               color="primary"
               onClick={handleUpdateAffiliate}
             >
-              Salvar
+              {i18n.t("adminAffiliates.save")}
             </Button>
           </DialogActions>
         </Dialog>
@@ -567,25 +568,25 @@ const AdminAffiliates = () => {
           maxWidth="sm"
           fullWidth
         >
-          <DialogTitle>Confirmar Exclusão</DialogTitle>
+          <DialogTitle>{i18n.t("adminAffiliates.deleteDialogTitle")}</DialogTitle>
           <DialogContent>
             <Typography>
-              Tem certeza que deseja excluir o afiliado "{selectedAffiliate?.company?.name}"?
+              {i18n.t("adminAffiliates.deleteConfirmMessage", { name: selectedAffiliate?.company?.name })}
             </Typography>
             <Typography variant="body2" color="textSecondary">
-              Esta ação não pode ser desfeita e todos os dados relacionados serão perdidos.
+              {i18n.t("adminAffiliates.deleteWarning")}
             </Typography>
           </DialogContent>
           <DialogActions>
             <Button onClick={() => setShowDeleteDialog(false)}>
-              Cancelar
+              {i18n.t("adminAffiliates.cancel")}
             </Button>
             <Button
               variant="contained"
               color="error"
               onClick={handleDeleteAffiliate}
             >
-              Excluir
+              {i18n.t("adminAffiliates.deleteButton")}
             </Button>
           </DialogActions>
         </Dialog>

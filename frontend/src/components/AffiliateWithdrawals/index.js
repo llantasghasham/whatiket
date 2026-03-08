@@ -156,7 +156,7 @@ const AffiliateWithdrawals = ({ withdrawals, onRefresh }) => {
               <div key={withdrawal.id} className={classes.withdrawalItem}>
                 <div>
                   <Typography variant="body1" className={classes.withdrawalAmount}>
-                    R$ {withdrawal.amount?.toFixed(2)}
+                    $ {withdrawal.amount?.toFixed(2)}
                   </Typography>
                   <Typography variant="body2">
                     {withdrawal.paymentMethod?.toUpperCase()}
@@ -186,7 +186,7 @@ const AffiliateWithdrawals = ({ withdrawals, onRefresh }) => {
         <DialogContent>
           <TextField
             fullWidth
-            label="Valor (R$)"
+            label="Valor (USD)"
             type="number"
             value={formData.amount}
             onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
