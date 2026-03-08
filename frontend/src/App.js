@@ -1,5 +1,21 @@
 import React, { useState, useEffect, useMemo } from "react";
 import api from "./services/api";
+import "react-toastify/dist/ReactToastify.css";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ptBR } from "@material-ui/core/locale";
+import { createTheme, ThemeProvider } from "@material-ui/core/styles";
+import { useMediaQuery } from "@material-ui/core";
+import ColorModeContext from "./layout/themeContext";
+import { ActiveMenuProvider } from "./context/ActiveMenuContext";
+import Favicon from "react-favicon";
+import { getBackendUrl } from "./config";
+import Routes from "./routes";
+import defaultLogoLight from "./assets/logo.png";
+import defaultLogoDark from "./assets/logo-black.png";
+import defaultLogoFavicon from "./assets/favicon.ico";
+import useSettings from "./hooks/useSettings";
+import { SystemAlertProvider } from "./components/SystemAlert";
+import { i18n } from "./translate/i18n";
 
 // Inicializar Facebook SDK antes de que FacebookLogin lo use (evita "FB.login() called before FB.init()")
 const initFacebookSDK = () => {
@@ -25,22 +41,6 @@ const initFacebookSDK = () => {
   script.src = "https://connect.facebook.net/es_ES/sdk.js";
   document.body.appendChild(script);
 };
-import "react-toastify/dist/ReactToastify.css";
-import { QueryClient, QueryClientProvider } from "react-query";
-import { ptBR } from "@material-ui/core/locale";
-import { createTheme, ThemeProvider } from "@material-ui/core/styles";
-import { useMediaQuery } from "@material-ui/core";
-import ColorModeContext from "./layout/themeContext";
-import { ActiveMenuProvider } from "./context/ActiveMenuContext";
-import Favicon from "react-favicon";
-import { getBackendUrl } from "./config";
-import Routes from "./routes";
-import defaultLogoLight from "./assets/logo.png";
-import defaultLogoDark from "./assets/logo-black.png";
-import defaultLogoFavicon from "./assets/favicon.ico";
-import useSettings from "./hooks/useSettings";
-import { SystemAlertProvider } from "./components/SystemAlert";
-import { i18n } from "./translate/i18n";
 
 const queryClient = new QueryClient();
 
