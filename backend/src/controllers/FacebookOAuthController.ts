@@ -132,7 +132,6 @@ export const facebookCallback = async (
         }
         createdConnections.push(instagramConnection);
       }
-      }
     }
 
     createdConnections.forEach((conn) => {
