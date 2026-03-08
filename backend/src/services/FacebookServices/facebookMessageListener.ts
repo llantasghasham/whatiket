@@ -492,6 +492,7 @@ export const handleMessage = async (
       const recipientPsid = webhookEvent.recipient.id;
       const { message } = webhookEvent;
       const fromMe = message.is_echo;
+      console.log("[FB_RECV] handleMessage | senderPsid:", senderPsid, "| recipientPsid:", recipientPsid, "| conexion:", token.name, "| channel:", channel);
 
       let bodyMessage = message.text;
 
@@ -560,6 +561,7 @@ export const handleMessage = async (
         );
         return createTicket;
       });
+      console.log("[FB_RECV] ticket listo | ticketId:", ticket.id, "| whatsappId:", ticket.whatsappId, "| contact.number:", contact.number);
 
       let bodyRollbackTag = "";
       let bodyNextTag = "";

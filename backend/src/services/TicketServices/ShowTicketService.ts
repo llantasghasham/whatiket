@@ -129,6 +129,8 @@ const ShowTicketService = async (
           "greetingMediaAttachment",
           "facebookUserToken",
           "facebookUserId",
+          "facebookPageUserId",
+          "channel",
           "status",
           "wavoip"
         ]

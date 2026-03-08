@@ -21,4 +21,4 @@ backend/public/*.jpg
 backend/public/*.jpeg
 backend/public/*.png
 backend/public/uploads/
-backend/public/company1/tutorials/
+backend/public/company1/
