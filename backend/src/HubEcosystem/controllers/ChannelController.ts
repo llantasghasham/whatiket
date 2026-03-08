@@ -52,8 +52,9 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
 
   try {
     const channels = await ListChannels(companyId.toString());
-    return res.status(200).json(channels);
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
+    return res.status(200).json(Array.isArray(channels) ? channels : []);
+  } catch (error: any) {
+    console.error("[hub-channel] Error listing channels:", error?.message || error);
+    return res.status(200).json([]);
   }
 };

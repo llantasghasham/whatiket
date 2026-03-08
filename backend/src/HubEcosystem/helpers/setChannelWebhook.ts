@@ -13,6 +13,10 @@ export const setChannelWebhook = async (
   whatsappId: string
 ) => {
   const notificameHubToken = await showHubToken(whatsapp.companyId.toString());
+  if (!notificameHubToken) {
+    console.warn("[setChannelWebhook] No Hub token for company", whatsapp.companyId);
+    return;
+  }
 
   const client = new Client(notificameHubToken);
 

@@ -1,5 +1,30 @@
 import React, { useState, useEffect, useMemo } from "react";
 import api from "./services/api";
+
+// Inicializar Facebook SDK antes de que FacebookLogin lo use (evita "FB.login() called before FB.init()")
+const initFacebookSDK = () => {
+  const appId = process.env.REACT_APP_FACEBOOK_APP_ID;
+  if (!appId || window.FB) return;
+
+  const prevFbAsyncInit = window.fbAsyncInit;
+  window.fbAsyncInit = function () {
+    window.FB.init({
+      appId,
+      cookie: true,
+      xfbml: true,
+      version: "v18.0",
+    });
+    if (typeof prevFbAsyncInit === "function") prevFbAsyncInit();
+    window.dispatchEvent(new CustomEvent("fb-sdk-ready"));
+  };
+
+  const script = document.createElement("script");
+  script.async = true;
+  script.defer = true;
+  script.crossOrigin = "anonymous";
+  script.src = "https://connect.facebook.net/es_ES/sdk.js";
+  document.body.appendChild(script);
+};
 import "react-toastify/dist/ReactToastify.css";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ptBR } from "@material-ui/core/locale";
@@ -20,6 +45,10 @@ import { i18n } from "./translate/i18n";
 const queryClient = new QueryClient();
 
 const App = () => {
+  useEffect(() => {
+    initFacebookSDK();
+  }, []);
+
   const [locale, setLocale] = useState();
   const appColorLocalStorage = localStorage.getItem("primaryColorLight") || localStorage.getItem("primaryColorDark") || "#065183";
   const appNameLocalStorage = localStorage.getItem("appName") || "Fae Developer";
