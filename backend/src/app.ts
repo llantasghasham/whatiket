@@ -15,6 +15,7 @@ import uploadConfig from "./config/upload";
 import { ValidationError, DatabaseError, ForeignKeyConstraintError } from "sequelize";
 import AppError from "./errors/AppError";
 import routes from "./routes";
+import * as FacebookOAuthController from "./controllers/FacebookOAuthController";
 import logger from "./utils/logger";
 import { messageQueue, sendScheduledMessages } from "./queues";
 import BullQueue from "./libs/queue"
@@ -39,6 +40,9 @@ dotenvConfig();
 Sentry.init({ dsn: process.env.SENTRY_DSN });
 
 const app = express();
+
+// Trust proxy (nginx/reverse proxy) - necesario para X-Forwarded-Proto, etc.
+app.set("trust proxy", 1);
 
 // Configuração de filas
 app.set("queues", {
@@ -118,6 +122,36 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
+// [TRACE] Log TODAS las peticiones que parecen callback OAuth (para diagnóstico)
+app.use((req: Request, res: Response, next: NextFunction) => {
+  const path = req.path || req.url?.split("?")[0] || "";
+  if (path.includes("facebook-callback") || path.includes("instagram-callback")) {
+    console.log("[TRACE] REQUEST TO OAUTH PATH - method:", req.method, "| path:", req.path, "| url:", req.url, "| originalUrl:", req.originalUrl);
+  }
+  next();
+});
+
+// =============================================================================
+// OAUTH FACEBOOK/INSTAGRAM - Montado ANTES de routes para evitar isAuth
+// El callback de Meta NO envía Authorization header; debe ser ruta pública.
+// =============================================================================
+app.get("/facebook-callback", (req, res, next) => {
+  console.log("HIT APP FACEBOOK CALLBACK | ORIGINAL URL:", req.originalUrl, "| req.query:", JSON.stringify(req.query), "| req.headers.authorization:", req.headers.authorization ?? "MISSING");
+  FacebookOAuthController.facebookCallback(req, res).catch(next);
+});
+app.get("/instagram-callback", (req, res, next) => {
+  console.log("[TRACE] HIT APP /instagram-callback - ORIGINAL_URL:", req.originalUrl, "| AUTH:", req.headers.authorization ? "present" : "MISSING");
+  FacebookOAuthController.instagramCallback(req, res).catch(next);
+});
+app.get("/api/facebook-callback", (req, res, next) => {
+  console.log("HIT APP FACEBOOK CALLBACK | ORIGINAL URL:", req.originalUrl, "| req.query:", JSON.stringify(req.query), "| req.headers.authorization:", req.headers.authorization ?? "MISSING");
+  FacebookOAuthController.facebookCallback(req, res).catch(next);
+});
+app.get("/api/instagram-callback", (req, res, next) => {
+  console.log("[TRACE] HIT APP /api/instagram-callback - ORIGINAL_URL:", req.originalUrl, "| AUTH:", req.headers.authorization ? "present" : "MISSING");
+  FacebookOAuthController.instagramCallback(req, res).catch(next);
+});
+
 // Rotas
 app.use(routes);
 
@@ -171,6 +205,9 @@ app.use(async (err: Error, req: Request, res: Response, _: NextFunction) => {
   }
 
   if (err instanceof AppError) {
+    if (err.message === "ERR_SESSION_EXPIRED") {
+      console.log("[TRACE] AppError ERR_SESSION_EXPIRED caught - req.path:", (req as any).path, "| req.originalUrl:", (req as any).originalUrl);
+    }
     logger.warn(err);
     return res.status(err.statusCode).json({ error: err.message });
   }

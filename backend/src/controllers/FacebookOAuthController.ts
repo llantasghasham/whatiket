@@ -10,10 +10,8 @@ export const facebookCallback = async (
   res: Response
 ): Promise<void> => {
   try {
+    console.log("HIT FACEBOOK CONTROLLER CALLBACK | ORIGINAL URL:", req.originalUrl, "| req.query:", JSON.stringify(req.query), "| req.headers.authorization:", req.headers.authorization ?? "MISSING");
     const { code, state } = req.query;
-    
-    console.log("Facebook OAuth Callback - code:", code ? "present" : "missing");
-    console.log("Facebook OAuth Callback - state:", state);
 
     if (!code || typeof code !== "string") {
       res.status(400).json({ error: "Missing authorization code" });
