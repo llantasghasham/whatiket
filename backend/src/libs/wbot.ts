@@ -49,6 +49,7 @@ type Session = WASocket & {
 const sessions: Session[] = [];
 
 const retriesQrCodeMap = new Map<number, number>();
+const reconnectAttemptsMap = new Map<number, number>();
 
 export default function msg() {
   return {
@@ -383,9 +384,13 @@ export const initWASocket = async (whatsapp: Whatsapp): Promise<Session> => {
                 DisconnectReason.loggedOut
               ) {
                 removeWbot(id, false);
+                const attempts = (reconnectAttemptsMap.get(id) || 0) + 1;
+                reconnectAttemptsMap.set(id, attempts);
+                const delayMs = Math.min(5000 + 5000 * attempts, 30000);
+                logger.info(`[WhatsApp] Reintento ${attempts} en ${delayMs / 1000}s - ${name}`);
                 setTimeout(
                   () => StartWhatsAppSession(whatsapp, whatsapp.companyId),
-                  2000
+                  delayMs
                 );
               } else {
                 await whatsapp.update({ status: "PENDING", session: "" });
@@ -397,14 +402,19 @@ export const initWASocket = async (whatsapp: Whatsapp): Promise<Session> => {
                     session: whatsapp
                   });
                 removeWbot(id, false);
+                const attempts = (reconnectAttemptsMap.get(id) || 0) + 1;
+                reconnectAttemptsMap.set(id, attempts);
+                const delayMs = Math.min(5000 + 5000 * attempts, 30000);
+                logger.info(`[WhatsApp] Reintento ${attempts} en ${delayMs / 1000}s (loggedOut) - ${name}`);
                 setTimeout(
                   () => StartWhatsAppSession(whatsapp, whatsapp.companyId),
-                  2000
+                  delayMs
                 );
               }
             }
 
             if (connection === "open") {
+              reconnectAttemptsMap.set(id, 0);
               await whatsapp.update({
                 status: "CONNECTED",
                 qrcode: "",
