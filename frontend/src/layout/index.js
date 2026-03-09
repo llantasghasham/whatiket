@@ -767,6 +767,7 @@ const LoggedInLayout = ({ children }) => {
   const location = useLocation();
   
   const { user, handleLogout, loading, isMobileSession } = useContext(AuthContext);
+  const { colorMode } = useContext(ColorModeContext);
   const { planActive, loading: planLoading } = usePlanPermissions();
   const {
     canAccessPage,
