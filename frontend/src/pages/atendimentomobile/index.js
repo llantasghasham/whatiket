@@ -1357,6 +1357,11 @@ useEffect(() => {
                 e.preventDefault();
                 if (selectedQuickIndex >= 0 && filteredQuickMessages[selectedQuickIndex]) {
                     handleSelectQuickReply(filteredQuickMessages[selectedQuickIndex].message);
+                } else if (inputMessage.trim()) {
+                    setShowQuickReplies(false);
+                    setFilteredQuickMessages([]);
+                    setSelectedQuickIndex(-1);
+                    handleSendMessage();
                 }
                 break;
             case 'Escape':
