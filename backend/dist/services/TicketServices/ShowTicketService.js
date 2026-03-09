@@ -128,6 +128,8 @@ const ShowTicketService = async (id, companyId, userId) => {
                     "greetingMediaAttachment",
                     "facebookUserToken",
                     "facebookUserId",
+                    "facebookPageUserId",
+                    "channel",
                     "status",
                     "wavoip"
                 ]

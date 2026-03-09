@@ -29,7 +29,17 @@ const webHook = async (req, res) => {
         if (body?.object) {
             const entryCount = body.entry?.length ?? 0;
             const hasMessaging = body.entry?.some((e) => (e.messaging?.length ?? 0) > 0);
-            console.log(`[WEBHOOK] POST /webhook - object: ${body.object} | entries: ${entryCount} | hasMessaging: ${hasMessaging}`);
+            const fieldsReceived = body.entry?.map((e) => {
+                if (e.messaging?.length)
+                    return "messaging";
+                if (e.changes?.length)
+                    return `changes:${e.changes.map((c) => c.field).join(",")}`;
+                return "other";
+            }).join(";") ?? "none";
+            console.log(`[WEBHOOK] POST /webhook - object: ${body.object} | entries: ${entryCount} | hasMessaging: ${hasMessaging} | fields: ${fieldsReceived}`);
+            if ((body.object === "page" || body.object === "instagram") && !hasMessaging) {
+                console.warn(`[WEBHOOK] AVISO: Meta envió evento pero SIN messaging. Si tienes feed/likes suscritos, cámbialos por: messages, messaging_postbacks, message_deliveries, message_reads, message_echoes`);
+            }
         }
         if (body.object === "page" || body.object === "instagram") {
             let channel;
@@ -47,13 +57,14 @@ const webHook = async (req, res) => {
                     }
                 });
                 if (getTokenPage) {
-                    console.log(`[WEBHOOK] Page/Insta found for entry.id=${entry.id}, channel=${channel}, companyId=${getTokenPage.companyId}`);
+                    const senderId = entry.messaging?.[0]?.sender?.id;
+                    console.log(`[FB_RECV] entry.id=${entry.id} | sender.id=${senderId} | conexion=${getTokenPage.name} (id=${getTokenPage.id}) | channel=${channel} | companyId=${getTokenPage.companyId}`);
                     for (const data of entry.messaging || []) {
                         await (0, facebookMessageListener_1.handleMessage)(getTokenPage, data, channel, getTokenPage.companyId);
                     }
                 }
                 else {
-                    console.log(`[WEBHOOK] No connection found for entry.id=${entry.id}, channel=${channel}`);
+                    console.log(`[FB_RECV] NO CONEXION | entry.id=${entry.id} | channel=${channel}`);
                 }
             }
             return res.status(200).json({

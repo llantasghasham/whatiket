@@ -55,33 +55,51 @@ const showTypingIndicator = async (id, token, action) => {
 };
 exports.showTypingIndicator = showTypingIndicator;
 const sendText = async (id, text, token) => {
+    if (!token) {
+        const err = new Error("ERR_FB_SEND: facebookUserToken vacío o nulo");
+        console.error("[graphAPI] sendText:", err.message);
+        throw err;
+    }
+    const payload = {
+        recipient: { id: String(id) },
+        messaging_type: "RESPONSE",
+        message: { text: `${text}` }
+    };
+    const url = `${(0, graphApiHelper_1.getGraphBaseUrl)()}/me/messages`;
+    console.log("[GRAPH_API] POST", url, "| recipient:", id, "| messaging_type: RESPONSE");
     try {
-        const { data } = await apiBase(token).post("me/messages", {
-            recipient: { id },
-            message: { text: `${text}` }
-        });
-        return data;
+        const response = await apiBase(token).post("me/messages", payload);
+        console.log("[GRAPH_API] response.status:", response.status, "| response.data:", JSON.stringify(response.data));
+        return response.data;
     }
     catch (error) {
-        console.log(error);
+        const status = error?.response?.status;
+        const data = error?.response?.data;
+        console.error("[GRAPH_API] FAIL | status:", status, "| response.data:", JSON.stringify(data));
+        throw error;
     }
 };
 exports.sendText = sendText;
 const sendAttachmentFromUrl = async (id, url, type, token) => {
+    if (!token) {
+        const err = new Error("ERR_FB_SEND: facebookUserToken vacío o nulo");
+        console.error("[graphAPI] sendAttachmentFromUrl:", err.message);
+        throw err;
+    }
+    const payload = {
+        recipient: { id },
+        messaging_type: "RESPONSE",
+        message: { attachment: { type, payload: { url } } }
+    };
+    console.log("[GRAPH_API] POST me/messages (attachment) | recipient:", id, "| type:", type);
     try {
-        const { data } = await apiBase(token).post("me/messages", {
-            recipient: { id },
-            message: {
-                attachment: {
-                    type,
-                    payload: { url }
-                }
-            }
-        });
-        return data;
+        const response = await apiBase(token).post("me/messages", payload);
+        console.log("[GRAPH_API] attachment OK | status:", response.status);
+        return response.data;
     }
     catch (error) {
-        console.log(error);
+        console.error("[GRAPH_API] attachment FAIL | status:", error?.response?.status, "| data:", JSON.stringify(error?.response?.data || {}));
+        throw error;
     }
 };
 exports.sendAttachmentFromUrl = sendAttachmentFromUrl;
