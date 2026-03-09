@@ -39,9 +39,12 @@ const sendFacebookMessage = async ({ body, ticket, quotedMsg }: Request): Promis
     const metaData = err?.response?.data?.error || {};
     const metaMsg = metaData.message || err?.message;
     const metaCode = metaData.code || err?.response?.status;
-    console.error("[FB_SEND] FAIL | conexion:", connName, "| recipient:", number, "| code:", metaCode, "| Meta:", metaMsg);
+    const metaSubcode = metaData.error_subcode;
+    console.error("[FB_SEND] FAIL | conexion:", connName, "| recipient:", number, "| code:", metaCode, "| subcode:", metaSubcode, "| Meta:", metaMsg);
     console.error("[FB_SEND] error.response.data:", JSON.stringify(err?.response?.data || {}));
-    throw new AppError("ERR_SENDING_FACEBOOK_MSG");
+    // Pasar mensaje de Meta al frontend para diagnóstico
+    const userMsg = metaMsg || "Error al enviar mensaje a Facebook/Instagram";
+    throw new AppError(`ERR_SENDING_FACEBOOK_MSG: ${userMsg}`);
   }
 };
 

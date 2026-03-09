@@ -501,7 +501,12 @@ export const handleMessage = async (
 
         msgContact = await profilePsid(recipientPsid, token.facebookUserToken);
       } else {
-        msgContact = await profilePsid(senderPsid, token.facebookUserToken);
+        try {
+          msgContact = await profilePsid(senderPsid, token.facebookUserToken);
+        } catch (e) {
+          console.warn("[FB_RECV] profilePsid fallback: usando senderPsid como contact.number | senderPsid:", senderPsid);
+          msgContact = { id: senderPsid, first_name: "", last_name: "", name: "", profile_pic: "" };
+        }
       }
 
       const contact = await verifyContact(msgContact, token, companyId);

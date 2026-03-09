@@ -71,10 +71,11 @@ export const sendText = async (
   }
   const payload = {
     recipient: { id: String(id) },
+    messaging_type: "RESPONSE",
     message: { text: `${text}` }
   };
   const url = `${getGraphBaseUrl()}/me/messages`;
-  console.log("[GRAPH_API] POST", url, "| payload:", JSON.stringify(payload));
+  console.log("[GRAPH_API] POST", url, "| recipient:", id, "| messaging_type: RESPONSE");
 
   try {
     const response = await apiBase(token).post("me/messages", payload);
@@ -99,7 +100,11 @@ export const sendAttachmentFromUrl = async (
     console.error("[graphAPI] sendAttachmentFromUrl:", err.message);
     throw err;
   }
-  const payload = { recipient: { id }, message: { attachment: { type, payload: { url } } } };
+  const payload = {
+    recipient: { id },
+    messaging_type: "RESPONSE",
+    message: { attachment: { type, payload: { url } } }
+  };
   console.log("[GRAPH_API] POST me/messages (attachment) | recipient:", id, "| type:", type);
   try {
     const response = await apiBase(token).post("me/messages", payload);
