@@ -13,10 +13,12 @@ echo "=== 2. Build backend ==="
 cd backend
 npm run build
 
-echo "=== 3. Reinicio limpio (libera puerto 4000 antes de arrancar) ==="
+echo "=== 3. Reinicio limpio (backend usa puerto 4001) ==="
 pm2 delete empresa-backend 2>/dev/null || true
+pkill -9 -f "dist/server.js" 2>/dev/null || true
 fuser -k 4000/tcp 2>/dev/null || true
-sleep 5
+fuser -k 4001/tcp 2>/dev/null || true
+sleep 10
 pm2 start ecosystem.config.js
 pm2 save
 
