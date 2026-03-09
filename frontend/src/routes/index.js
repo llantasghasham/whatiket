@@ -162,7 +162,7 @@ const Routes = () => {
                 <ProtectedRoute exact path="/painel" component={Dashboard} />
                 <ProtectedRoute exact path="/tickets/:ticketId?" component={TicketResponsiveContainer} />
                 <ProtectedRoute exact path="/conversas/:ticketId?" component={TicketResponsiveContainer} />
-                {/* Atendimentos: vista completa con filtros por WhatsApp, Facebook, Instagram */}
+                {/* Atendimentos: filtros WhatsApp, Facebook, Instagram (sin imports @mui para evitar error init) */}
                 <ProtectedRoute exact path="/atendimentos/:ticketId?" component={Atendimentos} />
                 <ProtectedRoute exact path="/atendimentomobile/:ticketId?" component={AtendimentosMobile} />
                 <ProtectedRoute exact path="/connections" component={Canais} />
