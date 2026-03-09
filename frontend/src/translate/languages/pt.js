@@ -1501,6 +1501,8 @@ const messages = {
       kanban: {
         title: "Kanban",
         searchPlaceholder: "Pesquisa",
+        cardMoved: "Ticket movido com sucesso",
+        cardMoveError: "Erro ao mover o ticket",
         subMenus: {
           list: "Painel",
           tags: "Quadros",

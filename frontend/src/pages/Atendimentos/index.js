@@ -4393,7 +4393,7 @@ useEffect(() => {
 							</IconButton>
 														<InputBase
 								className={classes.inputField}
-								placeholder="Digite uma mensagem ou / para respostas rápidas"
+								placeholder={i18n.t("atendimentos.inputPlaceholder")}
 								value={inputMessage}
 								inputRef={inputMessageRef}
 								onChange={(e) => {

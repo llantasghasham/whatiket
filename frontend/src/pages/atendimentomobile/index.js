@@ -99,6 +99,7 @@ import { ForwardMessageProvider } from "../../context/ForwarMessage/ForwardMessa
 import { EditMessageProvider } from "../../context/EditingMessage/EditingMessageContext";
 import { AuthContext } from "../../context/Auth/AuthContext";
 import { TicketsContext } from "../../context/Tickets/TicketsContext";
+import { i18n } from "../../translate/i18n";
 import api from "../../services/api";
 import MicRecorder from "mic-recorder-to-mp3";
 import { socketConnection } from "../../services/socket";
@@ -4170,7 +4171,7 @@ useEffect(() => {
                             </IconButton>
                                                         <InputBase
                                 className={classes.inputField}
-                                placeholder="Digite uma mensagem ou / para respostas rápidas"
+                                placeholder={i18n.t("atendimentos.inputPlaceholder")}
                                 value={inputMessage}
                                 inputRef={inputMessageRef}
                                 onChange={(e) => {

@@ -138,7 +138,9 @@ const Kanban = () => {
   const [tagsModalOpen, setTagsModalOpen] = useState(false);
   const [selectedTicketForTags, setSelectedTicketForTags] = useState(null);
 
-  const jsonString = user.queues.map(queue => queue.UserQueue.queueId);
+  const jsonString = (user.queues || [])
+    .map(queue => queue?.UserQueue?.queueId ?? queue?.id)
+    .filter(Boolean);
 
   const getDisplayName = (contact) => {
     if (!contact || !contact.name) return "Contato sem nome";
@@ -415,14 +417,13 @@ const Kanban = () => {
 
   const handleCardMove = async (cardId, sourceLaneId, targetLaneId) => {
     try {
-      await api.delete(`/ticket-tags/${targetLaneId}`);
-      toast.success('Ticket Tag Removido!');
-      await api.put(`/ticket-tags/${targetLaneId}/${sourceLaneId}`);
-      toast.success('Ticket Tag Adicionado com Sucesso!');
-      await fetchTickets(jsonString);
-      popularCards(jsonString);
+      // ticketId=cardId, tagId=targetLaneId - el backend elimina tags kanban previas y agrega la nueva
+      await api.put(`/ticket-tags/${cardId}/${targetLaneId}`);
+      toast.success(i18n.t("kanban.cardMoved"));
+      await fetchTickets();
     } catch (err) {
-      console.log(err);
+      console.error("[Kanban] Error al mover tarjeta:", err);
+      toast.error(err?.response?.data?.error || i18n.t("kanban.cardMoveError"));
     }
   };
 

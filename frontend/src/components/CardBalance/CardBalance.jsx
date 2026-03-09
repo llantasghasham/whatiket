@@ -76,7 +76,7 @@ export default function CardBalance({ balance }) {
               textAlign: "center",
             }}
           >
-            {Intl.NumberFormat("pt-BR", {
+            {Intl.NumberFormat("en-US", {
               style: "currency",
               currency: "USD",
             }).format(balance)}

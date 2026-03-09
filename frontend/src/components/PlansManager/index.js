@@ -520,7 +520,7 @@ export function PlansManagerGrid(props) {
                         variant="h4"
                         style={{ fontWeight: "bold", color: "#0ea5e9" }}
                     >
-                        {row.amount ? row.amount.toLocaleString('pt-br', { minimumFractionDigits: 2 }) : "00,00"}
+                        {row.amount ? Number(row.amount).toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 }) : "$0.00"}
                     </Typography>
                     <Divider />
                     <Typography variant="body2" color="textSecondary">
@@ -687,7 +687,7 @@ export default function PlansManager() {
             users: data.users || 0,
             connections: data.connections || 0,
             queues: data.queues || 0,
-            amount: data.amount?.toLocaleString('pt-br', { minimumFractionDigits: 2 }) || 0,
+            amount: data.amount != null ? Number(data.amount).toLocaleString('en-US', { minimumFractionDigits: 2 }) : 0,
             useWhatsapp,
             useFacebook,
             useInstagram,

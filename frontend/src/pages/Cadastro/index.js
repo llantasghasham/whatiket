@@ -376,32 +376,30 @@ const useStyles = makeStyles((theme) => ({
 
 const createSignUpSchema = (country) => Yup.object().shape({
   name: Yup.string()
-    .min(2, "Nome muito curto")
-    .required("Nome é obrigatório"),
+    .min(2, "Nombre muy corto")
+    .required("El nombre es obligatorio"),
   email: Yup.string()
-    .email("E-mail inválido")
-    .required("E-mail é obrigatório"),
+    .email("Correo inválido")
+    .required("El correo es obligatorio"),
   password: Yup.string()
-    .min(6, "Senha deve ter no mínimo 6 caracteres")
-    .matches(/[a-z]/, "Senha deve conter ao menos 1 letra minúscula")
-    .matches(/[A-Z]/, "Senha deve conter ao menos 1 letra maiúscula")
-    .required("Senha é obrigatória"),
+    .min(6, "La contraseña debe tener al menos 6 caracteres")
+    .required("La contraseña es obligatoria"),
   confirmPassword: Yup.string()
-    .oneOf([Yup.ref("password"), null], "Senhas não coincidem")
-    .required("Confirmação de senha é obrigatória"),
+    .oneOf([Yup.ref("password"), null], "Las contraseñas no coinciden")
+    .required("La confirmación de contraseña es obligatoria"),
   phone: Yup.string()
-    .min(10, "Telefone muito curto")
-    .required("Telefone é obrigatório"),
+    .min(10, "Teléfono muy corto")
+    .required("El teléfono es obligatorio"),
   companyName: Yup.string()
-    .min(2, "Nome da empresa muito curto")
-    .required("Nome da empresa é obrigatório"),
+    .min(2, "Nombre de empresa muy corto")
+    .required("El nombre de la empresa es obligatorio"),
   country: Yup.string()
-    .required("País é obrigatório"),
+    .required("El país es obligatorio"),
   type: Yup.string()
     .oneOf(["pf", "pj"], "Tipo inválido")
-    .required("Tipo é obrigatório"),
+    .required("El tipo es obligatorio"),
   document: Yup.string()
-    .required("Documento é obrigatório")
+    .required("El documento es obligatorio")
     .test("valid-document", "Documento inválido", (value, ctx) => {
       const c = ctx.parent?.country || "BR";
       const t = ctx.parent?.type || "pf";
@@ -409,7 +407,7 @@ const createSignUpSchema = (country) => Yup.object().shape({
     }),
   segment: Yup.string(),
   planId: Yup.number()
-    .required("Plano é obrigatório")
+    .required("El plan es obligatorio")
 });
 
 const QuizForm = ({ values, errors, touched, setFieldValue, setFieldTouched, nextStep, prevStep, step, totalSteps, handleSubmit, isSubmitting, plans, trialDays, loading }) => {
@@ -465,21 +463,21 @@ const QuizForm = ({ values, errors, touched, setFieldValue, setFieldTouched, nex
       const val = values[field];
       if (val === undefined || val === null || val === "") {
         const labels = {
-          name: "nome",
-          email: "e-mail",
-          password: "senha",
-          confirmPassword: "confirmação de senha",
-          phone: "telefone",
+          name: "nombre",
+          email: "correo",
+          password: "contraseña",
+          confirmPassword: "confirmación de contraseña",
+          phone: "teléfono",
           country: "país",
           type: "tipo (PF/PJ)",
           document: "documento",
-          companyName: "nome da empresa",
-          planId: "plano",
+          companyName: "nombre de empresa",
+          planId: "plan",
         };
         showAlert({
           type: "warning",
-          title: "Campo obrigatório",
-          message: `Preencha o campo "${labels[field] || field}" antes de continuar.`,
+          title: "Campo obligatorio",
+          message: `Complete el campo "${labels[field] || field}" antes de continuar.`,
         });
         return false;
       }
@@ -512,7 +510,7 @@ const QuizForm = ({ values, errors, touched, setFieldValue, setFieldTouched, nex
           showAlert({
             type: "warning",
             title: "E-mail já cadastrado",
-            message: "Já existe uma conta com este e-mail. Tente fazer login ou use outro e-mail.",
+            message: "Ya existe una cuenta con este correo. Intente iniciar sesión o use otro correo.",
           });
           setCheckingEmail(false);
           return false;
@@ -523,7 +521,7 @@ const QuizForm = ({ values, errors, touched, setFieldValue, setFieldTouched, nex
           showAlert({
             type: "info",
             title: "Aviso",
-            message: "Não foi possível verificar o e-mail. Se já possuir conta, o cadastro poderá falhar.",
+            message: "No se pudo verificar el correo. Si ya tiene cuenta, el registro podría fallar.",
           });
         }
       } finally {
@@ -536,8 +534,8 @@ const QuizForm = ({ values, errors, touched, setFieldValue, setFieldTouched, nex
       if (values.password !== values.confirmPassword) {
         showAlert({
           type: "error",
-          title: "Senhas diferentes",
-          message: "A senha e a confirmação não coincidem. Verifique e tente novamente.",
+          title: "Contraseñas diferentes",
+          message: "La contraseña y la confirmación no coinciden. Verifique e intente de nuevo.",
         });
         return false;
       }
@@ -566,14 +564,14 @@ const QuizForm = ({ values, errors, touched, setFieldValue, setFieldTouched, nex
           <Fade in={true}>
             <Box className={classes.stepContent}>
               <Typography variant="h5" gutterBottom>
-                👋 Vamos começar! Qual seu nome?
+                👋 ¡Empecemos! ¿Cuál es su nombre?
               </Typography>
               <Field
                 as={TextField}
                 name="name"
                 variant="outlined"
                 fullWidth
-                placeholder="Seu nome completo"
+                placeholder="Su nombre completo"
                 error={touched.name && Boolean(errors.name)}
                 helperText={touched.name && errors.name}
                 InputProps={{
@@ -594,7 +592,7 @@ const QuizForm = ({ values, errors, touched, setFieldValue, setFieldTouched, nex
           <Fade in={true}>
             <Box className={classes.stepContent}>
               <Typography variant="h5" gutterBottom>
-                📧 Qual seu melhor e-mail?
+                📧 ¿Cuál es su mejor correo electrónico?
               </Typography>
               <Field
                 as={TextField}
@@ -622,7 +620,7 @@ const QuizForm = ({ values, errors, touched, setFieldValue, setFieldTouched, nex
           <Fade in={true}>
             <Box className={classes.stepContent}>
               <Typography variant="h5" gutterBottom>
-                🔐 Crie uma senha segura
+                🔐 Cree una contraseña (mínimo 6 caracteres)
               </Typography>
               <Field
                 as={TextField}
@@ -652,22 +650,11 @@ const QuizForm = ({ values, errors, touched, setFieldValue, setFieldTouched, nex
                 }}
                 className={classes.inputField}
               />
-              {/* Indicadores de força da senha */}
+              {/* Indicador de contraseña: solo mínimo 6 caracteres */}
               <Box mt={1} px={1}>
-                <Typography variant="caption" style={{ color: "#6b7280", fontWeight: 500 }}>
-                  A senha deve conter:
+                <Typography variant="caption" style={{ color: values.password?.length >= 6 ? "#10b981" : "#ef4444" }}>
+                  {values.password?.length >= 6 ? "✓" : "✗"} Mínimo 6 caracteres
                 </Typography>
-                <Box display="flex" flexDirection="column" mt={0.5} gap={0.25}>
-                  <Typography variant="caption" style={{ color: values.password?.length >= 6 ? "#10b981" : "#ef4444" }}>
-                    {values.password?.length >= 6 ? "✓" : "✗"} Mínimo 6 caracteres
-                  </Typography>
-                  <Typography variant="caption" style={{ color: /[A-Z]/.test(values.password || "") ? "#10b981" : "#ef4444" }}>
-                    {/[A-Z]/.test(values.password || "") ? "✓" : "✗"} Ao menos 1 letra maiúscula
-                  </Typography>
-                  <Typography variant="caption" style={{ color: /[a-z]/.test(values.password || "") ? "#10b981" : "#ef4444" }}>
-                    {/[a-z]/.test(values.password || "") ? "✓" : "✗"} Ao menos 1 letra minúscula
-                  </Typography>
-                </Box>
               </Box>
               <Field
                 as={TextField}
@@ -675,7 +662,7 @@ const QuizForm = ({ values, errors, touched, setFieldValue, setFieldTouched, nex
                 type={showPassword ? "text" : "password"}
                 variant="outlined"
                 fullWidth
-                placeholder="Confirme sua senha"
+                placeholder="Confirme su contraseña"
                 error={touched.confirmPassword && Boolean(errors.confirmPassword)}
                 helperText={touched.confirmPassword && errors.confirmPassword}
                 InputProps={{
@@ -697,10 +684,10 @@ const QuizForm = ({ values, errors, touched, setFieldValue, setFieldTouched, nex
           <Fade in={true}>
             <Box className={classes.stepContent}>
               <Typography variant="h5" gutterBottom>
-                🌍 Selecione seu país
+                🌍 Seleccione su país
               </Typography>
               <Typography variant="body2" color="textSecondary" style={{ marginBottom: 16 }}>
-                O documento solicitado será conforme as leis do seu país
+                El documento solicitado será conforme a las leyes de su país
               </Typography>
               <Field
                 as={TextField}
@@ -727,7 +714,7 @@ const QuizForm = ({ values, errors, touched, setFieldValue, setFieldTouched, nex
           <Fade in={true}>
             <Box className={classes.stepContent}>
               <Typography variant="h5" gutterBottom>
-                📱 Seu telefone para contato
+                📱 Su teléfono de contacto
               </Typography>
               <div className={classes.phoneInputContainer}>
                 <Field name="phone">
@@ -735,7 +722,7 @@ const QuizForm = ({ values, errors, touched, setFieldValue, setFieldTouched, nex
                     <PhoneInput
                       {...field}
                       international
-                      defaultCountry={(values.country && ["BR","US","MX","AR","CO","CL","PE","EC","UY","PY","VE","BO","ES","PT"].includes(values.country)) ? values.country : "BR"}
+                      defaultCountry={(values.country && ["BR","US","MX","AR","CO","CL","PE","EC","UY","PY","VE","BO","ES","PT","CR"].includes(values.country)) ? values.country : "BR"}
                       onChange={(value) => setFieldValue('phone', value)}
                       className={classes.phoneInput}
                       placeholder="(00) 00000-0000"
@@ -765,7 +752,7 @@ const QuizForm = ({ values, errors, touched, setFieldValue, setFieldTouched, nex
           <Fade in={true}>
             <Box className={classes.stepContent}>
               <Typography variant="h5" gutterBottom>
-                🏢 Você é pessoa física ou jurídica?
+                🏢 ¿Es persona física o jurídica?
               </Typography>
               <Box display="flex" gap={2} mt={2}>
                 <Box
@@ -782,7 +769,7 @@ const QuizForm = ({ values, errors, touched, setFieldValue, setFieldTouched, nex
                 >
                   <PersonIcon style={{ fontSize: 32, color: "#3b82f6", marginBottom: 8 }} />
                   <Typography style={{ fontWeight: 500 }}>
-                    Pessoa Física
+                    Persona Física
                   </Typography>
                 </Box>
                 <Box
@@ -799,7 +786,7 @@ const QuizForm = ({ values, errors, touched, setFieldValue, setFieldTouched, nex
                 >
                   <BusinessIcon style={{ fontSize: 32, color: "#3b82f6", marginBottom: 8 }} />
                   <Typography style={{ fontWeight: 500 }}>
-                    Pessoa Jurídica
+                    Persona Jurídica
                   </Typography>
                 </Box>
               </Box>
@@ -845,14 +832,14 @@ const QuizForm = ({ values, errors, touched, setFieldValue, setFieldTouched, nex
           <Fade in={true}>
             <Box className={classes.stepContent}>
               <Typography variant="h5" gutterBottom>
-                🏭 Nome da sua empresa
+                🏭 Nombre de su empresa
               </Typography>
               <Field
                 as={TextField}
                 name="companyName"
                 variant="outlined"
                 fullWidth
-                placeholder="Nome da empresa"
+                placeholder="Nombre de la empresa"
                 error={touched.companyName && Boolean(errors.companyName)}
                 helperText={touched.companyName && errors.companyName}
                 InputProps={{
@@ -873,7 +860,7 @@ const QuizForm = ({ values, errors, touched, setFieldValue, setFieldTouched, nex
           <Fade in={true}>
             <Box className={classes.stepContent}>
               <Typography variant="h5" gutterBottom>
-                💳 Escolha seu plano
+                💳 Elija su plan
               </Typography>
               <Field
                 as={TextField}
@@ -900,13 +887,13 @@ const QuizForm = ({ values, errors, touched, setFieldValue, setFieldTouched, nex
                           {plan.name}
                         </Typography>
                         <Typography variant="body2" color="#6b7280">
-                          {plan.users || 3} usuários • Conexões ilimitadas
+                          {plan.users || 3} usuarios • Conexiones ilimitadas
                         </Typography>
                       </Box>
                       <Typography variant="h6" color="#3b82f6" fontWeight={700}>
                         {"$ " + (plan.value || plan.amount || plan.price || '0')}
                         <Typography component="span" variant="caption" color="#6b7280">
-                          /{plan.recurrence === 'MENSAL' ? 'mês' : 'ano'}
+                          /{plan.recurrence === 'MENSAL' ? 'mes' : 'año'}
                         </Typography>
                       </Typography>
                     </Box>
@@ -917,7 +904,7 @@ const QuizForm = ({ values, errors, touched, setFieldValue, setFieldTouched, nex
               <Box mt={2} p={2} bgcolor="#f0f9ff" borderRadius={8} border="1px solid #3b82f6">
                 <Typography variant="body2" color="#1e40af" style={{ lineHeight: 1.4 }}>
                   <CheckCircleIcon style={{ fontSize: 16, marginRight: 4, verticalAlign: "middle" }} />
-                  <strong>Aviso importante:</strong> Você não será cobrado agora. A cobrança apenas começará após os {trialDays} dias de teste gratuito.
+                  <strong>Aviso importante:</strong> No se le cobrará ahora. La facturación comenzará solo después de los {trialDays} días de prueba gratuita.
                 </Typography>
               </Box>
             </Box>
@@ -934,7 +921,7 @@ const QuizForm = ({ values, errors, touched, setFieldValue, setFieldTouched, nex
       <Box mb={3}>
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
           <Typography variant="body2" color="#6b7280">
-            Etapa {step + 1} de {totalSteps}
+            Paso {step + 1} de {totalSteps}
           </Typography>
           <Typography variant="body2" color="#3b82f6" fontWeight={600}>
             {Math.round(((step + 1) / totalSteps) * 100)}%
@@ -963,7 +950,7 @@ const QuizForm = ({ values, errors, touched, setFieldValue, setFieldTouched, nex
           onClick={prevStep}
           className={classes.backButton}
         >
-          Voltar
+          Volver
         </Button>
         <Button
           type={step === totalSteps - 1 ? "submit" : "button"}
@@ -973,7 +960,7 @@ const QuizForm = ({ values, errors, touched, setFieldValue, setFieldTouched, nex
           className={classes.submitButton}
           disabled={isSubmitting || checkingEmail}
         >
-          {checkingEmail ? "Verificando..." : step === totalSteps - 1 ? (isSubmitting ? "Cadastrando..." : "Finalizar") : "Próximo"}
+          {checkingEmail ? "Verificando..." : step === totalSteps - 1 ? (isSubmitting ? "Registrando..." : "Finalizar") : "Siguiente"}
         </Button>
       </Box>
     </Form>
@@ -992,7 +979,7 @@ const SignUp = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [processingModalOpen, setProcessingModalOpen] = useState(false);
-  const [processingText, setProcessingText] = useState("Realizando cadastro...");
+  const [processingText, setProcessingText] = useState("Realizando registro...");
   const { getPlanList } = usePlans();
   const [loading, setLoading] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState(null);
@@ -1018,15 +1005,15 @@ const SignUp = () => {
 
   const [plans, setPlans] = useState([]);
   const steps = [
-    "Nome",
+    "Nombre",
     "Email",
-    "Senha",
+    "Contraseña",
     "País",
-    "Telefone",
+    "Teléfono",
     "Tipo",
     "Documento",
     "Empresa",
-    "Plano"
+    "Plan"
   ];
 
   // Registrar clique no link de afiliado
@@ -1192,19 +1179,19 @@ const SignUp = () => {
     if (!agreeToTerms) {
       showAlert({
         type: "warning",
-        title: "Termos obrigatórios",
-        message: "Você precisa aceitar os Termos e Condições para continuar.",
+        title: "Términos obligatorios",
+        message: "Debe aceptar los Términos y Condiciones para continuar.",
       });
       return;
     }
 
     setProcessingModalOpen(true);
-    setProcessingText("Validando dados...");
+    setProcessingText("Validando datos...");
     
     const stages = [
-      "Criando conta...",
-      "Configurando ambiente...",
-      "Finalizando cadastro..."
+      "Creando cuenta...",
+      "Configurando entorno...",
+      "Finalizando registro..."
     ];
     
     for (let i = 0; i < stages.length; i++) {
@@ -1230,7 +1217,7 @@ const SignUp = () => {
         await openApi.post("/auth/signup", dataToSend);
         
         // 2. Mostrar sucesso
-        setProcessingText("Concluindo...");
+        setProcessingText("Concluyendo...");
         await new Promise(resolve => setTimeout(resolve, 1000));
         setProcessingModalOpen(false);
         
@@ -1238,10 +1225,10 @@ const SignUp = () => {
         toast.success(
           <div>
             <Typography variant="body1" style={{ fontWeight: 600 }}>
-              🎉 Cadastro realizado com sucesso!
+              🎉 ¡Registro realizado con éxito!
             </Typography>
             <Typography variant="body2" style={{ marginTop: 8 }}>
-              Sua conta foi criada. Faça login para acessar o sistema.
+              Su cuenta ha sido creada. Inicie sesión para acceder al sistema.
             </Typography>
             <Button
               variant="contained"
@@ -1250,7 +1237,7 @@ const SignUp = () => {
               style={{ marginTop: 12 }}
               onClick={() => history.push("/login")}
             >
-              Fazer Login
+              Iniciar sesión
             </Button>
           </div>,
           {
@@ -1280,12 +1267,12 @@ const SignUp = () => {
   };
 
   const leftPanelContent = {
-    title: "Construa o atendimento perfeito",
-    subtitle: "Automatize fluxos, conecte canais e entregue experiências únicas aos seus clientes.",
+    title: "Construya la atención perfecta",
+    subtitle: "Automatice flujos, conecte canales y entregue experiencias únicas a sus clientes.",
     features: [
-      "Jornadas inteligentes com IA",
-      "Campanhas e disparos multicanal",
-      "Insights em tempo real para o seu time"
+      "Jornadas inteligentes con IA",
+      "Campañas y envíos multicanal",
+      "Insights en tiempo real para su equipo"
     ]
   };
 
@@ -1323,7 +1310,7 @@ const SignUp = () => {
           <Card className={classes.signupCard}>
             <CardContent>
               <Typography variant="h4" align="center" gutterBottom style={{ fontWeight: 700, color: "#1f2937" }}>
-                Criar sua conta
+                Crear su cuenta
               </Typography>
               
               <Formik
@@ -1377,12 +1364,12 @@ const SignUp = () => {
                         }
                         label={
                           <span>
-                            Eu concordo com os{" "}
+                            Estoy de acuerdo con los{" "}
                             <span
                               onClick={() => setTermsModalOpen(true)}
                               style={{ color: "#3b82f6", textDecoration: "underline", cursor: "pointer", fontWeight: 600 }}
                             >
-                              Termos e Condições
+                              Términos y Condiciones
                             </span>
                           </span>
                         }
@@ -1400,7 +1387,7 @@ const SignUp = () => {
                 startIcon={<LoginIcon />}
                 style={{ marginTop: 16 }}
               >
-                Já tenho uma conta
+                Ya tengo una cuenta
               </Button>
             </CardContent>
           </Card>
@@ -1409,43 +1396,43 @@ const SignUp = () => {
 
       {/* Modal de Termos de Uso */}
       <Dialog open={termsModalOpen} onClose={() => setTermsModalOpen(false)} maxWidth="md" fullWidth>
-        <DialogTitle>Termos e Condições de Uso</DialogTitle>
+        <DialogTitle>Términos y Condiciones de Uso</DialogTitle>
         <DialogContent dividers>
-          <Typography variant="h6" gutterBottom><strong>1. ACEITAÇÃO DOS TERMOS</strong></Typography>
+          <Typography variant="h6" gutterBottom><strong>1. ACEPTACIÓN DE LOS TÉRMINOS</strong></Typography>
           <Typography paragraph>
-            1.1. Estes Termos de Uso ("Termos") regem o uso do sistema web. Ao acessar ou utilizar o Sistema, o usuário concorda em cumprir estes Termos. Caso não concorde, deve cessar o uso do Sistema imediatamente.
+            1.1. Estos Términos de Uso ("Términos") rigen el uso del sistema web. Al acceder o utilizar el Sistema, el usuario acepta cumplir estos Términos. Si no está de acuerdo, debe dejar de usar el Sistema inmediatamente.
           </Typography>
 
-          <Typography variant="h6" gutterBottom><strong>2. LICENÇA DE USO</strong></Typography>
+          <Typography variant="h6" gutterBottom><strong>2. LICENCIA DE USO</strong></Typography>
           <Typography paragraph>
-            2.1. O Licenciante concede ao Usuário uma licença limitada, não exclusiva, intransferível e revogável para uso do Sistema de acordo com estes Termos.
+            2.1. El Licenciante concede al Usuario una licencia limitada, no exclusiva, intransferible y revocable para usar el Sistema de acuerdo con estos Términos.
           </Typography>
           <Typography paragraph>
-            2.2. O Usuário não poderá modificar, distribuir, vender, alugar, sublicenciar ou realizar engenharia reversa sobre o Sistema, salvo quando expressamente permitido por lei.
-          </Typography>
-
-          <Typography variant="h6" gutterBottom><strong>3. DIREITOS AUTORAIS E PROPRIEDADE INTELECTUAL</strong></Typography>
-          <Typography paragraph>
-            3.1. O Sistema, incluindo código-fonte, design, logotipos e demais conteúdos, é protegido por leis de direitos autorais e outras leis de propriedade intelectual.
-          </Typography>
-          <Typography paragraph>
-            3.2. Nenhuma parte do Sistema poderá ser copiada, reproduzida ou utilizada sem a autorização expressa do Licenciante.
+            2.2. El Usuario no podrá modificar, distribuir, vender, alquilar, sublicenciar o realizar ingeniería inversa sobre el Sistema, salvo cuando expresamente lo permita la ley.
           </Typography>
 
-          <Typography variant="h6" gutterBottom><strong>4. RESPONSABILIDADES DO USUÁRIO</strong></Typography>
+          <Typography variant="h6" gutterBottom><strong>3. DERECHOS DE AUTOR Y PROPIEDAD INTELECTUAL</strong></Typography>
           <Typography paragraph>
-            4.1. O Usuário se compromete a utilizar o Sistema de forma lícita e em conformidade com estes Termos.
+            3.1. El Sistema, incluyendo código fuente, diseño, logotipos y demás contenidos, está protegido por leyes de derechos de autor y otras leyes de propiedad intelectual.
           </Typography>
           <Typography paragraph>
-            4.2. O Usuário é responsável por manter a segurança de suas credenciais de acesso e por todas as atividades realizadas em sua conta.
+            3.2. Ninguna parte del Sistema podrá ser copiada, reproducida o utilizada sin la autorización expresa del Licenciante.
           </Typography>
 
-          <Typography variant="h6" gutterBottom><strong>5. LIMITAÇÃO DE RESPONSABILIDADE</strong></Typography>
+          <Typography variant="h6" gutterBottom><strong>4. RESPONSABILIDADES DEL USUARIO</strong></Typography>
           <Typography paragraph>
-            5.1. O Sistema é fornecido "como está", sem garantias de qualquer tipo.
+            4.1. El Usuario se compromete a utilizar el Sistema de forma lícita y en conformidad con estos Términos.
           </Typography>
           <Typography paragraph>
-            5.2. O Licenciante não será responsável por quaisquer danos diretos, indiretos, incidentais ou consequentes resultantes do uso ou impossibilidade de uso do Sistema.
+            4.2. El Usuario es responsable de mantener la seguridad de sus credenciales de acceso y de todas las actividades realizadas en su cuenta.
+          </Typography>
+
+          <Typography variant="h6" gutterBottom><strong>5. LIMITACIÓN DE RESPONSABILIDAD</strong></Typography>
+          <Typography paragraph>
+            5.1. El Sistema se proporciona "tal cual", sin garantías de ningún tipo.
+          </Typography>
+          <Typography paragraph>
+            5.2. El Licenciante no será responsable por daños directos, indirectos, incidentales o consecuentes resultantes del uso o imposibilidad de uso del Sistema.
           </Typography>
 
           <Box mt={3}>
@@ -1455,7 +1442,7 @@ const SignUp = () => {
               color="primary" 
               onClick={() => setTermsModalOpen(false)}
             >
-              Fechar
+              Cerrar
             </Button>
           </Box>
         </DialogContent>

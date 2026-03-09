@@ -16,6 +16,7 @@ export const COUNTRIES = [
   { code: "UY", name: "Uruguay", flag: "🇺🇾", docTypes: ["ci"] },
   { code: "VE", name: "Venezuela", flag: "🇻🇪", docTypes: ["cedula", "rif"] },
   { code: "US", name: "Estados Unidos", flag: "🇺🇸", docTypes: ["id", "ein"] },
+  { code: "CR", name: "Costa Rica", flag: "🇨🇷", docTypes: ["cedula", "cedula_juridica"] },
   { code: "ES", name: "España", flag: "🇪🇸", docTypes: ["dni", "nie", "cif"] },
   { code: "PT", name: "Portugal", flag: "🇵🇹", docTypes: ["nif"] },
   { code: "OTHER", name: "Otro país", flag: "🌍", docTypes: ["document"] },
@@ -69,6 +70,10 @@ const DOC_CONFIG = {
   US: {
     pf: { label: "ID / SSN", placeholder: "Ej: 123-45-6789", minLen: 9, maxLen: 15, validate: "alphanumeric" },
     pj: { label: "EIN", placeholder: "Ej: 12-3456789", minLen: 9, maxLen: 12, validate: "alphanumeric" },
+  },
+  CR: {
+    pf: { label: "Cédula física", placeholder: "Ej: 1-2345-6789", minLen: 9, maxLen: 12, validate: "alphanumeric" },
+    pj: { label: "Cédula jurídica", placeholder: "Ej: 3-012-123456", minLen: 10, maxLen: 12, validate: "alphanumeric" },
   },
   ES: {
     pf: { label: "DNI / NIE", placeholder: "Ej: 12345678A", minLen: 8, maxLen: 12, validate: "alphanumeric" },

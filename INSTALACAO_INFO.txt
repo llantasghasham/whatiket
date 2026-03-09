@@ -1,0 +1,39 @@
+========================================
+INFORMAÇÕES DA INSTALAÇÃO - empresa
+Data: Thu Mar  5 00:05:39 -03 2026
+========================================
+
+ACESSOS:
+- Frontend: https://chatwoot.shakarbakar.com
+- Backend: https://api.shakarbakar.com
+- Login: user@faedeveloper.com.br
+- Senha: 102030
+
+PORTAS:
+- Frontend: 3000
+- Backend: 4000
+- Redis: 5000
+
+CREDENCIAIS:
+- Usuário Deploy: deploy
+- Senha Deploy: Master123
+- Senha Redis: 8Q0hysgyZbw8plK
+
+BANCO DE DADOS POSTGRESQL:
+- Banco: empresa
+- Usuário: empresa
+- Senha: ZdG387FhYsm0olSm097541HMSdS
+- Host: localhost
+- Porta: 5432
+
+LIMITES:
+- Max WhatsApp: 999
+- Max Usuários: 999
+
+COMANDOS ÚTEIS:
+- Ver status: sudo pm2 status
+- Ver logs backend: sudo pm2 logs empresa-backend
+- Ver logs frontend: sudo pm2 logs empresa-frontend
+- Reiniciar: sudo pm2 restart all
+- Ver Docker: sudo docker ps
+

@@ -342,7 +342,7 @@ const Companies = () => {
     const renderStatus = (isActive) => (isActive ? "Ativa" : "Inativa");
 
     const renderPlanValue = (row) => {
-        return row.planId !== null ? row.plan?.amount ? Number(row.plan.amount).toLocaleString('pt-br', { minimumFractionDigits: 2 }) : '00,00' : "-";
+        return row.planId !== null ? row.plan?.amount ? Number(row.plan.amount).toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 }) : '$0.00' : "-";
     };
 
     const renderWhatsapp = (row) => {

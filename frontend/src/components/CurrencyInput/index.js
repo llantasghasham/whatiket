@@ -13,8 +13,8 @@ const CurrencyInput = ({ value, onChange, label, required, error, helperText, ..
         // Converte para centavos
         const cents = parseInt(numbers) || 0
         
-        // Formata como moeda brasileira
-        return (cents / 100).toLocaleString('pt-BR', {
+        // Formato numérico USD (en-US: coma miles, punto decimal)
+        return (cents / 100).toLocaleString('en-US', {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
         })
