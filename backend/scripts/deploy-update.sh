@@ -1,17 +1,23 @@
 #!/bin/bash
-# Despliegue rápido: pull, build, restart
+# Despliegue rápido: pull, build, restart limpio (evita EADDRINUSE puerto 4000)
 # Uso: cd /home/deploy/empresa && bash backend/scripts/deploy-update.sh
 
 set -e
-cd "$(dirname "$0")/.."
+REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+cd "$REPO_ROOT"
+
 echo "=== 1. Git pull ==="
 git pull origin main
 
 echo "=== 2. Build backend ==="
+cd backend
 npm run build
 
-echo "=== 3. Restart PM2 ==="
-pm2 restart empresa-backend
+echo "=== 3. Reinicio limpio (libera puerto 4000 antes de arrancar) ==="
+pm2 delete empresa-backend 2>/dev/null || true
+fuser -k 4000/tcp 2>/dev/null || true
+sleep 5
+pm2 start ecosystem.config.js
 pm2 save
 
 echo "=== 4. Estado ==="
