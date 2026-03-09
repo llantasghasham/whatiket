@@ -162,7 +162,8 @@ const Routes = () => {
                 <ProtectedRoute exact path="/painel" component={Dashboard} />
                 <ProtectedRoute exact path="/tickets/:ticketId?" component={TicketResponsiveContainer} />
                 <ProtectedRoute exact path="/conversas/:ticketId?" component={TicketResponsiveContainer} />
-                <ProtectedRoute exact path="/atendimentos/:ticketId?" component={Atendimentos} />
+                {/* Usar el mismo contenedor que /conversas para evitar errores en Atendimentos */}
+                <ProtectedRoute exact path="/atendimentos/:ticketId?" component={TicketResponsiveContainer} />
                 <ProtectedRoute exact path="/atendimentomobile/:ticketId?" component={AtendimentosMobile} />
                 <ProtectedRoute exact path="/connections" component={Canais} />
                 <ProtectedRoute exact path="/canais" component={Canais} />
