@@ -171,7 +171,7 @@ const DividasCredito = () => {
               Dados Cadastrais | Score | Pendências financeiras | Protestos | Cheques sem fundos | Cheques sustados | Cenprot.
             </Typography>
             <Typography variant="h5" style={{ color: "#4caf50", marginBottom: 16, textAlign: "center", fontWeight: "bold" }}>
-              R$ 11,20
+              $ 11.20
             </Typography>
             <input
               type="text"
@@ -203,7 +203,7 @@ const DividasCredito = () => {
               Dados Cadastrais | Score | Pendências financeiras | Protestos | Cheques sem fundos | Cheques sustados | Cenprot.
             </Typography>
             <Typography variant="h5" style={{ color: "#4caf50", marginBottom: 16, textAlign: "center", fontWeight: "bold" }}>
-              R$ 11,20
+              $ 11.20
             </Typography>
             <input
               type="text"
@@ -235,7 +235,7 @@ const DividasCredito = () => {
               Dados Cadastrais | Score | Pendências financeiras | Protestos | Cheques sem fundos | Cheques sustados | Cenprot.
             </Typography>
             <Typography variant="h5" style={{ color: "#4caf50", marginBottom: 16, textAlign: "center", fontWeight: "bold" }}>
-              R$ 11,20
+              $ 11.20
             </Typography>
             <input
               type="text"
@@ -267,7 +267,7 @@ const DividasCredito = () => {
               Dados Cadastrais | Score | Pendências financeiras | Protestos | Cheques sem fundos | Cheques sustados | Cenprot.
             </Typography>
             <Typography variant="h5" style={{ color: "#4caf50", marginBottom: 16, textAlign: "center", fontWeight: "bold" }}>
-              R$ 11,20
+              $ 11.20
             </Typography>
             <input
               type="text"

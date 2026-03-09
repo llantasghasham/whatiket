@@ -921,7 +921,7 @@ const SignUp = () => {
                                                             Atendentes: {selectedPlan.users} | Conexões: {selectedPlan.connections} | Filas: {selectedPlan.queues}
                                                         </Typography>
                                                         <Typography className={classes.planPrice}>
-                                                            R$ {selectedPlan.amount}/mês
+                                                            $ {selectedPlan.amount}/mes
                                                         </Typography>
                                                     </>
                                                 ) : (
@@ -1063,7 +1063,7 @@ const SignUp = () => {
                                             Ideal para {plan.users === 1 ? 'pequenas empresas' : plan.users <= 3 ? 'empresas em crescimento' : 'grandes empresas'}
                                         </Typography>
                                         <Typography className={classes.dialogPlanPrice}>
-                                            R$ {plan.amount}
+                                            $ {plan.amount}
                                             <span className={classes.planPeriod}>/mês</span>
                                         </Typography>
                                         <ul className={classes.featureList}>

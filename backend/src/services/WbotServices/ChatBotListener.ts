@@ -1028,7 +1028,7 @@ export const sayChatbot = async (
   // //                           dueDate_pending_corrigida = dueDate_pending?.split('-')?.reverse()?.join('/');
   // //                           value_pending_corrigida = value_pending.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
 
-  // //                           const bodyBoleto = `Segue a segunda-via da sua Fatura!\n\n*Fatura:* ${invoiceNumber_pending}\n*Nome:* ${nome}\n*Valor:* R$ ${value_pending_corrigida}\n*Data Vencimento:* ${dueDate_pending_corrigida}\n*Descrição:* ${description_pending}\n*Link:* ${invoiceUrl_pending}`
+  // //                           const bodyBoleto = `Segue a segunda-via da sua Fatura!\n\n*Fatura:* ${invoiceNumber_pending}\n*Nome:* ${nome}\n*Valor:* $ ${value_pending_corrigida}\n*Data Vencimento:* ${dueDate_pending_corrigida}\n*Descrição:* ${description_pending}\n*Link:* ${invoiceUrl_pending}`
   // //                           await sleep(2000)
   // //                           await sendMessage(wbot, contact, ticket, bodyBoleto);
 
@@ -1209,7 +1209,7 @@ export const sayChatbot = async (
   // //                         await sleep(2000)
   // //                         await sendMessage(wbot, contact, ticket, body);
 
-  // //                         const bodyBoleto = `Segue a segunda-via da sua Fatura!\n\n*Fatura:* ${invoiceNumber_overdue}\n*Nome:* ${nome}\n*Valor:* R$ ${value_overdue_corrigida}\n*Data Vencimento:* ${dueDate_overdue_corrigida}\n*Descrição:* ${description_overdue}\n*Link:* ${invoiceUrl_overdue}`
+  // //                         const bodyBoleto = `Segue a segunda-via da sua Fatura!\n\n*Fatura:* ${invoiceNumber_overdue}\n*Nome:* ${nome}\n*Valor:* $ ${value_overdue_corrigida}\n*Data Vencimento:* ${dueDate_overdue_corrigida}\n*Descrição:* ${description_overdue}\n*Link:* ${invoiceUrl_overdue}`
   // //                         await sleep(2000)
   // //                         await sendMessage(wbot, contact, ticket, bodyBoleto);
 

@@ -432,7 +432,7 @@ CATEGORIA: ${item.categoria}
 COMBUSTÍVEL: ${item.combustivel}
 
 HISTÓRICO RECENTE:
-${item.historico.slice(0, 6).map(h => `${h.mes}: R$ ${h.valor.toLocaleString('pt-BR')}`).join('\n')}
+${item.historico.slice(0, 6).map(h => `${h.mes}: $ ${h.valor.toLocaleString('en-US')}`).join('\n')}
 
 Fonte: ${data["API Full"]}
 Data da consulta: ${new Date().toLocaleString('pt-BR')}`;
@@ -494,7 +494,7 @@ Data da consulta: ${new Date().toLocaleString('pt-BR')}`;
               Busca o proprietário da placa do veículo.
             </Typography>
             <Typography variant="h5" style={{ color: "#4caf50", marginBottom: 16, textAlign: "center", fontWeight: "bold" }}>
-              R$ 2,50
+              $ 2.50
             </Typography>
             <input
               type="text"
@@ -527,7 +527,7 @@ Data da consulta: ${new Date().toLocaleString('pt-BR')}`;
               Busca de dados recall do veículo.
             </Typography>
             <Typography variant="h5" style={{ color: "#4caf50", marginBottom: 16, textAlign: "center", fontWeight: "bold" }}>
-              R$ 5,60
+              $ 5.60
             </Typography>
             <input
               type="text"
@@ -560,7 +560,7 @@ Data da consulta: ${new Date().toLocaleString('pt-BR')}`;
               Bin Estadual | Gravame | Histórico de Roubo e Furto | Precificador
             </Typography>
             <Typography variant="h5" style={{ color: "#4caf50", marginBottom: 16, textAlign: "center", fontWeight: "bold" }}>
-              R$ 41,20
+              $ 41.20
             </Typography>
             <input
               type="text"
@@ -593,7 +593,7 @@ Data da consulta: ${new Date().toLocaleString('pt-BR')}`;
               Informa se o veículo possui registro em base de leilão, conforme dados repassados pelos leiloeiros.
             </Typography>
             <Typography variant="h5" style={{ color: "#4caf50", marginBottom: 16, textAlign: "center", fontWeight: "bold" }}>
-              R$ 12,76
+              $ 12.76
             </Typography>
             <input
               type="text"
@@ -626,7 +626,7 @@ Data da consulta: ${new Date().toLocaleString('pt-BR')}`;
               Busca de dados fipe do veículo.
             </Typography>
             <Typography variant="h5" style={{ color: "#4caf50", marginBottom: 16, textAlign: "center", fontWeight: "bold" }}>
-              R$ 1,11
+              $ 1.11
             </Typography>
             <input
               type="text"
@@ -781,7 +781,7 @@ Data da consulta: ${new Date().toLocaleString('pt-BR')}`;
               Traz as fotos do carro no leilão pela placa.
             </Typography>
             <Typography variant="h5" style={{ color: "#4caf50", marginBottom: 16, textAlign: "center", fontWeight: "bold" }}>
-              R$ 16,00
+              $ 16.00
             </Typography>
             <input
               type="text"
@@ -814,7 +814,7 @@ Data da consulta: ${new Date().toLocaleString('pt-BR')}`;
               Informa a existência de gravame sobre o veículo, como alienação fiduciária ou outras restrições financeiras, apresentando dados do contrato, data de inclusão, instituição financeira credora, documento do agente, situação do gravame e UF de licenciamento.
             </Typography>
             <Typography variant="h5" style={{ color: "#4caf50", marginBottom: 16, textAlign: "center", fontWeight: "bold" }}>
-              R$ 4,20
+              $ 4.20
             </Typography>
             <input
               type="text"
@@ -846,7 +846,7 @@ Data da consulta: ${new Date().toLocaleString('pt-BR')}`;
               Verifica se o veículo possui registro ativo de roubo ou furto nas bases policiais, apresentando número do boletim de ocorrência, local e data do fato, quando disponível. Caso não haja ocorrência ativa, a consulta retorna como "nada consta".
             </Typography>
             <Typography variant="h5" style={{ color: "#4caf50", marginBottom: 16, textAlign: "center", fontWeight: "bold" }}>
-              R$ 5,60
+              $ 5.60
             </Typography>
             <input
               type="text"
@@ -879,7 +879,7 @@ Data da consulta: ${new Date().toLocaleString('pt-BR')}`;
               Busca de dados de roubo ou furto do veículo.
             </Typography>
             <Typography variant="h5" style={{ color: "#4caf50", marginBottom: 16, textAlign: "center", fontWeight: "bold" }}>
-              R$ 12,36
+              $ 12.36
             </Typography>
             <input
               type="text"
@@ -912,7 +912,7 @@ Data da consulta: ${new Date().toLocaleString('pt-BR')}`;
               A API de Índice de risco fornece informações sobre sobre o histórico do veículo completo.
             </Typography>
             <Typography variant="h5" style={{ color: "#4caf50", marginBottom: 16, textAlign: "center", fontWeight: "bold" }}>
-              R$ 9,24
+              $ 9.24
             </Typography>
             <input
               type="text"

@@ -246,11 +246,11 @@ Você gostaria de saber mais sobre alguma especialidade ou valores das consultas
 [Se o paciente perguntar sobre valores]
 "Com prazer! Os valores das consultas são:
 
-Cardiologista: R$600,00
+Cardiologista: $ 600.00
 
-Clínico Geral: R$400,00
+Clínico Geral: $ 400.00
 
-Psicóloga: R$350,00
+Psicóloga: $ 350.00
 
 Qual especialidade você deseja agendar?"
 
@@ -273,10 +273,10 @@ Qual especialidade você deseja agendar?"
 [Se o cliente perguntar sobre serviços]
 "Claro! Oferecemos os seguintes serviços:
 
-- Corte de cabelo: R$50,00
-- Coloração: R$120,00
-- Manicure e pedicure: R$40,00
-- Tratamentos capilares: R$80,00
+- Corte de cabelo: $ 50.00
+- Coloração: $ 120.00
+- Manicure e pedicure: $ 40.00
+- Tratamentos capilares: $ 80.00
 
 Qual serviço você deseja agendar?"
 
@@ -296,7 +296,7 @@ Qual serviço você deseja agendar?"
 [Se o cliente perguntar sobre promoções]
 "Temos várias promoções incríveis esta semana:
 
-- Camisetas a partir de R$29,90
+- Camisetas a partir de $ 29.90
 - Calças jeans com 30% de desconto
 - Tênis com até 50% off
 
@@ -326,7 +326,7 @@ Você gostaria de saber mais sobre algum produto?"
 Qual área você precisa de assistência?"
 
 [Se o cliente perguntar sobre valores]
-"Os valores variam conforme o tipo de serviço. Para consultas iniciais, cobramos R$300,00. Posso agendar um horário para você?"
+"Os valores variam conforme o tipo de serviço. Para consultas iniciais, cobramos $ 300.00. Posso agendar um horário para você?"
 
 [Após escolha do dia e horário]
 "Sua consulta foi agendada para [data] às [horário]. Nosso endereço é Avenida Principal, 456, Sala 101. Aguardamos você!"
@@ -408,7 +408,7 @@ Você gostaria de saber mais sobre algum produto?"
 "Olá! Bem-vindo(a) à Gás Express. Como posso ajudar você hoje? Precisa de entrega de gás ou tem alguma dúvida?"
 
 [Se o cliente perguntar sobre preços]
-"O valor do botijão de 13kg é R$80,00, e o de 45kg é R$200,00. A entrega é gratuita para pedidos acima de R$100,00."
+"O valor do botijão de 13kg é $ 80.00, e o de 45kg é $ 200.00. A entrega é gratuita para pedidos acima de $ 100.00."
 
 [Se o cliente perguntar sobre prazos]
 "Entregamos em até 2 horas na região central. Para outras regiões, o prazo pode variar. Posso anotar seu pedido?"
@@ -434,7 +434,7 @@ Você gostaria de saber mais sobre algum produto?"
 Qual serviço você precisa?"
 
 [Se o cliente perguntar sobre valores]
-"Os valores variam conforme o serviço. Para abertura de empresas, cobramos R$500,00. Posso agendar uma consulta para você?"
+"Os valores variam conforme o serviço. Para abertura de empresas, cobramos $ 500.00. Posso agendar uma consulta para você?"
 
 [Após escolha do dia e horário]
 "Sua consulta foi agendada para [data] às [horário]. Nosso endereço é Rua dos Contadores, 101. Aguardamos você!"

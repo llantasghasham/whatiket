@@ -13,13 +13,13 @@ function createData(transaction, origin, value, date) {
 }
 
 const rows = [
-  createData("Panificadora Alpha", "Débito", "R$100,00", "10/10/2024"),
-  createData("Transferência Vitor", "Conta-corrente", "R$200,00", "15/10/2024"),
-  createData("Supermercado Beta", "Crédito", "R$350,00", "12/10/2024"),
-  createData("Pagamento Energia", "Débito", "R$120,00", "05/10/2024"),
-  createData("Depósito PIX", "Conta-salário", "R$2.000,00", "01/10/2024"),
-  createData("Farmácia Central", "Débito", "R$80,00", "09/10/2024"),
-  createData("Transferência João", "Conta-poupança", "R$500,00", "08/10/2024"),
+  createData("Panificadora Alpha", "Débito", "$ 100.00", "10/10/2024"),
+  createData("Transferência Vitor", "Conta-corrente", "$ 200.00", "15/10/2024"),
+  createData("Supermercado Beta", "Crédito", "$ 350.00", "12/10/2024"),
+  createData("Pagamento Energia", "Débito", "$ 120.00", "05/10/2024"),
+  createData("Depósito PIX", "Conta-salário", "$ 2,000.00", "01/10/2024"),
+  createData("Farmácia Central", "Débito", "$ 80.00", "09/10/2024"),
+  createData("Transferência João", "Conta-poupança", "$ 500.00", "08/10/2024"),
 ];
 
 export default function TransactionTable() {

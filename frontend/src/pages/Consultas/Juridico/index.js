@@ -170,7 +170,7 @@ const Juridico = () => {
               Consulte ações e processos judiciais de pessoas físicas e jurídicas.
             </Typography>
             <Typography variant="h5" style={{ color: "#4caf50", marginBottom: 16, textAlign: "center", fontWeight: "bold" }}>
-              R$ 9,50
+              $ 9.50
             </Typography>
             <input
               type="text"
@@ -203,7 +203,7 @@ const Juridico = () => {
               Acesse os débitos inadimplidos perante a Justiça do Trabalho em execuções trabalhistas.
             </Typography>
             <Typography variant="h5" style={{ color: "#4caf50", marginBottom: 16, textAlign: "center", fontWeight: "bold" }}>
-              R$ 9,50
+              $ 9.50
             </Typography>
             <input
               type="text"
@@ -235,7 +235,7 @@ const Juridico = () => {
               Investigações jurídicas, consulta de bens e negociação de dívidas com dados de múltiplas fontes.
             </Typography>
             <Typography variant="h5" style={{ color: "#4caf50", marginBottom: 16, textAlign: "center", fontWeight: "bold" }}>
-              R$ 15,76
+              $ 15.76
             </Typography>
             <input
               type="text"
