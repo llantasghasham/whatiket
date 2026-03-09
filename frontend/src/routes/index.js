@@ -115,6 +115,8 @@ import UsagePolicy from "../pages/landingpage/UsagePolicy";
 import PrivacyPolicy from "../pages/landingpage/PrivacyPolicy";
 import PublicCheckout from "../pages/PublicCheckout";
 import AtendimentosMobile from "../pages/atendimentomobile";
+import { QueueSelectedProvider } from "../context/QueuesSelected/QueuesSelectedContext";
+import NotificationToast from "../components/NotificationToast";
 
 // Vista "buena" con filtros Facebook, Instagram, WhatsApp; carga diferida para evitar error de inicialización
 const Atendimentos = lazy(() => import("../pages/Atendimentos"));
@@ -129,8 +131,6 @@ const AtendimentosWithSuspense = (props) => (
     <Atendimentos {...props} />
   </Suspense>
 );
-import { QueueSelectedProvider } from "../context/QueuesSelected/QueuesSelectedContext";
-import NotificationToast from "../components/NotificationToast";
 
 const Routes = () => {
   const [showCampaigns, setShowCampaigns] = useState(false);
