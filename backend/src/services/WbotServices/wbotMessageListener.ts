@@ -5553,7 +5553,7 @@ const handleMessage = async (
       return;
     }
 
-    // integração flowbuilder
+    // integração flowbuilder (cuando no entró por el bloque anterior con isBot)
     if (
       !ticket.imported &&
       !msg.key.fromMe &&
@@ -5573,10 +5573,10 @@ const handleMessage = async (
         companyId,
         integrations,
         ticket,
-        null,
-        null,
+        isMenu,
+        whatsapp,
         contact,
-        null
+        isFirstMsg
       );
     }
 
