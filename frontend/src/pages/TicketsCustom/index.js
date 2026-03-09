@@ -3,8 +3,10 @@ import { useParams, useHistory } from "react-router-dom";
 import Hidden from "@material-ui/core/Hidden";
 import { makeStyles } from "@material-ui/core/styles";
 import ChatIcon from "@material-ui/icons/Chat";
+import AddIcon from "@material-ui/icons/Add";
 import TicketsManager from "../../components/TicketsManagerTabs";
 import Ticket from "../../components/Ticket";
+import NewTicketModal from "../../components/NewTicketModal";
 
 import { QueueSelectedProvider } from "../../context/QueuesSelected/QueuesSelectedContext";
 import { i18n } from "../../translate/i18n";
@@ -63,6 +65,28 @@ const useStyles = makeStyles((theme) => ({
 		color: theme.palette.text.secondary,
 		fontSize: 16,
 	},
+	floatingButton: {
+		position: "fixed",
+		right: 24,
+		bottom: 24,
+		width: 56,
+		height: 56,
+		borderRadius: "50%",
+		border: "none",
+		display: "flex",
+		alignItems: "center",
+		justifyContent: "center",
+		backgroundColor: "#00a884",
+		color: "#ffffff",
+		boxShadow: "0 6px 16px rgba(0,0,0,0.25)",
+		cursor: "pointer",
+		zIndex: 2000,
+		transition: "transform 0.2s ease, box-shadow 0.2s ease",
+		"&:hover": {
+			transform: "translateY(-2px)",
+			boxShadow: "0 10px 24px rgba(0,0,0,0.3)",
+		},
+	},
 	dragger: {
 		width: "5px",
 		cursor: "ew-resize",
@@ -87,6 +111,7 @@ const TicketsCustom = () => {
 	const history = useHistory();
 
 	const [ticketsManagerWidth, setTicketsManagerWidth] = useState(0);
+	const [newTicketModalOpen, setNewTicketModalOpen] = useState(false);
 	const ticketsManagerWidthRef = useRef(ticketsManagerWidth);
 
 	var before = moment(moment().format()).isBefore(user.company.dueDate);
@@ -165,6 +190,26 @@ const TicketsCustom = () => {
 						)}
 					</div>
 				</div>
+
+				{/* Botón flotante para crear nuevo ticket (igual en /tickets, /conversas, /atendimentos) */}
+				<button
+					type="button"
+					className={classes.floatingButton}
+					onClick={() => setNewTicketModalOpen(true)}
+				>
+					<AddIcon />
+				</button>
+
+				<NewTicketModal
+					modalOpen={newTicketModalOpen}
+					onClose={(ticket) => {
+						setNewTicketModalOpen(false);
+						if (ticket?.id) {
+							// Redirige a la pantalla de atendimentos para continuar la conversación
+							history.push(`/atendimentos/${ticket.id}`);
+						}
+					}}
+				/>
 			</div>
 		</QueueSelectedProvider>
 	);
