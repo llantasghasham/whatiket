@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import {
+  Box,
   Button,
   Dialog,
   DialogActions,
@@ -10,6 +11,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Typography,
 } from "@material-ui/core";
 import { toast } from "react-toastify";
 
@@ -117,18 +119,29 @@ function ChannelModal({ open, onClose }) {
               )}
 
               {connections.length === 0 && (
-                <p>
-                  Nenhum canal disponível. Para cadastrar seus canais no Hub{" "}
-                  <a
-                    href="https://hub.notificame.com.br/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {" "}
-                    clique aqui
-                  </a>
-                  .
-                </p>
+                <Box>
+                  <Typography variant="body1" gutterBottom>
+                    Ningún canal disponible. Para usar Telegram, WhatsApp y otros canales:
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary" paragraph>
+                    1. Regístrese en NotificaMe Hub (app.notificame.com.br)
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary" paragraph>
+                    2. Configure su bot de Telegram u otros canales en el Hub
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary" paragraph>
+                    3. Copie el token del Hub y péguelo en Configuración → Token NotificameHub
+                  </Typography>
+                  <Typography variant="body2">
+                    <a
+                      href="https://app.notificame.com.br/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Ir a NotificaMe Hub →
+                    </a>
+                  </Typography>
+                </Box>
               )}
             </Grid>
           </Grid>

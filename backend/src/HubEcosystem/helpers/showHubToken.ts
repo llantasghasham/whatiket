@@ -1,11 +1,15 @@
 import CompaniesSettings from "../../models/CompaniesSettings";
 
-export const showHubToken = async (companyId: string): Promise<string> => {
-  const notificameHubToken = await CompaniesSettings.findOne({
+export const showHubToken = async (companyId: string): Promise<string | null> => {
+  const settings = await CompaniesSettings.findOne({
     where: {
       companyId,
     }
   });
 
-  return notificameHubToken.notificameHub;
+  if (!settings || !settings.notificameHub) {
+    return null;
+  }
+
+  return settings.notificameHub;
 };

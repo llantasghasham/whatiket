@@ -79,8 +79,8 @@ const MessageOptionsMenu = ({
 
       if (ticket.userId !== user?.id) {
         setOpenAlert(true);
-        setUserTicketOpen(ticket.user?.name || "Sem usuário");
-        setQueueTicketOpen(ticket.queue?.name || "Sem fila");
+        setUserTicketOpen(ticket.user?.name || i18n.t("tickets.withoutUser"));
+        setQueueTicketOpen(ticket.queue?.name || i18n.t("tickets.withoutQueue"));
       } else {
         setOpenAlert(false);
         setUserTicketOpen("");

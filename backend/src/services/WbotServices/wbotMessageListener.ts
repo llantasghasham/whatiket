@@ -5409,18 +5409,16 @@ const handleMessage = async (
         clearTimeout(messageBuffer[ticket.id].timeout);
       }
 
-      // Define o novo timeout de 8 segundos
+      // Timeout 2 segundos (antes 8s) - respuesta más rápida
       messageBuffer[ticket.id].timeout = setTimeout(async () => {
         try {
-          // Junta todas as mensagens acumuladas
           const combinedText = messageBuffer[ticket.id].texts.join(". ");
           delete messageBuffer[ticket.id];
 
-          // Clona a mensagem original e substitui o texto
           const combinedMsg = JSON.parse(JSON.stringify(msg));
           combinedMsg.message.conversation = combinedText;
 
-          console.log(`🧠 Agrupando mensagens em 8s (FlowBuilder): ${combinedText}`);
+          console.log(`🧠 Agrupando mensagens (FlowBuilder): ${combinedText}`);
 
           // Chama a IA com o texto combinado
           console.log(`OPENAI DIRETO: Chamando handleOpenAi com mensagem combinada`);
@@ -5436,7 +5434,7 @@ const handleMessage = async (
         } catch (error) {
           console.error("❌ Erro ao processar mensagens agrupadas (FlowBuilder):", error);
         }
-      }, 8000); // 8 segundos
+      }, 2000); // 2 segundos
 
       return;
     }
@@ -5496,18 +5494,16 @@ const handleMessage = async (
         clearTimeout(messageBuffer[ticket.id].timeout);
       }
 
-      // Define o novo timeout de 8 segundos
+      // Timeout 2 segundos (antes 8s) - respuesta más rápida
       messageBuffer[ticket.id].timeout = setTimeout(async () => {
         try {
-          // Junta todas as mensagens acumuladas
           const combinedText = messageBuffer[ticket.id].texts.join(". ");
           delete messageBuffer[ticket.id];
 
-          // Clona a mensagem original e substitui o texto
           const combinedMsg = JSON.parse(JSON.stringify(msg));
           combinedMsg.message.conversation = combinedText;
 
-          console.log(`🧠 Agrupando mensagens em 8s (Conexão): ${combinedText}`);
+          console.log(`🧠 Agrupando mensagens (Conexão): ${combinedText}`);
 
           // Chama a IA com o texto combinado
           await handleOpenAi(
@@ -5522,7 +5518,7 @@ const handleMessage = async (
         } catch (error) {
           console.error("❌ Erro ao processar mensagens agrupadas (Conexão):", error);
         }
-      }, 8000); // 8 segundos
+      }, 2000); // 2 segundos - respuesta más rápida
     }
 
     console.log("log... 4444", { ticket });
@@ -5557,7 +5553,7 @@ const handleMessage = async (
       return;
     }
 
-    // integração flowbuilder
+    // integração flowbuilder (cuando no entró por el bloque anterior con isBot)
     if (
       !ticket.imported &&
       !msg.key.fromMe &&
@@ -5577,10 +5573,10 @@ const handleMessage = async (
         companyId,
         integrations,
         ticket,
-        null,
-        null,
+        isMenu,
+        whatsapp,
         contact,
-        null
+        isFirstMsg
       );
     }
 

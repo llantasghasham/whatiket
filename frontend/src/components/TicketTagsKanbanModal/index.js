@@ -734,7 +734,7 @@ const TicketTagsKanbanModal = ({ open, onClose, contact, ticket, onUpdate }) => 
     },
     {
       label: "Fila",
-      value: queues.find(q => q.id === selectedQueue)?.name || "Sem fila",
+      value: queues.find(q => q.id === selectedQueue)?.name || i18n.t("tickets.withoutQueue"),
     },
     {
       label: "Etapa Kanban",
@@ -977,7 +977,7 @@ const TicketTagsKanbanModal = ({ open, onClose, contact, ticket, onUpdate }) => 
               disabled={loading || loadingQueue}
             >
               <MenuItem value="">
-                <em>Sem fila</em>
+                <em>{i18n.t("tickets.withoutQueue")}</em>
               </MenuItem>
               {queues.map((queue) => (
                 <MenuItem key={queue.id} value={queue.id}>

@@ -204,7 +204,7 @@ const FlowBuilderSendMessageModal = ({
               disabled={loading}
             >
               <MenuItem value="">
-                <em>Sem fila</em>
+                <em>{i18n.t("tickets.withoutQueue")}</em>
               </MenuItem>
               {queues && queues.length > 0 ? (
                 queues.map((queue) => (

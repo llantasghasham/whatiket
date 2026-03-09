@@ -483,8 +483,8 @@ const TicketListItemCustom = ({ setTabOpen, ticket }) => {
       if (otherTicket.data.id !== ticket.id) {
         if (otherTicket.data.userId !== user?.id) {
           setOpenAlert(true);
-          setUserTicketOpen(otherTicket.data.user?.name || "Sem usuário");
-          setQueueTicketOpen(otherTicket.data.queue?.name || "Sem fila");
+          setUserTicketOpen(otherTicket.data.user?.name || i18n.t("tickets.withoutUser"));
+          setQueueTicketOpen(otherTicket.data.queue?.name || i18n.t("tickets.withoutQueue"));
         } else {
           setLoading(false);
           setTabOpen(ticket.isGroup ? "group" : "open");
@@ -698,7 +698,7 @@ const TicketListItemCustom = ({ setTabOpen, ticket }) => {
                       ? ticket.queue?.name
                       : ticket.status === "lgpd"
                       ? "LGPD"
-                      : "Sem fila"}
+                      : i18n.t("tickets.withoutQueue")}
                   </span>
                   {ticket?.user && (
                     <span className={classes.userTagText}>

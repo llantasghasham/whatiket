@@ -402,8 +402,15 @@ export const ActionsWebhookService = async (
         console.log("Array options:", nodeSelected.data.arrayOption);
         
         if (pressKey) {
+          // Normalizar: aceptar número (1,2,3,4) O nombre de sucursal (liberia, santa cruz, etc.)
+          let normalizedKey = String(pressKey).trim().toLowerCase();
+          const byValue = nodeSelected.data.arrayOption.find(
+            opt => String(opt.value || "").toLowerCase() === normalizedKey
+          );
+          if (byValue) normalizedKey = String(byValue.number);
+          
           const selectedOption = nodeSelected.data.arrayOption.find(
-            option => option.number == pressKey
+            option => option.number == normalizedKey
           );
           
           if (selectedOption) {
@@ -415,7 +422,7 @@ export const ActionsWebhookService = async (
             if (!next && connects) {
               console.log("Next undefined, buscando nas conexões...");
               const optionIndex = nodeSelected.data.arrayOption.findIndex(
-                opt => opt.number == pressKey
+                opt => opt.number == normalizedKey
               );
               const sourceHandle = `a${optionIndex + 1}`;
               const connection = connects.find(conn => 
@@ -2910,11 +2917,18 @@ export const ActionsWebhookService = async (
       if (nodeSelected.type === "menu") {
         console.log(650, "menu");
         if (pressKey) {
+          // Normalizar: aceptar número O nombre (liberia -> 1, santa cruz -> 2, etc.)
+          let menuKey = String(pressKey).trim().toLowerCase();
+          const byVal = nodeSelected.data?.arrayOption?.find(
+            opt => String(opt.value || "").toLowerCase() === menuKey
+          );
+          if (byVal) menuKey = String(byVal.number);
+          
           const filterOne = connectStatic.filter(
             confil => confil.source === next
           );
           const filterTwo = filterOne.filter(
-            filt2 => filt2.sourceHandle === "a" + pressKey
+            filt2 => filt2.sourceHandle === "a" + menuKey
           );
           if (filterTwo.length > 0) {
             execFn = filterTwo[0].target;

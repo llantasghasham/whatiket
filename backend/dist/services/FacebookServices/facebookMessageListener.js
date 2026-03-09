@@ -319,6 +319,7 @@ const handleMessage = async (token, webhookEvent, channel, companyId) => {
             const recipientPsid = webhookEvent.recipient.id;
             const { message } = webhookEvent;
             const fromMe = message.is_echo;
+            console.log("[FB_RECV] handleMessage | senderPsid:", senderPsid, "| recipientPsid:", recipientPsid, "| conexion:", token.name, "| channel:", channel);
             let bodyMessage = message.text;
             if (fromMe) {
                 if (/\u200e/.test(bodyMessage))
@@ -326,7 +327,13 @@ const handleMessage = async (token, webhookEvent, channel, companyId) => {
                 msgContact = await (0, graphAPI_1.profilePsid)(recipientPsid, token.facebookUserToken);
             }
             else {
-                msgContact = await (0, graphAPI_1.profilePsid)(senderPsid, token.facebookUserToken);
+                try {
+                    msgContact = await (0, graphAPI_1.profilePsid)(senderPsid, token.facebookUserToken);
+                }
+                catch (e) {
+                    console.warn("[FB_RECV] profilePsid fallback: usando senderPsid como contact.number | senderPsid:", senderPsid);
+                    msgContact = { id: senderPsid, first_name: "", last_name: "", name: "", profile_pic: "" };
+                }
             }
             const contact = await verifyContact(msgContact, token, companyId);
             const unreadCount = fromMe ? 0 : 1;
@@ -368,6 +375,7 @@ const handleMessage = async (token, webhookEvent, channel, companyId) => {
                 const createTicket = await (0, FindOrCreateTicketService_1.default)(contact, getSession, unreadCount, companyId, 0, 0, null, channel, null, false, settings);
                 return createTicket;
             });
+            console.log("[FB_RECV] ticket listo | ticketId:", ticket.id, "| whatsappId:", ticket.whatsappId, "| contact.number:", contact.number);
             let bodyRollbackTag = "";
             let bodyNextTag = "";
             let rollbackTag;

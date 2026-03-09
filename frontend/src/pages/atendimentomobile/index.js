@@ -99,11 +99,12 @@ import { ForwardMessageProvider } from "../../context/ForwarMessage/ForwardMessa
 import { EditMessageProvider } from "../../context/EditingMessage/EditingMessageContext";
 import { AuthContext } from "../../context/Auth/AuthContext";
 import { TicketsContext } from "../../context/Tickets/TicketsContext";
+import { i18n } from "../../translate/i18n";
 import api from "../../services/api";
 import MicRecorder from "mic-recorder-to-mp3";
 import { socketConnection } from "../../services/socket";
 import { format, formatDistanceToNow, parseISO } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import ptBR from "date-fns/locale/pt-BR";
 import TicketActionsMenu from "../../components/TicketActionsMenu";
 import useQuickMessages from "../../hooks/useQuickMessages";
 import { toast } from "react-toastify";
@@ -1356,6 +1357,11 @@ useEffect(() => {
                 e.preventDefault();
                 if (selectedQuickIndex >= 0 && filteredQuickMessages[selectedQuickIndex]) {
                     handleSelectQuickReply(filteredQuickMessages[selectedQuickIndex].message);
+                } else if (inputMessage.trim()) {
+                    setShowQuickReplies(false);
+                    setFilteredQuickMessages([]);
+                    setSelectedQuickIndex(-1);
+                    handleSendMessage();
                 }
                 break;
             case 'Escape':
@@ -4170,7 +4176,7 @@ useEffect(() => {
                             </IconButton>
                                                         <InputBase
                                 className={classes.inputField}
-                                placeholder="Digite uma mensagem ou / para respostas rápidas"
+                                placeholder={i18n.t("atendimentos.inputPlaceholder")}
                                 value={inputMessage}
                                 inputRef={inputMessageRef}
                                 onChange={(e) => {

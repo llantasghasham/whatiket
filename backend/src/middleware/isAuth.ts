@@ -19,9 +19,11 @@ interface TokenPayload {
 }
 
 const isAuth = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  console.log("HIT isAuth | ORIGINAL URL:", req.originalUrl, "| req.query:", JSON.stringify(req.query), "| req.headers.authorization:", req.headers.authorization ?? "MISSING");
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {
+    console.log("ERR_SESSION_EXPIRED THROWN FROM isAuth.ts LINE", 26);
     throw new AppError("ERR_SESSION_EXPIRED", 401);
   }
 
@@ -73,6 +75,7 @@ const isAuth = async (req: Request, res: Response, next: NextFunction): Promise<
         console.log("Token renovado automaticamente");
       } catch (renewError) {
         console.error("Erro ao renovar token:", renewError);
+        console.log("ERR_SESSION_EXPIRED THROWN FROM isAuth.ts LINE", 78, "(renewError)");
         throw new AppError("ERR_SESSION_EXPIRED", 401);
       }
     } else if (err.name === "JsonWebTokenError") {

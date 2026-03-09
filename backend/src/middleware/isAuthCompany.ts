@@ -7,9 +7,11 @@ const isAuthCompany = async (
   res: Response,
   next: NextFunction
 ): Promise<void> => {
+  console.log("HIT isAuthCompany | ORIGINAL URL:", req.originalUrl, "| req.query:", JSON.stringify(req.query), "| req.headers.authorization:", req.headers.authorization ?? "MISSING");
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {
+    console.log("ERR_SESSION_EXPIRED THROWN FROM isAuthCompany.ts LINE", 15);
     throw new AppError("ERR_SESSION_EXPIRED", 401);
   }
 

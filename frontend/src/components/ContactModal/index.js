@@ -271,7 +271,7 @@ const ContactModal = ({ open, onClose, contactId, initialValues, onSave }) => {
                 : i18n.t("contactModal.title.add")}
             </Typography>
             <Chip
-              label={contactId ? "Edição" : "Criação"}
+              label={contactId ? i18n.t("contactModal.chip.edit") : i18n.t("contactModal.chip.create")}
               size="small"
               sx={{
                 bgcolor: "rgba(255,255,255,0.2)",
@@ -494,7 +494,7 @@ const ContactModal = ({ open, onClose, contactId, initialValues, onSave }) => {
                     <Field
                       as={TextField}
                       type="date"
-                      label="Aniversário"
+                      label={i18n.t("contactModal.form.birthday")}
                       name="birthday"
                       fullWidth
                       InputLabelProps={{ shrink: true }}
@@ -529,7 +529,7 @@ const ContactModal = ({ open, onClose, contactId, initialValues, onSave }) => {
                   <Grid item xs={12}>
                     <Field
                       as={TextField}
-                      label="Observações"
+                      label={i18n.t("contactModal.form.notes")}
                       name="info"
                       fullWidth
                       multiline
@@ -597,8 +597,8 @@ const ContactModal = ({ open, onClose, contactId, initialValues, onSave }) => {
                       }}
                       helperText={
                         values.lid
-                          ? "Identificador temporário recebido do WhatsApp"
-                          : "Nenhum LID vinculado"
+                          ? i18n.t("contactModal.form.lidHelperText")
+                          : i18n.t("contactModal.form.noLidLinked")
                       }
                       variant="filled"
                       sx={{

@@ -63,15 +63,29 @@ export const sendText = async (
   id: string | number,
   text: string,
   token: string
-): Promise<void> => {
+): Promise<any> => {
+  if (!token) {
+    const err = new Error("ERR_FB_SEND: facebookUserToken vacío o nulo");
+    console.error("[graphAPI] sendText:", err.message);
+    throw err;
+  }
+  const payload = {
+    recipient: { id: String(id) },
+    messaging_type: "RESPONSE",
+    message: { text: `${text}` }
+  };
+  const url = `${getGraphBaseUrl()}/me/messages`;
+  console.log("[GRAPH_API] POST", url, "| recipient:", id, "| messaging_type: RESPONSE");
+
   try {
-    const { data } = await apiBase(token).post("me/messages", {
-      recipient: { id },
-      message: { text: `${text}` }
-    });
-    return data;
-  } catch (error) {
-    console.log(error);
+    const response = await apiBase(token).post("me/messages", payload);
+    console.log("[GRAPH_API] response.status:", response.status, "| response.data:", JSON.stringify(response.data));
+    return response.data;
+  } catch (error: any) {
+    const status = error?.response?.status;
+    const data = error?.response?.data;
+    console.error("[GRAPH_API] FAIL | status:", status, "| response.data:", JSON.stringify(data));
+    throw error;
   }
 };
 
@@ -80,20 +94,25 @@ export const sendAttachmentFromUrl = async (
   url: string,
   type: string,
   token: string
-): Promise<void> => {
+): Promise<any> => {
+  if (!token) {
+    const err = new Error("ERR_FB_SEND: facebookUserToken vacío o nulo");
+    console.error("[graphAPI] sendAttachmentFromUrl:", err.message);
+    throw err;
+  }
+  const payload = {
+    recipient: { id },
+    messaging_type: "RESPONSE",
+    message: { attachment: { type, payload: { url } } }
+  };
+  console.log("[GRAPH_API] POST me/messages (attachment) | recipient:", id, "| type:", type);
   try {
-    const { data } = await apiBase(token).post("me/messages", {
-      recipient: { id },
-      message: {
-        attachment: {
-          type,
-          payload: { url }
-        }
-      }
-    });
-    return data;
-  } catch (error) {
-    console.log(error);
+    const response = await apiBase(token).post("me/messages", payload);
+    console.log("[GRAPH_API] attachment OK | status:", response.status);
+    return response.data;
+  } catch (error: any) {
+    console.error("[GRAPH_API] attachment FAIL | status:", error?.response?.status, "| data:", JSON.stringify(error?.response?.data || {}));
+    throw error;
   }
 };
 
@@ -141,14 +160,14 @@ export const getProfile = async (id: string, token: string): Promise<any> => {
 export const getPageProfile = async (
   id: string,
   token: string
-): Promise<any> => {
+): Promise<{ data: any[] }> => {
   try {
     const { data } = await apiBase(token).get(
       `${id}/accounts?fields=name,access_token,instagram_business_account{id,username,profile_picture_url,name}`
     );
     return data;
   } catch (error) {
-    console.log(error);
+    console.error("[graphAPI] getPageProfile error:", error);
     throw new Error("ERR_FETCHING_FB_PAGES");
   }
 };

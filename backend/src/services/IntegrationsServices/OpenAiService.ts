@@ -934,12 +934,15 @@ export const handleOpenAi = async (
 
   const maxMessages = normalizeNumeric(openAiSettings.maxMessages, 10);
 
-  const messages = await Message.findAll({
+  // Obtener las ÚLTIMAS N mensajes (más recientes) para contexto correcto
+  const messagesRaw = await Message.findAll({
     where: { ticketId: ticket.id },
-    order: [["createdAt", "ASC"]],
+    order: [["createdAt", "DESC"]],
     limit: maxMessages
   });
+  const messages = messagesRaw.reverse();
 
+  console.log(`[AI] ticket ${ticket.id} | historial: ${messages.length} msgs (últimas ${maxMessages})`);
   const isSecondClientMessage = messages.filter(m => !m.fromMe).length >= 2;
   const isNearMaxMessages = isSecondClientMessage || messages.length >= maxMessages - 1;
 
@@ -1002,9 +1005,12 @@ ${openAiSettings.prompt}
     messagesOpenAi = [];
     messagesOpenAi.push({ role: "system", content: promptSystem });
 
+    const textMediaTypes = ["conversation", "extendedTextMessage", "chat"];
     for (let i = 0; i < Math.min(maxMessages, messages.length); i++) {
       const message = messages[i];
-      if (message.mediaType === "conversation" || message.mediaType === "extendedTextMessage") {
+      const isTextMessage = textMediaTypes.includes(message.mediaType) ||
+        (message.body && typeof message.body === "string" && message.body.length > 0 && message.body.length < 10000);
+      if (isTextMessage && message.body) {
         if (message.fromMe) {
           messagesOpenAi.push({ role: "assistant", content: message.body });
         } else {
@@ -1013,6 +1019,8 @@ ${openAiSettings.prompt}
       }
     }
     messagesOpenAi.push({ role: "user", content: bodyMessage! });
+    const ctxCount = messagesOpenAi.length - 1;
+    console.log(`[AI] ticket ${ticket.id} | enviando a IA: ${ctxCount} msgs de historial + mensaje actual`);
 
     let response: string | undefined;
 
@@ -2644,16 +2652,20 @@ ${openAiSettings.prompt}
       messagesOpenAi = [];
       messagesOpenAi.push({ role: "system", content: promptSystem });
 
-      // @ts-ignore
-      const allMessages = await Message.findAll({
+      // Obtener las ÚLTIMAS N mensajes para contexto correcto
+      const allMessagesRaw = await Message.findAll({
         where: { ticketId: ticket.id },
-        order: [["createdAt", "ASC"]],
+        order: [["createdAt", "DESC"]],
         limit: maxMessages
       });
+      const allMessages = allMessagesRaw.reverse();
 
+      const textMediaTypes = ["conversation", "extendedTextMessage", "chat"];
       for (let i = 0; i < Math.min(maxMessages, allMessages.length); i++) {
         const message = allMessages[i];
-        if (message.mediaType === "conversation" || message.mediaType === "extendedTextMessage") {
+        const isTextMessage = textMediaTypes.includes(message.mediaType) ||
+          (message.body && typeof message.body === "string" && message.body.length > 0 && message.body.length < 10000);
+        if (isTextMessage && message.body) {
           if (message.fromMe) {
             messagesOpenAi.push({ role: "assistant", content: message.body });
           } else {

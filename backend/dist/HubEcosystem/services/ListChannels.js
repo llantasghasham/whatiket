@@ -7,14 +7,15 @@ const ListChannels = async (companyId) => {
     try {
         const notificameHubToken = await (0, showHubToken_1.showHubToken)(companyId);
         if (!notificameHubToken) {
-            throw new Error("NOTIFICAMEHUB_TOKEN_NOT_FOUND");
+            return [];
         }
         const client = new Client(notificameHubToken);
         const response = await client.listChannels();
-        return response;
+        return response || [];
     }
     catch (error) {
-        throw new Error(error.body.message);
+        console.error("[ListChannels] Error:", error?.message || error);
+        return [];
     }
 };
 exports.default = ListChannels;

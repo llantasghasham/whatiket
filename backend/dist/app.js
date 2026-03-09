@@ -42,6 +42,7 @@ const upload_1 = __importDefault(require("./config/upload"));
 const sequelize_1 = require("sequelize");
 const AppError_1 = __importDefault(require("./errors/AppError"));
 const routes_1 = __importDefault(require("./routes"));
+const FacebookOAuthController = __importStar(require("./controllers/FacebookOAuthController"));
 const logger_1 = __importDefault(require("./utils/logger"));
 const queues_1 = require("./queues");
 const queue_1 = __importDefault(require("./libs/queue"));
@@ -62,6 +63,28 @@ exports.isBullAuth = isBullAuth;
 // Inicializar Sentry
 Sentry.init({ dsn: process.env.SENTRY_DSN });
 const app = (0, express_1.default)();
+// Trust proxy (nginx/reverse proxy) - necesario para X-Forwarded-Proto, etc.
+app.set("trust proxy", 1);
+// =============================================================================
+// OAUTH FACEBOOK/INSTAGRAM - PRIMERO, antes de CUALQUIER middleware
+// Meta redirige sin Authorization; si pasa por isAuth = ERR_SESSION_EXPIRED
+// =============================================================================
+app.get("/facebook-callback", (req, res, next) => {
+    console.log("[OAUTH] HIT /facebook-callback - path:", req.path, "| originalUrl:", req.originalUrl);
+    FacebookOAuthController.facebookCallback(req, res).catch(next);
+});
+app.get("/instagram-callback", (req, res, next) => {
+    console.log("[OAUTH] HIT /instagram-callback - path:", req.path, "| originalUrl:", req.originalUrl);
+    FacebookOAuthController.instagramCallback(req, res).catch(next);
+});
+app.get("/api/facebook-callback", (req, res, next) => {
+    console.log("[OAUTH] HIT /api/facebook-callback - path:", req.path, "| originalUrl:", req.originalUrl);
+    FacebookOAuthController.facebookCallback(req, res).catch(next);
+});
+app.get("/api/instagram-callback", (req, res, next) => {
+    console.log("[OAUTH] HIT /api/instagram-callback - path:", req.path, "| originalUrl:", req.originalUrl);
+    FacebookOAuthController.instagramCallback(req, res).catch(next);
+});
 // Configuração de filas
 app.set("queues", {
     messageQueue: queues_1.messageQueue,
@@ -171,6 +194,9 @@ app.use(async (err, req, res, _) => {
         }
     }
     if (err instanceof AppError_1.default) {
+        if (err.message === "ERR_SESSION_EXPIRED") {
+            console.error("[ERR_SESSION_EXPIRED] path:", req.path, "| originalUrl:", req.originalUrl, "| stack:", err.stack);
+        }
         logger_1.default.warn(err);
         return res.status(err.statusCode).json({ error: err.message });
     }

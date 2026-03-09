@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useHistory } from "react-router-dom";
+import { i18n } from "../../translate/i18n";
 import toastError from "../../errors/toastError";
 import api from "../../services/api";
 
@@ -126,8 +127,8 @@ const VcardPreview = ({ contact, numbers, queueId, whatsappId }) => {
 
             if (ticket.userId !== user?.id) {
                 setOpenAlert(true);
-                setUserTicketOpen(ticket.user?.name || "Sem usuário");
-                setQueueTicketOpen(ticket.queue?.name || "Sem fila");
+                setUserTicketOpen(ticket.user?.name || i18n.t("tickets.withoutUser"));
+                setQueueTicketOpen(ticket.queue?.name || i18n.t("tickets.withoutQueue"));
             } else {
                 setOpenAlert(false);
                 setUserTicketOpen("");

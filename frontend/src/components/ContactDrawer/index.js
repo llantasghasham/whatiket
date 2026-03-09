@@ -21,6 +21,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import Drawer from "@material-ui/core/Drawer";
 import CreateIcon from '@material-ui/icons/Create';
 import formatSerializedId from '../../utils/formatSerializedId';
+import formatContactNumber from '../../utils/formatContactNumber';
 import { i18n } from "../../translate/i18n";
 import { getFormatLocale } from "../../utils/formatLocale";
 import ModalImageCors from "../ModalImageCors";
@@ -453,7 +454,7 @@ const ContactDrawer = ({ open, handleDrawerClose, contact, ticket, loading }) =>
 								subheader={
 									<>
 										<Typography style={{ fontSize: 12 }}>
-											{hideNum && user.profile === "user" ? formatSerializedId(safeContact.number || "").slice(0, -6) + "**-**" + (safeContact.number || "").slice(-2) : formatSerializedId(safeContact.number || "")}
+											{hideNum && user.profile === "user" ? formatSerializedId(safeContact.number || "").slice(0, -6) + "**-**" + (safeContact.number || "").slice(-2) : (formatContactNumber(safeContact.number) || formatSerializedId(safeContact.number || ""))}
 										</Typography>
 										<Typography style={{ color: "primary", fontSize: 12 }}>
 											<Link href={`mailto:${safeContact.email}`}>{safeContact.email}</Link>

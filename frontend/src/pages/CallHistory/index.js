@@ -37,9 +37,10 @@ import {
   CallReceived as CallReceivedIcon,
 } from "@material-ui/icons";
 import { format, parseISO } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import es from "date-fns/locale/es";
 import api from "../../services/api";
 import { i18n } from "../../translate/i18n";
+import formatContactNumber from "../../utils/formatContactNumber";
 import { AuthContext } from "../../context/Auth/AuthContext";
 import { socketConnection } from "../../services/socket";
 import Title from "../../components/Title";
@@ -135,13 +136,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const statusConfig = {
-  answered: { label: "Atendida", color: "#22c55e", bgColor: "#dcfce7", icon: PhoneCallbackIcon },
-  missed: { label: "Perdida", color: "#ef4444", bgColor: "#fee2e2", icon: PhoneMissedIcon },
-  busy: { label: "Ocupado", color: "#f59e0b", bgColor: "#fef3c7", icon: PhoneDisabledIcon },
-  rejected: { label: "Rejeitada", color: "#ef4444", bgColor: "#fee2e2", icon: PhoneDisabledIcon },
-  failed: { label: "Falhou", color: "#6b7280", bgColor: "#f3f4f6", icon: PhoneDisabledIcon },
-};
+const getStatusConfig = () => ({
+  answered: { label: i18n.t("callHistory.answered"), color: "#22c55e", bgColor: "#dcfce7", icon: PhoneCallbackIcon },
+  missed: { label: i18n.t("callHistory.missed"), color: "#ef4444", bgColor: "#fee2e2", icon: PhoneMissedIcon },
+  busy: { label: i18n.t("callHistory.busy"), color: "#f59e0b", bgColor: "#fef3c7", icon: PhoneDisabledIcon },
+  rejected: { label: i18n.t("callHistory.rejected"), color: "#ef4444", bgColor: "#fee2e2", icon: PhoneDisabledIcon },
+  failed: { label: i18n.t("callHistory.failed"), color: "#6b7280", bgColor: "#f3f4f6", icon: PhoneDisabledIcon },
+});
 
 const formatDuration = (seconds) => {
   if (!seconds || seconds === 0) return "-";
@@ -155,7 +156,7 @@ const formatDate = (dateStr) => {
   if (!dateStr) return "-";
   try {
     const date = typeof dateStr === "string" ? parseISO(dateStr) : new Date(dateStr);
-    return format(date, "dd/MM/yyyy HH:mm", { locale: ptBR });
+    return format(date, "dd/MM/yyyy HH:mm", { locale: es });
   } catch {
     return "-";
   }
@@ -241,7 +242,7 @@ const CallHistory = () => {
       <div className={classes.summaryContainer}>
         <Card className={classes.summaryCard} style={{ borderLeft: "4px solid #3b82f6" }}>
           <CardContent>
-            <Typography className={classes.summaryLabel}>Total</Typography>
+            <Typography className={classes.summaryLabel}>{i18n.t("callHistory.total")}</Typography>
             <Typography className={classes.summaryValue} style={{ color: "#3b82f6" }}>
               {summary.total}
             </Typography>
@@ -249,7 +250,7 @@ const CallHistory = () => {
         </Card>
         <Card className={classes.summaryCard} style={{ borderLeft: "4px solid #22c55e" }}>
           <CardContent>
-            <Typography className={classes.summaryLabel}>Atendidas</Typography>
+            <Typography className={classes.summaryLabel}>{i18n.t("callHistory.answered")}</Typography>
             <Typography className={classes.summaryValue} style={{ color: "#22c55e" }}>
               {summary.answered}
             </Typography>
@@ -257,7 +258,7 @@ const CallHistory = () => {
         </Card>
         <Card className={classes.summaryCard} style={{ borderLeft: "4px solid #ef4444" }}>
           <CardContent>
-            <Typography className={classes.summaryLabel}>Perdidas</Typography>
+            <Typography className={classes.summaryLabel}>{i18n.t("callHistory.missed")}</Typography>
             <Typography className={classes.summaryValue} style={{ color: "#ef4444" }}>
               {summary.missed}
             </Typography>
@@ -265,7 +266,7 @@ const CallHistory = () => {
         </Card>
         <Card className={classes.summaryCard} style={{ borderLeft: "4px solid #f59e0b" }}>
           <CardContent>
-            <Typography className={classes.summaryLabel}>Ocupado</Typography>
+            <Typography className={classes.summaryLabel}>{i18n.t("callHistory.busy")}</Typography>
             <Typography className={classes.summaryValue} style={{ color: "#f59e0b" }}>
               {summary.busy}
             </Typography>
@@ -277,7 +278,7 @@ const CallHistory = () => {
       <Paper style={{ padding: 16, borderRadius: 12 }}>
         <div className={classes.filtersContainer}>
           <TextField
-            label="Buscar número"
+            label={i18n.t("callHistory.searchNumber")}
             variant="outlined"
             size="small"
             value={contactSearch}
@@ -287,20 +288,20 @@ const CallHistory = () => {
             }}
           />
           <FormControl variant="outlined" size="small" style={{ minWidth: 140 }}>
-            <InputLabel>Status</InputLabel>
+            <InputLabel>{i18n.t("callHistory.status")}</InputLabel>
             <Select
               value={statusFilter}
               onChange={(e) => { setStatusFilter(e.target.value); setPage(0); }}
-              label="Status"
+              label={i18n.t("callHistory.status")}
             >
-              <MenuItem value="">Todos</MenuItem>
-              <MenuItem value="answered">Atendida</MenuItem>
-              <MenuItem value="missed">Perdida</MenuItem>
-              <MenuItem value="busy">Ocupado</MenuItem>
+              <MenuItem value="">{i18n.t("callHistory.all")}</MenuItem>
+              <MenuItem value="answered">{i18n.t("callHistory.answered")}</MenuItem>
+              <MenuItem value="missed">{i18n.t("callHistory.missed")}</MenuItem>
+              <MenuItem value="busy">{i18n.t("callHistory.busy")}</MenuItem>
             </Select>
           </FormControl>
           <TextField
-            label="Data início"
+            label={i18n.t("callHistory.dateStart")}
             type="date"
             variant="outlined"
             size="small"
@@ -310,7 +311,7 @@ const CallHistory = () => {
             onChange={(e) => { setDateStart(e.target.value); setPage(0); }}
           />
           <TextField
-            label="Data fim"
+            label={i18n.t("callHistory.dateEnd")}
             type="date"
             variant="outlined"
             size="small"
@@ -332,10 +333,10 @@ const CallHistory = () => {
           <div className={classes.emptyState}>
             <PhoneIcon style={{ fontSize: 48, color: "#ccc", marginBottom: 8 }} />
             <Typography variant="h6" style={{ color: "#999" }}>
-              Nenhuma chamada registrada
+              {i18n.t("callHistory.noCalls")}
             </Typography>
             <Typography variant="body2" style={{ color: "#bbb" }}>
-              As chamadas recebidas aparecerão aqui automaticamente
+              {i18n.t("callHistory.noCallsDesc")}
             </Typography>
           </div>
         ) : (
@@ -343,23 +344,24 @@ const CallHistory = () => {
             <Table size="small">
               <TableHead className={classes.tableHead}>
                 <TableRow>
-                  <TableCell className={classes.tableHeadCell}>Tipo</TableCell>
-                  <TableCell className={classes.tableHeadCell}>Contato</TableCell>
-                  <TableCell className={classes.tableHeadCell}>Status</TableCell>
-                  <TableCell className={classes.tableHeadCell}>Duração</TableCell>
-                  <TableCell className={classes.tableHeadCell}>Conexão</TableCell>
-                  <TableCell className={classes.tableHeadCell}>Data</TableCell>
+                  <TableCell className={classes.tableHeadCell}>{i18n.t("callHistory.type")}</TableCell>
+                  <TableCell className={classes.tableHeadCell}>{i18n.t("callHistory.contact")}</TableCell>
+                  <TableCell className={classes.tableHeadCell}>{i18n.t("callHistory.status")}</TableCell>
+                  <TableCell className={classes.tableHeadCell}>{i18n.t("callHistory.duration")}</TableCell>
+                  <TableCell className={classes.tableHeadCell}>{i18n.t("callHistory.connection")}</TableCell>
+                  <TableCell className={classes.tableHeadCell}>{i18n.t("callHistory.date")}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {records.map((record) => {
-                  const config = statusConfig[record.status] || statusConfig.failed;
+                  const statusConfig = getStatusConfig();
+                  const config = statusConfig[record.status] ?? statusConfig.failed;
                   const StatusIcon = config.icon;
 
                   return (
                     <TableRow key={record.id} className={classes.tableRow}>
                       <TableCell>
-                        <Tooltip title={record.type === "incoming" ? "Recebida" : "Realizada"}>
+                        <Tooltip title={record.type === "incoming" ? i18n.t("callHistory.incoming") : i18n.t("callHistory.outgoing")}>
                           {record.type === "incoming" ? (
                             <CallReceivedIcon style={{ color: "#3b82f6", fontSize: 20 }} />
                           ) : (
@@ -380,7 +382,7 @@ const CallHistory = () => {
                               {record.contact?.name || record.fromNumber}
                             </Typography>
                             <Typography className={classes.contactNumber}>
-                              {record.fromNumber}
+                              {formatContactNumber(record.fromNumber)}
                             </Typography>
                           </div>
                         </div>
@@ -428,7 +430,9 @@ const CallHistory = () => {
               rowsPerPage={40}
               rowsPerPageOptions={[40]}
               labelDisplayedRows={({ from, to, count }) =>
-                `${from}-${to} de ${count !== -1 ? count : `mais de ${to}`}`
+                count !== -1
+                  ? i18n.t("callHistory.pagination", { from, to, count })
+                  : i18n.t("callHistory.paginationMore", { from, to })
               }
             />
           </>

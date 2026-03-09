@@ -73,7 +73,6 @@ import produtoRoutes from "./produtoRoutes";
 import ferramentaRoutes from "./ferramentaRoutes";
 import googleCalendarRoutes from "./googleCalendarRoutes";
 import userGoogleCalendarRoutes from "./userGoogleCalendarRoutes";
-import facebookOAuthRoutes from "./facebookOAuthRoutes";
 // import mobileWebhookRoutes from "./mobileWebhookRoutes";
 import emailRoutes from "./emailRoutes";
 import tutorialVideoRoutes from "./tutorialVideoRoutes";
@@ -115,6 +114,8 @@ import financeiroDespesaRoutes from "./financeiroDespesaRoutes";
 import financeiroPagamentoDespesaRoutes from "./financeiroPagamentoDespesaRoutes";
 
 const routes = Router();
+
+// OAuth Facebook/Instagram: montado en app.ts directamente (antes de routes) para evitar ERR_SESSION_EXPIRED
 
 routes.use(userRoutes);
 routes.use("/auth", authRoutes);
@@ -229,9 +230,6 @@ routes.use(hubChannelRoutes);
 routes.use(hubMessageRoutes);
 routes.use(hubWebhookRoutes);
 routes.use(automationRoutes);
-
-// OAuth Facebook/Instagram
-routes.use(facebookOAuthRoutes);
 
 // Configurações e Analytics de Contatos
 routes.use(contactSettingsRoutes);

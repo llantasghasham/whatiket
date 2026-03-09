@@ -49,6 +49,7 @@ type Session = WASocket & {
 const sessions: Session[] = [];
 
 const retriesQrCodeMap = new Map<number, number>();
+const reconnectAttemptsMap = new Map<number, number>();
 
 export default function msg() {
   return {
@@ -367,8 +368,20 @@ export const initWASocket = async (whatsapp: Whatsapp): Promise<Session> => {
                 `Socket  ${name} Connection Update ${connection || ""} ${lastDisconnect ? lastDisconnect.error.message : ""
                 }`
               );
-              if ((lastDisconnect?.error as Boom)?.output?.statusCode === 403) {
-                await whatsapp.update({ status: "PENDING", session: "" });
+              const statusCode = (lastDisconnect?.error as Boom)?.output?.statusCode;
+              if (statusCode === 440) {
+                await whatsapp.update({ status: "DISCONNECTED", qrcode: "" });
+                io.of(String(companyId))
+                  .emit(`company-${whatsapp.companyId}-whatsappSession`, {
+                    action: "update",
+                    session: whatsapp
+                  });
+                removeWbot(id, false);
+                logger.warn(`[WhatsApp] Conflict (replaced) - ${name}. Mismo número en otra sesión. No reinicio automático. Ver WHATSAPP-CONFLICT-REPLACED.md`);
+                return;
+              }
+              if (statusCode === 403) {
+                await whatsapp.update({ status: "PENDING", session: "", qrcode: "" });
                 await DeleteBaileysService(whatsapp.id);
                 await cacheLayer.delFromPattern(`sessions:${whatsapp.id}:*`);
                 io.of(String(companyId))
@@ -378,17 +391,18 @@ export const initWASocket = async (whatsapp: Whatsapp): Promise<Session> => {
                   });
                 removeWbot(id, false);
               }
-              if (
-                (lastDisconnect?.error as Boom)?.output?.statusCode !==
-                DisconnectReason.loggedOut
-              ) {
+              if (statusCode !== DisconnectReason.loggedOut) {
                 removeWbot(id, false);
+                const attempts = (reconnectAttemptsMap.get(id) || 0) + 1;
+                reconnectAttemptsMap.set(id, attempts);
+                const delayMs = Math.min(5000 + 5000 * attempts, 30000);
+                logger.info(`[WhatsApp] Reintento ${attempts} en ${delayMs / 1000}s - ${name}`);
                 setTimeout(
                   () => StartWhatsAppSession(whatsapp, whatsapp.companyId),
-                  2000
+                  delayMs
                 );
               } else {
-                await whatsapp.update({ status: "PENDING", session: "" });
+                await whatsapp.update({ status: "PENDING", session: "", qrcode: "" });
                 await DeleteBaileysService(whatsapp.id);
                 await cacheLayer.delFromPattern(`sessions:${whatsapp.id}:*`);
                 io.of(String(companyId))
@@ -397,14 +411,19 @@ export const initWASocket = async (whatsapp: Whatsapp): Promise<Session> => {
                     session: whatsapp
                   });
                 removeWbot(id, false);
+                const attempts = (reconnectAttemptsMap.get(id) || 0) + 1;
+                reconnectAttemptsMap.set(id, attempts);
+                const delayMs = Math.min(5000 + 5000 * attempts, 30000);
+                logger.info(`[WhatsApp] Reintento ${attempts} en ${delayMs / 1000}s (loggedOut) - ${name}`);
                 setTimeout(
                   () => StartWhatsAppSession(whatsapp, whatsapp.companyId),
-                  2000
+                  delayMs
                 );
               }
             }
 
             if (connection === "open") {
+              reconnectAttemptsMap.set(id, 0);
               await whatsapp.update({
                 status: "CONNECTED",
                 qrcode: "",

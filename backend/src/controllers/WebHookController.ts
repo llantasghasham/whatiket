@@ -27,7 +27,21 @@ export const webHook = async (
 ): Promise<Response> => {
   try {
     const { body } = req;
-    console.log(30, "WebHookController", { body })
+
+    // Log para verificar que Meta envía eventos
+    if (body?.object) {
+      const entryCount = body.entry?.length ?? 0;
+      const hasMessaging = body.entry?.some((e: any) => (e.messaging?.length ?? 0) > 0);
+      const fieldsReceived = body.entry?.map((e: any) => {
+        if (e.messaging?.length) return "messaging";
+        if (e.changes?.length) return `changes:${e.changes.map((c: any) => c.field).join(",")}`;
+        return "other";
+      }).join(";") ?? "none";
+      console.log(`[WEBHOOK] POST /webhook - object: ${body.object} | entries: ${entryCount} | hasMessaging: ${hasMessaging} | fields: ${fieldsReceived}`);
+      if ((body.object === "page" || body.object === "instagram") && !hasMessaging) {
+        console.warn(`[WEBHOOK] AVISO: Meta envió evento pero SIN messaging. Si tienes feed/likes suscritos, cámbialos por: messages, messaging_postbacks, message_deliveries, message_reads, message_echoes`);
+      }
+    }
 
     if (body.object === "page" || body.object === "instagram") {
       let channel: string;
@@ -38,7 +52,7 @@ export const webHook = async (
         channel = "instagram";
       }
 
-      body.entry?.forEach(async (entry: any) => {
+      for (const entry of body.entry || []) {
         const getTokenPage = await Whatsapp.findOne({
           where: {
             facebookPageUserId: entry.id,
@@ -47,11 +61,15 @@ export const webHook = async (
         });
 
         if (getTokenPage) {
-          entry.messaging?.forEach((data: any) => {
-            handleMessage(getTokenPage, data, channel, getTokenPage.companyId);
-          });
+          const senderId = entry.messaging?.[0]?.sender?.id;
+          console.log(`[FB_RECV] entry.id=${entry.id} | sender.id=${senderId} | conexion=${getTokenPage.name} (id=${getTokenPage.id}) | channel=${channel} | companyId=${getTokenPage.companyId}`);
+          for (const data of entry.messaging || []) {
+            await handleMessage(getTokenPage, data, channel, getTokenPage.companyId);
+          }
+        } else {
+          console.log(`[FB_RECV] NO CONEXION | entry.id=${entry.id} | channel=${channel}`);
         }
-      });
+      }
 
       return res.status(200).json({
         message: "EVENT_RECEIVED"
@@ -59,11 +77,12 @@ export const webHook = async (
     }
 
     return res.status(404).json({
-      message: body
+      message: "Webhook object not supported"
     });
-  } catch (error) {
+  } catch (error: any) {
+    console.error("[WebHook] Error:", error?.message || error);
     return res.status(500).json({
-      message: error
+      message: error?.message || "Internal error"
     });
   }
 };

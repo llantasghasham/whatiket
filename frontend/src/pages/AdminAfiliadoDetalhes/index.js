@@ -274,7 +274,7 @@ const AdminAfiliadoDetalhes = () => {
           <Card className={classes.statsCard}>
             <CardContent>
               <div className={classes.statValue}>
-                R$ {totalEarned.toFixed(2)}
+                $ {totalEarned.toFixed(2)}
               </div>
               <div className={classes.statLabel}>Total Ganho</div>
             </CardContent>
@@ -284,7 +284,7 @@ const AdminAfiliadoDetalhes = () => {
           <Card className={classes.statsCard}>
             <CardContent>
               <div className={classes.statValue}>
-                R$ {totalWithdrawn.toFixed(2)}
+                $ {totalWithdrawn.toFixed(2)}
               </div>
               <div className={classes.statLabel}>Total Sacado</div>
             </CardContent>
@@ -294,7 +294,7 @@ const AdminAfiliadoDetalhes = () => {
           <Card className={classes.statsCard}>
             <CardContent>
               <div className={classes.statValue}>
-                R$ {availableBalance.toFixed(2)}
+                $ {availableBalance.toFixed(2)}
               </div>
               <div className={classes.statLabel}>Saldo Disponível</div>
             </CardContent>
@@ -332,7 +332,7 @@ const AdminAfiliadoDetalhes = () => {
               </div>
               <div className={classes.infoRow}>
                 <span className={classes.infoLabel}>Mínimo para Saque:</span>
-                <span className={classes.infoValue}>R$ {parseFloat(affiliate.minWithdrawAmount || 0).toFixed(2)}</span>
+                <span className={classes.infoValue}>$ {parseFloat(affiliate.minWithdrawAmount || 0).toFixed(2)}</span>
               </div>
               <div className={classes.infoRow}>
                 <span className={classes.infoLabel}>Criado em:</span>
@@ -348,16 +348,16 @@ const AdminAfiliadoDetalhes = () => {
               <Typography variant="h6" gutterBottom>Resumo Financeiro</Typography>
               <div className={classes.infoRow}>
                 <span className={classes.infoLabel}>Total Ganho:</span>
-                <span className={classes.infoValue}>R$ {totalEarned.toFixed(2)}</span>
+                <span className={classes.infoValue}>$ {totalEarned.toFixed(2)}</span>
               </div>
               <div className={classes.infoRow}>
                 <span className={classes.infoLabel}>Total Sacado:</span>
-                <span className={classes.infoValue}>R$ {totalWithdrawn.toFixed(2)}</span>
+                <span className={classes.infoValue}>$ {totalWithdrawn.toFixed(2)}</span>
               </div>
               <div className={classes.infoRow}>
                 <span className={classes.infoLabel}>Saldo Disponível:</span>
                 <span className={classes.infoValue} style={{ color: "#2e7d32", fontWeight: 700 }}>
-                  R$ {availableBalance.toFixed(2)}
+                  $ {availableBalance.toFixed(2)}
                 </span>
               </div>
               <Divider style={{ margin: "12px 0" }} />
@@ -450,7 +450,7 @@ const AdminAfiliadoDetalhes = () => {
                 <TableRow key={commission.id}>
                   <TableCell>{formatDate(commission.createdAt)}</TableCell>
                   <TableCell className={classes.amountCell}>
-                    R$ {parseFloat(commission.commissionAmount || 0).toFixed(2)}
+                    $ {parseFloat(commission.commissionAmount || 0).toFixed(2)}
                   </TableCell>
                   <TableCell>{commission.commissionRate}%</TableCell>
                   <TableCell>
@@ -494,7 +494,7 @@ const AdminAfiliadoDetalhes = () => {
                 <TableRow key={withdrawal.id}>
                   <TableCell>{formatDate(withdrawal.createdAt)}</TableCell>
                   <TableCell className={classes.amountCell}>
-                    R$ {parseFloat(withdrawal.amount || 0).toFixed(2)}
+                    $ {parseFloat(withdrawal.amount || 0).toFixed(2)}
                   </TableCell>
                   <TableCell>{withdrawal.paymentMethod?.toUpperCase() || "N/A"}</TableCell>
                   <TableCell>

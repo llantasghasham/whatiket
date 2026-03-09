@@ -408,8 +408,8 @@ const TicketActionButtonsCustom = ({ ticket }) => {
             if (otherTicket.data.id !== ticket.id) {
                 if (otherTicket.data.userId !== user?.id) {
                     setOpenAlert(true)
-                    setUserTicketOpen(otherTicket.data.user?.name || "Sem usuário")
-                    setQueueTicketOpen(otherTicket.data.queue?.name || "Sem fila")
+                    setUserTicketOpen(otherTicket.data.user?.name || i18n.t("tickets.withoutUser"))
+                    setQueueTicketOpen(otherTicket.data.queue?.name || i18n.t("tickets.withoutQueue"))
                     setTabOpen(ticket.isGroup ? "group" : "open")
                 } else {
                     setLoading(false);

@@ -55,7 +55,6 @@ import PowerIcon from "@mui/icons-material/Power";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import ChannelModal from "../../HubEcosystem/components/ChannelModal";
 import notificame_logo from "../../assets/notificame_logo.png";
-import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
 import FacebookInstagramModal from "../../components/FacebookInstagramModal";
 
 const useStyles = makeStyles((theme) => ({
@@ -445,42 +444,24 @@ const Connections = () => {
     handleLogout();
   }
 
-  const responseFacebook = (response) => {
-    if (response.status !== "unknown") {
-      const { accessToken, id } = response;
-
-      api
-        .post("/facebook", {
-          facebookUserId: id,
-          facebookUserToken: accessToken,
-        })
-        .then((response) => {
-          toast.success(i18n.t("connections.facebook.success"));
-        })
-        .catch((error) => {
-          toastError(error);
-        });
-    }
+  const handleOpenFacebookModal = (channel) => {
+    setSelectedWhatsApp(null);
+    setFbIgModalOpen(true);
+    setModalChannel(channel);
   };
 
-  const responseInstagram = (response) => {
-    if (response.status !== "unknown") {
-      const { accessToken, id } = response;
-
-      api
-        .post("/facebook", {
-          addInstagram: true,
-          facebookUserId: id,
-          facebookUserToken: accessToken,
-        })
-        .then((response) => {
-          toast.success(i18n.t("connections.facebook.success"));
-        })
-        .catch((error) => {
-          toastError(error);
-        });
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const success = params.get("success");
+    const error = params.get("error");
+    if (success === "facebook-connected" || success === "instagram-connected") {
+      toast.success(i18n.t("connections.facebook.success"));
+      window.history.replaceState({}, "", "/canais");
+    } else if (error === "facebook-failed" || error === "instagram-failed") {
+      toast.error(i18n.t("connections.facebook.error") || "Error al conectar. Verifique la configuración.");
+      window.history.replaceState({}, "", "/canais");
     }
-  };
+  }, []);
 
   useEffect(() => {
     const channel = `importMessages-${user.companyId}`;
@@ -950,8 +931,11 @@ const Connections = () => {
         onClose={() => {
           setFbIgModalOpen(false);
           setSelectedWhatsApp(null);
+          setModalChannel(null);
         }}
         whatsAppId={!qrModalOpen && fbIgModalOpen && selectedWhatsApp?.id}
+        channel={modalChannel}
+        companyId={companyId}
       />
       <ChannelModal
         open={hubChannelModalOpen}
@@ -1035,34 +1019,14 @@ const Connections = () => {
                           <img src={notificame_logo} alt="NotificaMe Hub" style={{ width: 16, height: 16, marginRight: 10, marginLeft: 2 }} />
                           NotificaMe Hub
                         </MenuItem>
-                        <FacebookLogin
-                          appId={process.env.REACT_APP_FACEBOOK_APP_ID}
-                          autoLoad={false}
-                          fields="name,email,picture"
-                          version="13.0"
-                          scope="public_profile,pages_messaging,pages_show_list,pages_manage_metadata,pages_read_engagement,business_management"
-                          callback={responseFacebook}
-                          render={(renderProps) => (
-                            <MenuItem onClick={renderProps.onClick}>
-                              <Facebook fontSize="small" style={{ marginRight: 10, color: "#3b5998" }} />
-                              Facebook
-                            </MenuItem>
-                          )}
-                        />
-                        <FacebookLogin
-                          appId={process.env.REACT_APP_FACEBOOK_APP_ID}
-                          autoLoad={false}
-                          fields="name,email,picture"
-                          version="13.0"
-                          scope="public_profile,instagram_basic,instagram_manage_messages,pages_messaging,pages_show_list,pages_manage_metadata,pages_read_engagement,business_management"
-                          callback={responseInstagram}
-                          render={(renderProps) => (
-                            <MenuItem onClick={renderProps.onClick}>
-                              <Instagram fontSize="small" style={{ marginRight: 10, color: "#e1306c" }} />
-                              Instagram
-                            </MenuItem>
-                          )}
-                        />
+                        <MenuItem onClick={() => { handleOpenFacebookModal("facebook"); popupState.close(); }}>
+                          <Facebook fontSize="small" style={{ marginRight: 10, color: "#3b5998" }} />
+                          Facebook
+                        </MenuItem>
+                        <MenuItem onClick={() => { handleOpenFacebookModal("instagram"); popupState.close(); }}>
+                          <Instagram fontSize="small" style={{ marginRight: 10, color: "#e1306c" }} />
+                          Instagram
+                        </MenuItem>
                       </Menu>
                     </>
                   )}

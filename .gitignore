@@ -14,11 +14,12 @@ tmp/
 .env.*
 
 *.sql
-*.txt
 backend/.env.example
-backend/.env.example
-backend/public/*.jpg
-backend/public/*.jpeg
-backend/public/*.png
 backend/public/uploads/
-backend/public/company1/tutorials/
+backend/public/company1/
+backend/public/company*/
+
+# No subir al repo: documentación generada, copias, n8n
+docs/
+copia/
+n8n/

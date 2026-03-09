@@ -72,7 +72,6 @@ const getPublicSignupSchema = (country) => Yup.object().shape({
         .required("ERR_INVALID_EMAIL"),
     password: Yup.string()
         .min(6, "ERR_INVALID_PASSWORD")
-        .matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/, "ERR_INVALID_PASSWORD")
         .required("ERR_INVALID_PASSWORD"),
     confirmPassword: Yup.string()
         .oneOf([Yup.ref("password"), null], "ERR_PASSWORD_CONFIRMATION")
@@ -178,7 +177,7 @@ const store = async (req, res) => {
                 "ERR_COMPANY_INVALID_NAME": "Nome da empresa inválido (mínimo 2 caracteres).",
                 "ERR_USER_INVALID_NAME": "Nome do usuário inválido (mínimo 2 caracteres).",
                 "ERR_INVALID_EMAIL": "E-mail inválido.",
-                "ERR_INVALID_PASSWORD": "Senha inválida (mínimo 6 caracteres, com letras e números).",
+                "ERR_INVALID_PASSWORD": "Contraseña inválida (mínimo 6 caracteres).",
                 "ERR_PASSWORD_CONFIRMATION": "Confirmação de senha não coincide.",
                 "ERR_INVALID_PHONE": "Telefone inválido (mínimo 10 dígitos).",
                 "ERR_INVALID_PLAN": "Plano inválido."

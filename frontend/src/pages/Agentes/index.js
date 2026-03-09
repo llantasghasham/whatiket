@@ -422,7 +422,7 @@ const Prompts = () => {
                       </Typography>
                     </TableCell>
                     <TableCell align="center">
-                      {prompt.queue?.name || "Sem fila"}
+                      {prompt.queue?.name || i18n.t("tickets.withoutQueue")}
                     </TableCell>
                     <TableCell align="center">
                       {prompt.maxTokens}

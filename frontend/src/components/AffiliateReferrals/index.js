@@ -192,7 +192,7 @@ const AffiliateReferrals = ({ affiliateId, onRefresh }) => {
   };
 
   const formatCurrency = (value) => {
-    return `R$ ${parseFloat(value || 0).toFixed(2)}`;
+    return `$ ${parseFloat(value || 0).toFixed(2)}`;
   };
 
   if (loading) {

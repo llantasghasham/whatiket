@@ -1,9 +1,17 @@
+const path = require('path');
+
+// Puerto 4001 - nginx debe tener proxy_pass http://127.0.0.1:4001;
 module.exports = [{
   script: 'dist/server.js',
-  name: 'multipremium-back',
+  cwd: path.resolve(__dirname),
+  name: 'empresa-backend',
   exec_mode: 'fork',
   cron_restart: '05 00 * * *',
-  max_memory_restart: '769M', // Configuração para reiniciar quando atingir 769 MB de memória
-  node_args: '--max-old-space-size=769', // Limite de memória do Node.js para 769 MB
-  watch: false
+  max_memory_restart: '769M',
+  node_args: '--max-old-space-size=769',
+  watch: false,
+  kill_timeout: 5000,
+  exp_backoff_restart_delay: 10000,
+  listen_timeout: 15000,
+  env: { PORT: 4001 }
 }]

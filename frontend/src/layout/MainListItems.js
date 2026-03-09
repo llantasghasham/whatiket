@@ -49,8 +49,13 @@ import WebhookIcon from "@mui/icons-material/Webhook";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import BuildOutlinedIcon from "@mui/icons-material/BuildOutlined";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+import PhoneIcon from "@mui/icons-material/Phone";
+import PersonSearchIcon from "@mui/icons-material/PersonSearch";
+import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
 import UserModal from "../components/UserModal";
 
+import usePlans from "../hooks/usePlans";
+import useVersion from "../hooks/useVersion";
 import { WhatsAppsContext } from "../context/WhatsApp/WhatsAppsContext";
 import { AuthContext } from "../context/Auth/AuthContext";
 import { useActiveMenu } from "../context/ActiveMenuContext";
@@ -674,13 +679,22 @@ const MainListItems = ({ collapsed, drawerClose, onSubmenuOpen, submenuOpen, onT
     location.pathname.startsWith("/companies") ||
     location.pathname.startsWith("/announcements") ||
     location.pathname.startsWith("/messages-api") ||
-    location.pathname.startsWith("/translation-manager");
+    location.pathname.startsWith("/translation-manager") ||
+    location.pathname.startsWith("/consultas");
 
   const isIntegrationActive =
     location.pathname.startsWith("/kanban") ||
     location.pathname.startsWith("/todolist") ||
     location.pathname.startsWith("/helps") ||
-    location.pathname.startsWith("/documentacao");
+    location.pathname.startsWith("/documentacao") ||
+    location.pathname.startsWith("/sistema") ||
+    location.pathname.startsWith("/call-history") ||
+    location.pathname.startsWith("/chamadas") ||
+    location.pathname.startsWith("/servicos") ||
+    location.pathname.startsWith("/ordens-servico") ||
+    location.pathname.startsWith("/leads") ||
+    location.pathname.startsWith("/clientes") ||
+    location.pathname.startsWith("/catalogo-produtos");
 
   useEffect(() => {
     if (location.pathname.startsWith("/tickets")) {
@@ -1008,6 +1022,12 @@ const MainListItems = ({ collapsed, drawerClose, onSubmenuOpen, submenuOpen, onT
                 icon={<AccountTreeIcon />}
                 onNavigate={handleNavigateFromSubmenu}
               />
+              <ListItemLink
+                to="/flowdefault"
+                primary={i18n.t("mainDrawer.listItems.flowDefault")}
+                icon={<AccountTreeIcon />}
+                onNavigate={handleNavigateFromSubmenu}
+              />
             </div>
           </>
         );
@@ -1021,6 +1041,18 @@ const MainListItems = ({ collapsed, drawerClose, onSubmenuOpen, submenuOpen, onT
               </Typography>
             </div>
             <div className={classes.submenuContent}>
+              <ListItemLink
+                to="/sistema"
+                primary={i18n.t("mainDrawer.listItems.sistema")}
+                icon={<BuildOutlinedIcon />}
+                onNavigate={handleNavigateFromSubmenu}
+              />
+              <ListItemLink
+                to="/call-history"
+                primary={i18n.t("mainDrawer.listItems.callHistory")}
+                icon={<PhoneIcon />}
+                onNavigate={handleNavigateFromSubmenu}
+              />
               {showKanban && planExpired && (
                 <ListItemLink
                   to="/kanban"
@@ -1033,6 +1065,42 @@ const MainListItems = ({ collapsed, drawerClose, onSubmenuOpen, submenuOpen, onT
                 to="/todolist"
                 primary={i18n.t("Catalogo")}
                 icon={<Inventory2OutlinedIcon />}
+                onNavigate={handleNavigateFromSubmenu}
+              />
+              <ListItemLink
+                to="/catalogo-produtos"
+                primary={i18n.t("mainDrawer.listItems.catalogProducts")}
+                icon={<Inventory2OutlinedIcon />}
+                onNavigate={handleNavigateFromSubmenu}
+              />
+              <ListItemLink
+                to="/leads"
+                primary={i18n.t("mainDrawer.listItems.leads")}
+                icon={<PersonSearchIcon />}
+                onNavigate={handleNavigateFromSubmenu}
+              />
+              <ListItemLink
+                to="/clientes"
+                primary={i18n.t("mainDrawer.listItems.clients")}
+                icon={<PeopleOutlineIcon />}
+                onNavigate={handleNavigateFromSubmenu}
+              />
+              <ListItemLink
+                to="/servicos"
+                primary={i18n.t("mainDrawer.listItems.services")}
+                icon={<WorkOutlineIcon />}
+                onNavigate={handleNavigateFromSubmenu}
+              />
+              <ListItemLink
+                to="/ordens-servico"
+                primary={i18n.t("mainDrawer.listItems.serviceOrders")}
+                icon={<ListAltIcon />}
+                onNavigate={handleNavigateFromSubmenu}
+              />
+              <ListItemLink
+                to="/profissionais"
+                primary={i18n.t("mainDrawer.listItems.professionals")}
+                icon={<PeopleOutlineIcon />}
                 onNavigate={handleNavigateFromSubmenu}
               />
               <ListItemLink
@@ -1231,6 +1299,12 @@ const MainListItems = ({ collapsed, drawerClose, onSubmenuOpen, submenuOpen, onT
                   onNavigate={handleNavigateFromSubmenu}
                 />
               )}
+              <ListItemLink
+                to="/consultas/dados"
+                primary={i18n.t("mainDrawer.listItems.consultas")}
+                icon={<ListAltIcon />}
+                onNavigate={handleNavigateFromSubmenu}
+              />
             </div>
           </>
         );

@@ -102,7 +102,6 @@ import api from "../../services/api";
 import MicRecorder from "mic-recorder-to-mp3";
 import { socketConnection } from "../../services/socket";
 import { format, formatDistanceToNow, parseISO } from "date-fns";
-import { ptBR } from "date-fns/locale";
 import TicketActionsMenu from "../../components/TicketActionsMenu";
 import NewTicketModal from "../../components/NewTicketModal";
 import useQuickMessages from "../../hooks/useQuickMessages";
@@ -1253,10 +1252,7 @@ const Atendimentos = () => {
 			return null;
 		}
 
-		return `Aguardando há ${formatDistanceToNow(parsedDate, {
-			locale: ptBR,
-			addSuffix: false
-		})}`;
+		return `Aguardando há ${formatDistanceToNow(parsedDate, { addSuffix: false })}`;
 	};
 	const handleCloseContactModal = () => {
 		setContactModalOpen(false);
@@ -1321,6 +1317,11 @@ useEffect(() => {
 				e.preventDefault();
 				if (selectedQuickIndex >= 0 && filteredQuickMessages[selectedQuickIndex]) {
 					handleSelectQuickReply(filteredQuickMessages[selectedQuickIndex].message);
+				} else if (inputMessage.trim()) {
+					setShowQuickReplies(false);
+					setFilteredQuickMessages([]);
+					setSelectedQuickIndex(-1);
+					handleSendMessage();
 				}
 				return true;
 			case "Escape":
@@ -1332,7 +1333,7 @@ useEffect(() => {
 			default:
 				return false;
 		}
-	}, [showQuickReplies, filteredQuickMessages, selectedQuickIndex, handleSelectQuickReply]);
+	}, [showQuickReplies, filteredQuickMessages, selectedQuickIndex, handleSelectQuickReply, inputMessage, handleSendMessage]);
 
 	// Solicitar permissão para notificações ao carregar
 	useEffect(() => {
@@ -2256,7 +2257,7 @@ useEffect(() => {
 		console.log("Ticket selecionado:", selectedTicket.id);
 
 		const now = Date.now();
-		if (now - lastSendTimeRef.current < 400) {
+		if (now - lastSendTimeRef.current < 150) {
 			return;
 		}
 		isSendingMessageRef.current = true;
@@ -2285,6 +2286,7 @@ useEffect(() => {
 			setReplyingTo(null);
 		} catch (err) {
 			console.error("Erro ao enviar mensagem:", err);
+			toast.error(err?.response?.data?.message || "Error al enviar mensaje");
 			if (err?.response?.status === 403) {
 				handlePermissionDenied();
 			}
@@ -2829,7 +2831,7 @@ useEffect(() => {
 
 	const formatMessageTime = (timestamp) => {
 		try {
-			return format(parseISO(timestamp), "HH:mm", { locale: ptBR });
+			return format(parseISO(timestamp), "HH:mm");
 		} catch {
 			return "";
 		}
@@ -3083,7 +3085,7 @@ useEffect(() => {
 
 	const formatMessageDateTime = (timestamp) => {
 		try {
-			return format(parseISO(timestamp), "dd/MM/yyyy HH:mm", { locale: ptBR });
+			return format(parseISO(timestamp), "dd/MM/yyyy HH:mm");
 		} catch {
 			return "";
 		}
@@ -4393,7 +4395,7 @@ useEffect(() => {
 							</IconButton>
 														<InputBase
 								className={classes.inputField}
-								placeholder="Digite uma mensagem ou / para respostas rápidas"
+								placeholder={i18n.t("atendimentos.inputPlaceholder")}
 								value={inputMessage}
 								inputRef={inputMessageRef}
 								onChange={(e) => {

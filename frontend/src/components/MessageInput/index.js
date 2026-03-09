@@ -391,7 +391,7 @@ const MessageInput = ({ ticketId, ticketStatus, droppedFiles, contactId, ticketC
   const [placeholderText, setPlaceHolderText] = useState("");
 
   useEffect(() => {
-    if (ticketStatus === "open" || ticketStatus === "group") {
+    if (ticketStatus === "open" || ticketStatus === "group" || ticketStatus === "pending") {
       setPlaceHolderText(i18n.t("messagesInput.placeholderOpen"));
     } else {
       setPlaceHolderText(i18n.t("messagesInput.placeholderClosed"));
@@ -760,7 +760,7 @@ const MessageInput = ({ ticketId, ticketStatus, droppedFiles, contactId, ticketC
     return (
       loading ||
       recording ||
-      (ticketStatus !== "open" && ticketStatus !== "group")
+      (ticketStatus !== "open" && ticketStatus !== "group" && ticketStatus !== "pending")
     );
   };
 
@@ -1229,7 +1229,7 @@ const MessageInput = ({ ticketId, ticketStatus, droppedFiles, contactId, ticketC
                       }}
                       className={classes.messageInputPrivate}
                       placeholder={
-                        ticketStatus === "open" || ticketStatus === "group"
+                        (ticketStatus === "open" || ticketStatus === "group" || ticketStatus === "pending")
                           ? i18n.t("messagesInput.placeholderPrivateMessage")
                           : i18n.t("messagesInput.placeholderClosed")
                       }
@@ -1239,7 +1239,7 @@ const MessageInput = ({ ticketId, ticketStatus, droppedFiles, contactId, ticketC
                       onChange={handleChangeInput}
                       disabled={disableOption()}
                       onPaste={(e) => {
-                        (ticketStatus === "open" || ticketStatus === "group") &&
+                        (ticketStatus === "open" || ticketStatus === "group" || ticketStatus === "pending") &&
                           handleInputPaste(e);
                       }}
                       onKeyPress={(e) => {
@@ -1286,7 +1286,7 @@ const MessageInput = ({ ticketId, ticketStatus, droppedFiles, contactId, ticketC
                       onChange={handleChangeInput}
                       disabled={disableOption()}
                       onPaste={(e) => {
-                        (ticketStatus === "open" || ticketStatus === "group") &&
+                        (ticketStatus === "open" || ticketStatus === "group" || ticketStatus === "pending") &&
                           handleInputPaste(e);
                       }}
                       onKeyPress={(e) => {

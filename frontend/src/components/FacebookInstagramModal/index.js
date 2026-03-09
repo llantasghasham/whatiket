@@ -19,8 +19,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import { toast } from "react-toastify";
 
 import api from "../../services/api";
-import { i18n } from "../../translate/i18n";
 import toastError from "../../errors/toastError";
+import { i18n } from "../../translate/i18n";
 
 const useStyles = makeStyles((theme) => ({
   dialogTitle: {
@@ -112,29 +112,45 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const FacebookInstagramModal = ({ open, onClose, whatsAppId }) => {
+const FacebookInstagramModal = ({ open, onClose, whatsAppId, channel, companyId }) => {
   const classes = useStyles();
 
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState("");
-  const [activeTab, setActiveTab] = useState(0); // 0 = Facebook, 1 = Instagram
+  const [activeTab, setActiveTab] = useState(channel === "instagram" ? 1 : 0); // 0 = Facebook, 1 = Instagram
 
-  // Informações do webhook - usando a URL do backend
+  // URL del backend - debe coincidir con BACKEND_URL del servidor
   const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
-  const webhookUrl = `${backendUrl}/webhook`;
+  const webhookUrl = `${backendUrl.replace(/\/$/, "")}/webhook`;
   const verifyToken = "whaticket";
 
-  // Função para login direto no Instagram Business
+  // companyId para OAuth state - desde props o localStorage
+  const oauthState = companyId || localStorage.getItem("companyId") || "";
+
   const handleInstagramLogin = () => {
-    const instagramOAuthUrl = `https://www.facebook.com/v18.0/dialog/oauth?client_id=${process.env.REACT_APP_FACEBOOK_APP_ID}&redirect_uri=${encodeURIComponent(backendUrl + '/instagram-callback')}&scope=instagram_basic,instagram_manage_messages,pages_messaging,pages_show_list,pages_manage_metadata,pages_read_engagement,business_management&response_type=code&state=${localStorage.getItem("companyId") || ""}`;
+    if (!oauthState) {
+      toast.error("No se pudo obtener el ID de la empresa. Cierre sesión y vuelva a entrar.");
+      return;
+    }
+    const redirectUri = `${backendUrl.replace(/\/$/, "")}/instagram-callback`;
+    const instagramOAuthUrl = `https://www.facebook.com/v18.0/dialog/oauth?client_id=${process.env.REACT_APP_FACEBOOK_APP_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=instagram_basic,instagram_manage_messages,pages_messaging,pages_show_list,pages_manage_metadata,pages_read_engagement,business_management&response_type=code&state=${oauthState}`;
     window.location.href = instagramOAuthUrl;
   };
 
-  // Função para login direto no Facebook (response_type=code para o backend trocar por token)
   const handleFacebookLogin = () => {
-    const facebookOAuthUrl = `https://www.facebook.com/v18.0/dialog/oauth?client_id=${process.env.REACT_APP_FACEBOOK_APP_ID}&redirect_uri=${encodeURIComponent(backendUrl + "/facebook-callback")}&scope=public_profile,pages_messaging,pages_show_list,pages_manage_metadata,pages_read_engagement,business_management&response_type=code&state=${localStorage.getItem("companyId") || ""}`;
+    if (!oauthState) {
+      toast.error("No se pudo obtener el ID de la empresa. Cierre sesión y vuelva a entrar.");
+      return;
+    }
+    const redirectUri = `${backendUrl.replace(/\/$/, "")}/facebook-callback`;
+    const facebookOAuthUrl = `https://www.facebook.com/v18.0/dialog/oauth?client_id=${process.env.REACT_APP_FACEBOOK_APP_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=public_profile,pages_messaging,pages_show_list,pages_manage_metadata,pages_read_engagement,business_management&response_type=code&state=${oauthState}`;
     window.location.href = facebookOAuthUrl;
   };
+
+  useEffect(() => {
+    if (channel === "instagram") setActiveTab(1);
+    else if (channel === "facebook") setActiveTab(0);
+  }, [channel]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -160,6 +176,10 @@ const FacebookInstagramModal = ({ open, onClose, whatsAppId }) => {
   };
 
   const handleSave = async () => {
+    if (!whatsAppId) {
+      toast.error(i18n.t("facebookInstagram.saveRequiresConnection") || "Primero conecte Facebook o Instagram.");
+      return;
+    }
     try {
       await api.put(`/whatsapp/${whatsAppId}`, {
         name,
@@ -174,7 +194,7 @@ const FacebookInstagramModal = ({ open, onClose, whatsAppId }) => {
 
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
-    toast.success("Copiado para a área de transferência!");
+    toast.success(i18n.t("common.toasts.linkCopiedClipboard"));
   };
 
   const openFacebookDeveloper = () => {
@@ -184,7 +204,7 @@ const FacebookInstagramModal = ({ open, onClose, whatsAppId }) => {
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
       <DialogTitle className={classes.dialogTitle}>
-        Conexão Facebook / Instagram
+        {i18n.t("facebookInstagram.title")}
       </DialogTitle>
       
       <Tabs
@@ -210,23 +230,23 @@ const FacebookInstagramModal = ({ open, onClose, whatsAppId }) => {
           // Conteúdo do Facebook
           <>
             <TextField
-              label="Nome da Conexão Facebook"
+              label={i18n.t("facebookInstagram.nameFacebook")}
               fullWidth
               variant="outlined"
               value={name}
               onChange={(e) => setName(e.target.value)}
               className={classes.textField}
               disabled={loading}
-              placeholder="Ex: Minha Página do Facebook"
+              placeholder={i18n.t("facebookInstagram.placeholderName")}
             />
 
             <Box className={classes.instructionBox}>
               <Typography className={classes.instructionTitle}>
                 <span className={classes.stepNumber}>1</span>
-                Conectar ao Facebook
+                {i18n.t("facebookInstagram.step1Connect")}
               </Typography>
               <Typography className={classes.instructionText}>
-                Clique no botão abaixo para fazer login no Facebook e autorizar o acesso às suas páginas.
+                {i18n.t("facebookInstagram.step1Desc")}
               </Typography>
               <Button
                 variant="contained"
@@ -236,27 +256,27 @@ const FacebookInstagramModal = ({ open, onClose, whatsAppId }) => {
                 fullWidth
                 style={{ backgroundColor: "#3b5998" }}
               >
-                Conectar Facebook
+                {i18n.t("facebookInstagram.connectFacebook")}
               </Button>
             </Box>
 
             <Box className={classes.instructionBox}>
               <Typography className={classes.instructionTitle}>
                 <span className={classes.stepNumber}>2</span>
-                Configurar Webhook (Opcional)
+                {i18n.t("facebookInstagram.step2Webhook")}
               </Typography>
               <Typography className={classes.instructionText}>
-                Se precisar configurar manualmente, use as informações abaixo:
+                {i18n.t("facebookInstagram.step2Desc")}
               </Typography>
               
               <Typography variant="caption" style={{ color: "#666", fontWeight: 500 }}>
-                URL de Callback:
+                {i18n.t("facebookInstagram.callbackUrl")}
               </Typography>
               <Box className={classes.copyField}>
                 <Typography className={classes.copyText}>
                   {webhookUrl}
                 </Typography>
-                <Tooltip title="Copiar URL">
+                <Tooltip title={i18n.t("facebookInstagram.copyUrl")}>
                   <IconButton size="small" onClick={() => copyToClipboard(webhookUrl)}>
                     <FileCopy fontSize="small" />
                   </IconButton>
@@ -265,13 +285,13 @@ const FacebookInstagramModal = ({ open, onClose, whatsAppId }) => {
 
               <Box mt={2}>
                 <Typography variant="caption" style={{ color: "#666", fontWeight: 500 }}>
-                  Token de Verificação:
+                  {i18n.t("facebookInstagram.verifyToken")}:
                 </Typography>
                 <Box className={classes.copyField}>
                   <Typography className={classes.copyText}>
                     {verifyToken}
                   </Typography>
-                  <Tooltip title="Copiar Token">
+                  <Tooltip title={i18n.t("facebookInstagram.copyToken")}>
                     <IconButton size="small" onClick={() => copyToClipboard(verifyToken)}>
                       <FileCopy fontSize="small" />
                     </IconButton>
@@ -286,23 +306,23 @@ const FacebookInstagramModal = ({ open, onClose, whatsAppId }) => {
           // Conteúdo do Instagram
           <>
             <TextField
-              label="Nome da Conexão Instagram"
+              label={i18n.t("facebookInstagram.nameInstagram")}
               fullWidth
               variant="outlined"
               value={name}
               onChange={(e) => setName(e.target.value)}
               className={classes.textField}
               disabled={loading}
-              placeholder="Ex: Meu Instagram Business"
+              placeholder={i18n.t("facebookInstagram.placeholderInstagram")}
             />
 
             <Box className={classes.instructionBox}>
               <Typography className={classes.instructionTitle}>
                 <span className={classes.stepNumber}>1</span>
-                Conectar ao Instagram
+                {i18n.t("facebookInstagram.step1ConnectInstagram")}
               </Typography>
               <Typography className={classes.instructionText}>
-                Clique no botão abaixo para fazer login no Instagram e autorizar o acesso à sua conta Business.
+                {i18n.t("facebookInstagram.step1DescInstagram")}
               </Typography>
               <Button
                 variant="contained"
@@ -312,17 +332,17 @@ const FacebookInstagramModal = ({ open, onClose, whatsAppId }) => {
                 fullWidth
                 style={{ backgroundColor: "#e1306c" }}
               >
-                Conectar Instagram
+                {i18n.t("facebookInstagram.connectInstagram")}
               </Button>
             </Box>
 
             <Box className={classes.instructionBox}>
               <Typography className={classes.instructionTitle}>
                 <span className={classes.stepNumber}>2</span>
-                Requisitos
+                {i18n.t("facebookInstagram.step2Requirements")}
               </Typography>
               <Typography className={classes.instructionText}>
-                Para conectar o Instagram, você precisa:
+                {i18n.t("facebookInstagram.step2RequirementsDesc")}
               </Typography>
               <Typography className={classes.instructionText} style={{ fontFamily: "monospace", backgroundColor: "#f0f0f0", padding: 8, borderRadius: 4 }}>
                 • Conta Instagram Business<br />
@@ -347,7 +367,7 @@ const FacebookInstagramModal = ({ open, onClose, whatsAppId }) => {
                 <Typography className={classes.copyText}>
                   {webhookUrl}
                 </Typography>
-                <Tooltip title="Copiar URL">
+                <Tooltip title={i18n.t("facebookInstagram.copyUrl")}>
                   <IconButton size="small" onClick={() => copyToClipboard(webhookUrl)}>
                     <FileCopy fontSize="small" />
                   </IconButton>
@@ -365,9 +385,10 @@ const FacebookInstagramModal = ({ open, onClose, whatsAppId }) => {
           onClick={handleSave}
           color="primary"
           variant="contained"
-          disabled={loading}
+          disabled={loading || !whatsAppId}
+          title={!whatsAppId ? (i18n.t("facebookInstagram.saveRequiresConnection") || "Conecte primero para guardar el nombre") : ""}
         >
-          Salvar
+          {i18n.t("common.save")}
         </Button>
       </DialogActions>
     </Dialog>

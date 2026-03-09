@@ -8,8 +8,10 @@ const isAuthApi = async (
   res: Response,
   next: NextFunction
 ): Promise<void> => {
+  console.log("HIT tokenAuth | ORIGINAL URL:", req.originalUrl, "| req.query:", JSON.stringify(req.query), "| req.headers.authorization:", req.headers.authorization ?? "MISSING");
   const authHeader = req.headers.authorization;
   if (!authHeader) {
+    console.log("ERR_SESSION_EXPIRED THROWN FROM tokenAuth.ts LINE", 15);
     throw new AppError("ERR_SESSION_EXPIRED", 401);
   }
 

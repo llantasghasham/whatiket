@@ -10,6 +10,10 @@ const { Client, MessageSubscription, WebhookController } = require("notificamehu
 require("dotenv").config();
 const setChannelWebhook = async (whatsapp, whatsappId) => {
     const notificameHubToken = await (0, showHubToken_1.showHubToken)(whatsapp.companyId.toString());
+    if (!notificameHubToken) {
+        console.warn("[setChannelWebhook] No Hub token for company", whatsapp.companyId);
+        return;
+    }
     const client = new Client(notificameHubToken);
     const url = `${process.env.BACKEND_URL}/hub-webhook/${whatsapp.token}`;
     const subscription = new MessageSubscription({
