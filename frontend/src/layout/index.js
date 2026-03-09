@@ -109,7 +109,6 @@ import UserLanguageSelector from "../components/UserLanguageSelector";
 import { getBackendUrl } from "../config";
 import f002Image from "../assets/f002.png";
 import logo from "../assets/logo.png";
-import ColorModeContext from "./themeContext";
 import { useSystemAlert } from "../components/SystemAlert";
 
 const backendUrl = getBackendUrl();
