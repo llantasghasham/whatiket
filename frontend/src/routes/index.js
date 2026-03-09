@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense, lazy } from "react";
 import { BrowserRouter, Switch } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import { CircularProgress, Box } from "@material-ui/core";
 
 import LoggedInLayout from "../layout";
 import Dashboard from "../pages/Painel";
@@ -113,8 +114,21 @@ import TermsOfService from "../pages/landingpage/TermsOfService";
 import UsagePolicy from "../pages/landingpage/UsagePolicy";
 import PrivacyPolicy from "../pages/landingpage/PrivacyPolicy";
 import PublicCheckout from "../pages/PublicCheckout";
-import Atendimentos from "../pages/Atendimentos";
 import AtendimentosMobile from "../pages/atendimentomobile";
+
+// Vista "buena" con filtros Facebook, Instagram, WhatsApp; carga diferida para evitar error de inicialización
+const Atendimentos = lazy(() => import("../pages/Atendimentos"));
+const AtendimentosWithSuspense = (props) => (
+  <Suspense
+    fallback={
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh">
+        <CircularProgress />
+      </Box>
+    }
+  >
+    <Atendimentos {...props} />
+  </Suspense>
+);
 import { QueueSelectedProvider } from "../context/QueuesSelected/QueuesSelectedContext";
 import NotificationToast from "../components/NotificationToast";
 
@@ -162,8 +176,8 @@ const Routes = () => {
                 <ProtectedRoute exact path="/painel" component={Dashboard} />
                 <ProtectedRoute exact path="/tickets/:ticketId?" component={TicketResponsiveContainer} />
                 <ProtectedRoute exact path="/conversas/:ticketId?" component={TicketResponsiveContainer} />
-                {/* /atendimentos usa la misma vista que /conversas (estable; Atendimentos da pantalla blanca) */}
-                <ProtectedRoute exact path="/atendimentos/:ticketId?" component={TicketResponsiveContainer} />
+                {/* Vista "buena" con Facebook, Instagram, WhatsApp (carga lazy) */}
+                <ProtectedRoute exact path="/atendimentos/:ticketId?" component={AtendimentosWithSuspense} />
                 <ProtectedRoute exact path="/atendimentomobile/:ticketId?" component={AtendimentosMobile} />
                 <ProtectedRoute exact path="/connections" component={Canais} />
                 <ProtectedRoute exact path="/canais" component={Canais} />
