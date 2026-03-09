@@ -597,7 +597,7 @@ const FerramentasPage = () => {
             </Select>
           </FormControl>
           <TextField
-            placeholder="Buscar ferramenta..."
+            placeholder="Buscar herramienta..."
             variant="outlined"
             size="small"
             value={searchParam}

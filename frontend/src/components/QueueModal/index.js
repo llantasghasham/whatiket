@@ -249,13 +249,13 @@ const QueueSchema = Yup.object().shape({
   name: Yup.string()
     .min(2, "Too Short!")
     .max(50, "Too Long!")
-    .required("Obrigatório"),
-  color: Yup.string().min(3, "Too Short!").max(9, "Too Long!").required("A cor é Obrigatório"),
+    .required("Requerido"),
+  color: Yup.string().min(3, "Too Short!").max(9, "Too Long!").required("A cor é Requerido"),
   greetingMessage: Yup.string(),
   chatbots: Yup.array()
     .of(
       Yup.object().shape({
-        name: Yup.string().min(4, "too short").required("Obrigatório"),
+        name: Yup.string().min(4, "too short").required("Requerido"),
       })
     )
     .required("Must have friends"),
@@ -824,7 +824,7 @@ const QueueModal = ({ open, onClose, queueId, onEdit }) => {
                     className={classes.saveButton}
                     startIcon={isSubmitting ? <CircularProgress size={20} className={classes.buttonProgress} /> : (queueId ? <EditIcon /> : <SaveIcon />)}
                   >
-                    {queueId ? "Editar" : "Salvar"}
+                    {queueId ? "Editar" : "Guardar"}
                   </Button>
                 </DialogActions>
               </Form>

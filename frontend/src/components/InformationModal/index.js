@@ -25,7 +25,7 @@ const InformationModal = ({ title, children, open, onClose }) => {
 					onClick={() => onClose(false)}
 					color="default"
 				>
-					{i18n.t("Fechar")}
+					{i18n.t("layout.close") || "Cerrar"}
 				</Button>
 			</DialogActions>
 		</Dialog>

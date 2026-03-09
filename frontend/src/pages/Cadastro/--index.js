@@ -431,19 +431,19 @@ const useStyles = makeStyles((theme) => ({
 
 const UserSchema = Yup.object().shape({
     name: Yup.string()
-        .min(2, "Muito curto!")
-        .max(50, "Muito extenso!")
-        .required("Obrigatório"),
+        .min(2, "Muy corto!")
+        .max(50, "Muy largo!")
+        .required("Requerido"),
     password: Yup.string()
-        .min(5, "Muito curto!")
-        .max(50, "Muito extenso!")
-        .required("Obrigatório"),
+        .min(5, "Muy corto!")
+        .max(50, "Muy largo!")
+        .required("Requerido"),
     confirmPassword: Yup.string()
-        .oneOf([Yup.ref('password'), null], "As senhas não são iguais.")
-        .required("Por favor, confirme sua senha."),
+        .oneOf([Yup.ref('password'), null], "Las contraseñas no coinciden.")
+        .required("Por favor, confirme su contraseña."),
     email: Yup.string()
         .email("Email inválido")
-        .required("Obrigatório"),
+        .required("Requerido"),
 });
 
 const SignUp = () => {

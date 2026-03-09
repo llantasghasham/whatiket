@@ -524,7 +524,7 @@ const NegociosPage = () => {
               <TextField
                 size="small"
                 variant="outlined"
-                placeholder="Buscar tags..."
+                placeholder="Buscar etiquetas..."
                 value={tagSearchTerm}
                 onChange={e => setTagSearchTerm(e.target.value)}
                 className={classes.searchField}

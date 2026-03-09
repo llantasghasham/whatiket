@@ -124,7 +124,7 @@ const DialogflowSchema = Yup.object().shape({
   name: Yup.string()
     .min(2, "Too Short!")
     .max(50, "Too Long!")
-    .required("Obrigatório"),
+    .required("Requerido"),
 });
 
 const QueueIntegration = ({ open, onClose, integrationId }) => {

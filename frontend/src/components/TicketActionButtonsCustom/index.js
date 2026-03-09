@@ -701,7 +701,7 @@ const TicketActionButtonsCustom = ({ ticket }) => {
                 />
                 <DialogActions>
                     <Button onClick={handleCloseModal} color="primary">
-                        Fechar
+                        Cerrar
                     </Button>
                 </DialogActions>
             </Dialog>

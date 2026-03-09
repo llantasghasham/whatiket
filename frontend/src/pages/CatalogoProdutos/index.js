@@ -642,7 +642,7 @@ const CatalogoProdutos = () => {
           <DialogActions>
             <Button onClick={() => setCategoriaDialogOpen(false)}>Cancelar</Button>
             <Button color="primary" variant="contained" type="submit" disabled={categoriaSaving}>
-              {categoriaSaving ? "Salvando..." : "Salvar"}
+              {categoriaSaving ? "Guardando..." : "Guardar"}
             </Button>
           </DialogActions>
         </form>
@@ -664,7 +664,7 @@ const CatalogoProdutos = () => {
           <DialogActions>
             <Button onClick={() => setGrupoDialogOpen(false)}>Cancelar</Button>
             <Button color="primary" variant="contained" type="submit" disabled={grupoSaving}>
-              {grupoSaving ? "Salvando..." : "Salvar"}
+              {grupoSaving ? "Guardando..." : "Guardar"}
             </Button>
           </DialogActions>
         </form>
@@ -696,7 +696,7 @@ const CatalogoProdutos = () => {
           <DialogActions>
             <Button onClick={() => setOpcaoDialogOpen(false)}>Cancelar</Button>
             <Button color="primary" variant="contained" type="submit" disabled={opcaoSaving}>
-              {opcaoSaving ? "Salvando..." : "Salvar"}
+              {opcaoSaving ? "Guardando..." : "Guardar"}
             </Button>
           </DialogActions>
         </form>

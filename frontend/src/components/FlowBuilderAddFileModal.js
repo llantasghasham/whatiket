@@ -133,7 +133,7 @@ const FlowBuilderAddFileModal = ({ open, onSave, onUpdate, data, close }) => {
             >
               {file || fileUrl
                 ? "Arquivo selecionado"
-                : "Clique para selecionar um arquivo"}
+                : "Clic para seleccionar un archivo"}
             </Typography>
           </label>
         </Box>
@@ -144,7 +144,7 @@ const FlowBuilderAddFileModal = ({ open, onSave, onUpdate, data, close }) => {
           onClick={handleSave}
           disabled={!label || (!file && !fileUrl) || uploading}
         >
-          {uploading ? <CircularProgress size={24} /> : "Salvar"}
+          {uploading ? <CircularProgress size={24} /> : "Guardar"}
         </Button>
       </DialogActions>
     </Dialog>

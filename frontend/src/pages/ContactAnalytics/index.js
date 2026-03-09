@@ -243,7 +243,7 @@ const ContactAnalytics = () => {
       <div className={classes.pageHeader}>
         <div>
           <Typography className={classes.pageTitle}>
-            <AnalyticsIcon /> Analytics de Contatos
+            <AnalyticsIcon /> Análisis de contactos
           </Typography>
           <Typography className={classes.pageSubtitle}>
             Visualize estatísticas detalhadas sobre contatos, deduplicação e salvamento
@@ -286,7 +286,7 @@ const ContactAnalytics = () => {
                 {formatNumber(analytics.summary?.totalContacts)}
               </Typography>
               <Typography className={classes.statsLabel}>
-                <PeopleIcon /> Total de Contatos
+                <PeopleIcon /> Total de contactos
               </Typography>
             </Card>
           </Grid>
@@ -323,11 +323,11 @@ const ContactAnalytics = () => {
         </Grid>
       )}
 
-      {/* Relatório de Deduplicação */}
+      {/* Informe de deduplicación */}
       {deduplicationReport && (
         <Paper className={classes.card}>
           <Typography className={classes.sectionTitle}>
-            <AnalyticsIcon /> Relatório de Deduplicação
+            <AnalyticsIcon /> Informe de deduplicación
           </Typography>
 
           <Grid container spacing={3}>
@@ -361,7 +361,7 @@ const ContactAnalytics = () => {
                   <TableHead>
                     <TableRow>
                       <TableCell>Número</TableCell>
-                      <TableCell>Contatos</TableCell>
+                      <TableCell>Contactos</TableCell>
                       <TableCell>Score Médio</TableCell>
                       <TableCell>Status</TableCell>
                     </TableRow>
@@ -398,7 +398,7 @@ const ContactAnalytics = () => {
       {savingReport && (
         <Paper className={classes.card}>
           <Typography className={classes.sectionTitle}>
-            <PhoneIcon /> Relatório de Salvamento no Celular
+            <PhoneIcon /> Informe de guardado en móvil
           </Typography>
 
           <Grid container spacing={3}>
@@ -467,11 +467,11 @@ const ContactAnalytics = () => {
         </Paper>
       )}
 
-      {/* Top Contatos */}
+      {/* Principales contactos */}
       {topContacts && (
         <Paper className={classes.card}>
           <Typography className={classes.sectionTitle}>
-            <TrendingIcon /> Top Contatos
+            <TrendingIcon /> Principales contactos
           </Typography>
 
           <Grid container spacing={3}>

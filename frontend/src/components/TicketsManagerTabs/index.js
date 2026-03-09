@@ -3,6 +3,7 @@ import { useTheme } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
 import clsx from "clsx";
 import {
+  Box,
   makeStyles,
   Paper,
   InputBase,
@@ -46,6 +47,7 @@ import ToggleButton from "@material-ui/lab/ToggleButton";
 import { FilterAltOff, FilterAlt, PlaylistAddCheckOutlined } from "@mui/icons-material";
 
 import NewTicketModal from "../NewTicketModal";
+import SendWhatsAppMessageModal from "../SendWhatsAppMessageModal";
 import TicketsList from "../TicketsListCustom";
 import TabPanel from "../TabPanel";
 import { Can } from "../Can";
@@ -524,6 +526,7 @@ const TicketsManagerTabs = () => {
   const [searchParam, setSearchParam] = useState("");
   const [tab, setTab] = useState("open");
   const [newTicketModalOpen, setNewTicketModalOpen] = useState(false);
+  const [sendWhatsAppModalOpen, setSendWhatsAppModalOpen] = useState(false);
   const [showAllTickets, setShowAllTickets] = useState(false);
   const [sortTickets, setSortTickets] = useState(false);
 
@@ -761,6 +764,10 @@ const TicketsManagerTabs = () => {
           handleCloseOrOpenTicket(ticket);
         }}
       />
+      <SendWhatsAppMessageModal
+        open={sendWhatsAppModalOpen}
+        onClose={() => setSendWhatsAppModalOpen(false)}
+      />
       {isSearchVisible && (
         <div className={classes.serachInputWrapper}>
           <SearchIcon className={classes.searchIcon} />
@@ -809,6 +816,18 @@ const TicketsManagerTabs = () => {
 
       {filter === true && (
         <>
+          <Box display="flex" alignItems="center" flexWrap="wrap" gap={1} padding="8px 10px 4px">
+            <Button
+              variant="contained"
+              color="primary"
+              size="small"
+              startIcon={<AddIcon />}
+              onClick={() => setNewTicketModalOpen(true)}
+              style={{ textTransform: "none", fontWeight: 600 }}
+            >
+              {i18n.t("tickets.inbox.newTicket") || "Nuevo ticket"}
+            </Button>
+          </Box>
           <TagsFilter onFiltered={handleSelectedTags} />
           <WhatsappsFilter onFiltered={handleSelectedWhatsapps} />
           <StatusFilter onFiltered={handleSelectedStatus} />
@@ -907,6 +926,23 @@ const TicketsManagerTabs = () => {
                     <AddIcon />
                   </IconButton>
               </Badge>
+
+              {/* Enviar Mensaje de WhatsApp - número que no ha escrito */}
+              <Tooltip title={i18n.t("sendWhatsAppMessage.title") || "Enviar Mensaje de WhatsApp"}>
+                <Button
+                  size="small"
+                  variant="outlined"
+                  onClick={() => setSendWhatsAppModalOpen(true)}
+                  style={{
+                    textTransform: "none",
+                    borderColor: "#25d366",
+                    color: "#25d366",
+                    marginLeft: 8,
+                  }}
+                >
+                  {i18n.t("sendWhatsAppMessage.shortLabel") || "Enviar WhatsApp"}
+                </Button>
+              </Tooltip>
 
               {/* Close All Button - Admin Only */}
               {user.profile === "admin" && (

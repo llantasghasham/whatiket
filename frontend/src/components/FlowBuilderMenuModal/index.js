@@ -101,8 +101,8 @@ const FlowBuilderMenuModal = ({ open, onSave, onUpdate, data, close }) => {
   const [arrayOption, setArrayOption] = useState([]);
 
   const [labels, setLabels] = useState({
-    title: "Adicionar menu ao fluxo",
-    btn: "Adicionar"
+    title: "Agregar menú al flujo",
+    btn: "Agregar"
   });
 
   useEffect(() => {
@@ -116,8 +116,8 @@ const FlowBuilderMenuModal = ({ open, onSave, onUpdate, data, close }) => {
       setActiveModal(true);
     } else if (open === "create") {
       setLabels({
-        title: "Adicionar menu ao fluxo",
-        btn: "Adicionar"
+        title: "Agregar menú al flujo",
+        btn: "Agregar"
       });
       setTextDig();
       setArrayOption([]);
@@ -182,7 +182,7 @@ const FlowBuilderMenuModal = ({ open, onSave, onUpdate, data, close }) => {
               style={{ width: "100%" }}
             />
             <Stack direction={"row"} justifyContent={"space-between"}>
-              <Typography>Adicionar Opção</Typography>
+              <Typography>Agregar opción</Typography>
               <Button
                 onClick={() =>
                   setArrayOption(old => [

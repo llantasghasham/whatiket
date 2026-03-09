@@ -319,25 +319,18 @@ const Users = () => {
   };
 
   const renderProfileImage = (user) => {
-    if (user.id === loggedInUser.id) {
-      return (
-        <Avatar
-          src={`${backendUrl}/public/company${user.companyId}/user/${profileImage ? profileImage : whatsappIcon}`}
-          alt={user.name}
-          className={classes.userAvatar}
-        />
-      );
-    }
-    if (user.id !== loggedInUser.id) {
-      return (
-        <Avatar
-          src={user.profileImage ? `${backendUrl}/public/company${user.companyId}/user/${user.profileImage}` : whatsappIcon}
-          alt={user.name}
-          className={classes.userAvatar}
-        />
-      );
-    }
-    return <AccountCircle />;
+    const photoUrl = user.profileImage
+      ? `${backendUrl}/public/company${user.companyId}/user/${user.profileImage}`
+      : null;
+    return (
+      <Avatar
+        src={photoUrl || whatsappIcon}
+        alt={user.name}
+        className={classes.userAvatar}
+      >
+        {!photoUrl && user.name ? user.name.charAt(0).toUpperCase() : null}
+      </Avatar>
+    );
   };
 
   const filteredUsers = users.filter((user) => user.id !== 1);

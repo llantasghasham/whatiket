@@ -379,7 +379,7 @@ const ServicosPage = () => {
             className={classes.searchField}
             variant="outlined"
             size="small"
-            placeholder="Buscar por nome, descrição ou ID"
+            placeholder="Buscar por nombre, descripción o ID"
             value={search}
             onChange={event => setSearch(event.target.value)}
             InputProps={{

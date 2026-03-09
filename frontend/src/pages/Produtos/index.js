@@ -1100,7 +1100,7 @@ const ProdutosPage = () => {
             </Select>
           </FormControl>
           <TextField
-            placeholder="Buscar produto..."
+            placeholder="Buscar producto..."
             variant="outlined"
             size="small"
             value={searchParam}

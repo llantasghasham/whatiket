@@ -587,7 +587,7 @@ const FlowBuilderWaitQuestionModal = ({
                 className={classes.btnWrapper}
                 startIcon={<SaveIcon />}
               >
-                Salvar
+                Guardar
                 {isSubmitting && (
                   <CircularProgress
                     size={24}

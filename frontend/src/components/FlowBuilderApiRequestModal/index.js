@@ -237,7 +237,7 @@ const FlowBuilderApiRequestModal = ({
     <div className={classes.root}>
       <Dialog open={activeModal} onClose={handleClose} fullWidth maxWidth="md" scroll="paper">
         <DialogTitle id="form-dialog-title">
-          {open === 'create' ? `Adicionar requisição API` : `Editar requisição API`}
+          {open === 'create' ? `Agregar petición API` : `Editar petición API`}
         </DialogTitle>
         <Stack>
           <DialogContent dividers>
@@ -374,7 +374,7 @@ const FlowBuilderApiRequestModal = ({
             </div>
 
             <TextField
-              label="Salvar resposta completa em variável (opcional)"
+              label="Guardar respuesta completa en variable (opcional)"
               placeholder="api_response"
               fullWidth
               variant="outlined"
@@ -492,7 +492,7 @@ const FlowBuilderApiRequestModal = ({
               variant="contained"
               onClick={handleSave}
             >
-              Salvar
+              Guardar
             </Button>
           </DialogActions>
         </Stack>

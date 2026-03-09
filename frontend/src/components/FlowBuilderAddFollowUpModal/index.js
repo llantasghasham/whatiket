@@ -351,7 +351,7 @@ const FlowBuilderAddFollowUpModal = ({ open, onClose, onSave, initialData }) => 
       <DialogActions>
         <Button onClick={onClose}>Cancelar</Button>
         <Button onClick={handleSave} color="primary" variant="contained">
-          {initialData ? "Salvar edição" : "Salvar"}
+          {initialData ? "Guardar edición" : "Guardar"}
         </Button>
       </DialogActions>
     </Dialog>

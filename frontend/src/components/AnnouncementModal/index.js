@@ -168,8 +168,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const AnnouncementSchema = Yup.object().shape({
-  title: Yup.string().required("Obrigatório"),
-  text: Yup.string().required("Obrigatório"),
+  title: Yup.string().required("Requerido"),
+  text: Yup.string().required("Requerido"),
 });
 
 function PaperComponent(props) {

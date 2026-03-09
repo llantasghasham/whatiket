@@ -21,7 +21,7 @@ const PrivacyPolicy = () => {
       <h2>2. Finalidade</h2>
       <p>
         Utilizamos os dados para autenticação, suporte, faturamento, envio de comunicados importantes e evolução do
-        produto. Não vendemos dados para terceiros.
+        producto. No vendemos datos a terceros.
       </p>
 
       <h2>3. Compartilhamento</h2>

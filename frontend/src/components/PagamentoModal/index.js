@@ -167,7 +167,7 @@ const PagamentoModal = ({ open, onClose, fatura }) => {
             </Box>
           ) : payments.length === 0 ? (
             <Typography color="textSecondary">
-              Nenhum pagamento registrado.
+              Ningún pago registrado.
             </Typography>
           ) : (
             payments.map(payment => (
@@ -181,7 +181,7 @@ const PagamentoModal = ({ open, onClose, fatura }) => {
                   )}
                 </Box>
                 <Box className={classes.paymentActions}>
-                  <Tooltip title="Excluir pagamento">
+                  <Tooltip title="Eliminar pago">
                     <IconButton
                       size="small"
                       onClick={() => handleDeletePayment(payment)}
@@ -258,7 +258,7 @@ const PagamentoModal = ({ open, onClose, fatura }) => {
           onClick={handleCreatePayment}
           disabled={saving}
         >
-          {saving ? "Salvando..." : "Registrar pagamento"}
+          {saving ? "Guardando..." : "Registrar pago"}
         </Button>
       </DialogActions>
     </Dialog>

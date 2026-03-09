@@ -96,7 +96,7 @@ const FlowBuilderAddVariableModal = ({
 
   useEffect(() => {
     if (open === "edit") {
-      setLabels({ title: "Editar variável", btn: "Salvar" });
+      setLabels({ title: "Editar variable", btn: "Guardar" });
       setFormData(mergedData);
       setActiveModal(true);
     } else if (open === "create") {

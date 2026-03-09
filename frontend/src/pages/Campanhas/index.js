@@ -441,7 +441,7 @@ const Campaigns = () => {
                 <TableRow>
                   <TableCell colSpan={6}>
                     <Box className={classes.emptyState}>
-                      <Typography>Nenhuma campanha encontrada</Typography>
+                      <Typography>Ninguna campaña encontrada</Typography>
                     </Box>
                   </TableCell>
                 </TableRow>
@@ -471,7 +471,7 @@ const Campaigns = () => {
                     <TableCell align="center">
                       {campaign.whatsappId
                         ? campaign.whatsapp?.name
-                        : "Não definido"}
+                        : "No definido"}
                     </TableCell>
                     <TableCell align="center">
                       {campaign.scheduledAt

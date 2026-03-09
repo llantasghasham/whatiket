@@ -228,7 +228,7 @@ const FlowBuilderAddQuestionModal = ({
                   className={classes.btnWrapper}
                   disabled={isSubmitting}
                 >
-                  {open === "create" ? `Adicionar` : "Editar"}
+                  {open === "create" ? `Agregar` : "Editar"}
                 </Button>
               </DialogActions>
             </Form>

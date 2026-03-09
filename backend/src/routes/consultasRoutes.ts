@@ -32,7 +32,7 @@ router.post("/consultas", isAuth, async (req, res) => {
     if (!apiKey) {
       return res.status(401).json({ 
         status: "erro", 
-        mensagem: "Token de autenticação não fornecido"
+        mensagem: "Token de autenticación no proporcionado"
       });
     }
 
@@ -180,7 +180,7 @@ router.post("/fipe", async (req, res) => {
     if (!apiKey) {
       return res.status(401).json({ 
         status: "erro", 
-        mensagem: "Token de autenticação não fornecido"
+        mensagem: "Token de autenticación no proporcionado"
       });
     }
 

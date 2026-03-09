@@ -881,7 +881,7 @@ const TranslationManager = () => {
                   fullWidth
                   variant="outlined"
                   size="small"
-                  placeholder="Buscar chave ou texto..."
+                  placeholder="Buscar clave o texto..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className={classes.searchField}

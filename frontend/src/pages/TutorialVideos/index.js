@@ -323,7 +323,7 @@ const TutorialVideos = () => {
         </Box>
         <Box className={classes.headerRight}>
           <TextField
-            placeholder="Buscar vídeo..."
+            placeholder="Buscar video..."
             variant="outlined"
             size="small"
             className={classes.searchField}

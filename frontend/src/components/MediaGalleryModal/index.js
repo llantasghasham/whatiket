@@ -288,7 +288,7 @@ const MediaGalleryModal = ({
             onClick={onClose}
             className={classes.iconButton}
             size="small"
-            title="Fechar"
+            title="Cerrar"
           >
             <CloseIcon />
           </IconButton>

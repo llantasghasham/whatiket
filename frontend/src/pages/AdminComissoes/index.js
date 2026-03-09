@@ -396,7 +396,7 @@ const AdminCommissions = () => {
                 Nenhuma comissão encontrada.
               </Typography>
               <Typography variant="body2" color="textSecondary" style={{ marginTop: 8 }}>
-                {statusFilter ? "Tente remover o filtro de status." : "Nenhuma comissão registrada ainda."}
+                {statusFilter ? "Intente quitar el filtro de estado." : "Ninguna comisión registrada aún."}
               </Typography>
             </CardContent>
           </Card>

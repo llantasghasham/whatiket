@@ -643,7 +643,7 @@ const Faturas = () => {
             </Select>
           </FormControl>
           <TextField
-            placeholder="Buscar fatura..."
+            placeholder="Buscar factura..."
             variant="outlined"
             size="small"
             value={searchParam}

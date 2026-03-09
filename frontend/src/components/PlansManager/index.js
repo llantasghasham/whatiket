@@ -527,7 +527,7 @@ export function PlansManagerGrid(props) {
                         {i18n.t("plans.form.users")}: <strong>{row.users || "-"}</strong>
                     </Typography>
                     <Typography variant="body2" color="textSecondary">
-                        {i18n.t("plans.form.public")}: <strong>{row.isPublic ? "Sim" : "Não"}</strong>
+                        {i18n.t("plans.form.public")}: <strong>{row.isPublic ? "Sí" : "No"}</strong>
                     </Typography>
                     <Typography variant="body2" color="textSecondary">
                         {i18n.t("plans.form.connections")}: <strong>{row.connections || "-"}</strong>

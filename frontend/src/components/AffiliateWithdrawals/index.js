@@ -148,7 +148,7 @@ const AffiliateWithdrawals = ({ withdrawals, onRefresh }) => {
           {(!withdrawals || withdrawals.length === 0) ? (
             <div className={classes.emptyState}>
               <Typography variant="body1" color="textSecondary">
-                Nenhum saque solicitado.
+                Ningún retiro solicitado.
               </Typography>
             </div>
           ) : (

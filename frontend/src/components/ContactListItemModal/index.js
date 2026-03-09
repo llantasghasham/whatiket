@@ -83,7 +83,7 @@ const ContactSchema = Yup.object().shape({
   name: Yup.string()
     .min(2, "Muito curto!")
     .max(50, "Muito longo!")
-    .required("Obrigatório"),
+    .required("Requerido"),
   number: Yup.string().min(8, "Too Short!").max(50, "Too Long!"),
   email: Yup.string().email("E-Mail inválido"),
 });

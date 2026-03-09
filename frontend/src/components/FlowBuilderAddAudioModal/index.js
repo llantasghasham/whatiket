@@ -79,7 +79,7 @@ const FlowBuilderAddAudioModal = ({ open, onSave, onUpdate, data, close }) => {
     if (open === "edit") {
       setLabels({
         title: "Editar audio",
-        btn: "Salvar"
+        btn: "Guardar"
       });
       setPreview(process.env.REACT_APP_BACKEND_URL + '/public/' + data.data.url)
       setRecord(data.data.record)
@@ -202,7 +202,7 @@ const FlowBuilderAddAudioModal = ({ open, onSave, onUpdate, data, close }) => {
                 <Stack direction={'row'} justifyContent={'center'}>
                 <Checkbox checked={record} onChange={(e) => setRecord(old => !old)}/>
                 <Stack justifyContent={'center'}>
-                <Typography>Enviar como audio gravado na hora</Typography>
+                <Typography>Enviar como audio grabado al instante</Typography>
                 </Stack>
                 </Stack>
               )}

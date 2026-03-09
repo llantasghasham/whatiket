@@ -66,6 +66,14 @@ const messages = {
         searchModalTitle: "Buscar conversaciones",
         searchModalPlaceholder: "Escriba nombre, número o mensaje...",
         noPermission: "No tiene permiso para acceder a esta página.",
+        darkMode: {
+          dark: "Modo oscuro",
+          light: "Modo claro",
+        },
+        language: {
+          tooltip: "Idioma",
+        },
+        close: "Cerrar",
       },
       atendimentos: {
         title: "Atendimientos",
@@ -1285,6 +1293,22 @@ const messages = {
           ok: "Guardar",
           cancel: "Cancelar",
         },
+      },
+      sendWhatsAppMessage: {
+        title: "Enviar Mensaje de WhatsApp",
+        subtitle: "Envía un mensaje a un número que no te ha escrito",
+        shortLabel: "Enviar WhatsApp",
+        countryCode: "Código",
+        phoneLabel: "Número de teléfono",
+        phoneHint: "Solo números, sin espacios ni guiones",
+        messageLabel: "Mensaje",
+        cancel: "Cancelar",
+        send: "Enviar Mensaje",
+        sending: "Enviando…",
+        sent: "Mensaje enviado.",
+        invalidNumber: "Ingrese un número de teléfono válido.",
+        invalidMessage: "Escriba el mensaje.",
+        noConnection: "No hay conexión de WhatsApp configurada.",
       },
       SendContactModal: {
         title: "Enviar contacto",

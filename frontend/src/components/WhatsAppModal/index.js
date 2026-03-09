@@ -171,7 +171,7 @@ const SessionSchema = Yup.object().shape({
   name: Yup.string()
     .min(2, "Too Short!")
     .max(50, "Too Long!")
-    .required("Obrigatório"),
+    .required("Requerido"),
   greetingMessage: Yup.string(),
   complationMessage: Yup.string(),
   outOfHoursMessage: Yup.string(),
@@ -607,7 +607,7 @@ const WhatsAppModal = ({ open, onClose, whatsAppId, channel }) => {
   };
 
   const handleSaveSchedules = async (values) => {
-    toast.success("Clique em salvar para registar as alterações");
+    toast.success("Haga clic en Guardar para registrar los cambios");
     setSchedules(values);
   };
 

@@ -382,7 +382,7 @@ const AdminSaques = () => {
                 Nenhum saque encontrado.
               </Typography>
               <Typography variant="body2" color="textSecondary" style={{ marginTop: 8 }}>
-                {statusFilter ? "Tente remover o filtro de status." : "Nenhum saque solicitado ainda."}
+                {statusFilter ? "Intente quitar el filtro de estado." : "Ningún retiro solicitado aún."}
               </Typography>
             </CardContent>
           </Card>

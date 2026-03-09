@@ -120,13 +120,13 @@ const ContactImport = () => {
     console.log(selection)
 
     if (!selection.number) {
-      toastError("Não foi selecionado o campo de número do contato");
+      toastError("No se seleccionó el campo de número del contacto");
       setUploading(false);
       return;
     }
 
     if (!selection.name) {
-      toastError("Não foi selecionado o campo de nome do contato");
+      toastError("No se seleccionó el campo de nombre del contacto");
       setUploading(false);
       return;
     }
@@ -407,12 +407,12 @@ const ContactImport = () => {
         <div>
           <ul>
             <li>{countCreated} contatos criados</li>
-            <li>{countIgnored} contatos ignorados (número inválido ou não marcados para atualizar)</li>
+            <li>{countIgnored} contactos ignorados (número inválido o no marcados para actualizar)</li>
           </ul>
         </div>
       )}
       {openingFile && <div>Processando arquivo...</div>}
-      {invalidFile && <div>Arquivo inválido!</div>}
+      {invalidFile && <div>Archivo inválido!</div>}
       {!imported && rows && columns ? renderContent() : (
         <>
           <div

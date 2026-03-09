@@ -73,7 +73,7 @@ const SliderBannerModal = ({ open, onClose, banner, onSuccess }) => {
       return;
     }
     if (!banner && !imageFile) {
-      toast.error("Selecione uma imagem PNG para o banner");
+      toast.error("Seleccione una imagen PNG para el banner");
       return;
     }
 
@@ -92,7 +92,7 @@ const SliderBannerModal = ({ open, onClose, banner, onSuccess }) => {
       onClose();
     } catch (error) {
       console.error("Erro ao salvar banner:", error);
-      toast.error("Não foi possível salvar o banner");
+      toast.error("No se pudo guardar el banner");
     } finally {
       setSaving(false);
     }
@@ -132,7 +132,7 @@ const SliderBannerModal = ({ open, onClose, banner, onSuccess }) => {
           Cancelar
         </Button>
         <Button color="primary" variant="contained" onClick={handleSubmit} disabled={saving}>
-          {banner ? "Salvar" : "Cadastrar"}
+          {banner ? "Guardar" : "Registrar"}
         </Button>
       </DialogActions>
     </Dialog>

@@ -321,7 +321,7 @@ const ClientModal = ({ open, onClose, clientId, onSuccess }) => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  label="Endereço"
+                  label="Dirección"
                   name="address"
                   value={form.address}
                   onChange={handleChange}

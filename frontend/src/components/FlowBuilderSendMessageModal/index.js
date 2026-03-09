@@ -275,7 +275,7 @@ const FlowBuilderSendMessageModal = ({
           variant="contained"
           startIcon={<SaveIcon />}
         >
-          {isEditing ? "Atualizar" : "Salvar"}
+          {isEditing ? "Actualizar" : "Guardar"}
         </Button>
       </DialogActions>
     </Dialog>

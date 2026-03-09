@@ -291,7 +291,7 @@ const Automations = () => {
         </Box>
         <Box className={classes.headerRight}>
           <TextField
-            placeholder="Buscar disparo..."
+            placeholder="Buscar envío..."
             variant="outlined"
             size="small"
             className={classes.searchField}

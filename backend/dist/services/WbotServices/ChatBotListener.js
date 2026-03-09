@@ -805,8 +805,8 @@ const sayChatbot = async (queueId, wbot, ticket, contact, msg, ticketTraking) =>
     // //                           totalCount_pending = response?.data?.totalCount;
     // //                           bankSlipUrl = response?.data?.data[0]?.bankSlipUrl;
     // //                           dueDate_pending_corrigida = dueDate_pending?.split('-')?.reverse()?.join('/');
-    // //                           value_pending_corrigida = value_pending.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
-    // //                           const bodyBoleto = `Segue a segunda-via da sua Fatura!\n\n*Fatura:* ${invoiceNumber_pending}\n*Nome:* ${nome}\n*Valor:* R$ ${value_pending_corrigida}\n*Data Vencimento:* ${dueDate_pending_corrigida}\n*Descrição:* ${description_pending}\n*Link:* ${invoiceUrl_pending}`
+    // //                           value_pending_corrigida = value_pending.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+    // //                           const bodyBoleto = `Segue a segunda-via da sua Fatura!\n\n*Fatura:* ${invoiceNumber_pending}\n*Nome:* ${nome}\n*Valor:* $ ${value_pending_corrigida}\n*Data Vencimento:* ${dueDate_pending_corrigida}\n*Descrição:* ${description_pending}\n*Link:* ${invoiceUrl_pending}`
     // //                           await sleep(2000)
     // //                           await sendMessage(wbot, contact, ticket, bodyBoleto);
     // //                           //GET DADOS PIX
@@ -956,11 +956,11 @@ const sayChatbot = async (queueId, wbot, ticket, contact, msg, ticketTraking) =>
     // //                         invoiceNumber_overdue = response?.data?.data[0]?.invoiceNumber;
     // //                         bankSlipUrl = response?.data?.data[0]?.bankSlipUrl;
     // //                         dueDate_overdue_corrigida = dueDate_overdue?.split('-')?.reverse()?.join('/');
-    // //                         value_overdue_corrigida = value_overdue.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
+    // //                         value_overdue_corrigida = value_overdue.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
     // //                         const body = `Você tem *${totalCount_overdue}* fatura(s) vencida(s)! \nVou te enviar. Por favor aguarde!`;
     // //                         await sleep(2000)
     // //                         await sendMessage(wbot, contact, ticket, body);
-    // //                         const bodyBoleto = `Segue a segunda-via da sua Fatura!\n\n*Fatura:* ${invoiceNumber_overdue}\n*Nome:* ${nome}\n*Valor:* R$ ${value_overdue_corrigida}\n*Data Vencimento:* ${dueDate_overdue_corrigida}\n*Descrição:* ${description_overdue}\n*Link:* ${invoiceUrl_overdue}`
+    // //                         const bodyBoleto = `Segue a segunda-via da sua Fatura!\n\n*Fatura:* ${invoiceNumber_overdue}\n*Nome:* ${nome}\n*Valor:* $ ${value_overdue_corrigida}\n*Data Vencimento:* ${dueDate_overdue_corrigida}\n*Descrição:* ${description_overdue}\n*Link:* ${invoiceUrl_overdue}`
     // //                         await sleep(2000)
     // //                         await sendMessage(wbot, contact, ticket, bodyBoleto);
     // //                         //GET DADOS PIX

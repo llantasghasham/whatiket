@@ -92,7 +92,7 @@ const sendMessageLink = async (
     sentMessage = await wbot.sendMessage(
       `${contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`,
       {
-        text: formatBody('\u200eNão consegui enviar o PDF, tente novamente!', ticket)
+        text: formatBody('\u200eNo se pudo enviar el PDF, intente de nuevo.', ticket)
       }
     );
   }
@@ -122,7 +122,7 @@ const sendMessageImage = async (
     sentMessage = await wbot.sendMessage(
       `${contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`,
       {
-        text: formatBody('Não consegui enviar o PDF, tente novamente!', ticket)
+        text: formatBody('No se pudo enviar el PDF, intente de nuevo.', ticket)
       }
     );
   }
@@ -1026,7 +1026,7 @@ export const sayChatbot = async (
   // //                           bankSlipUrl = response?.data?.data[0]?.bankSlipUrl;
 
   // //                           dueDate_pending_corrigida = dueDate_pending?.split('-')?.reverse()?.join('/');
-  // //                           value_pending_corrigida = value_pending.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
+  // //                           value_pending_corrigida = value_pending.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 
   // //                           const bodyBoleto = `Segue a segunda-via da sua Fatura!\n\n*Fatura:* ${invoiceNumber_pending}\n*Nome:* ${nome}\n*Valor:* $ ${value_pending_corrigida}\n*Data Vencimento:* ${dueDate_pending_corrigida}\n*Descrição:* ${description_pending}\n*Link:* ${invoiceUrl_pending}`
   // //                           await sleep(2000)
@@ -1203,7 +1203,7 @@ export const sayChatbot = async (
   // //                         invoiceNumber_overdue = response?.data?.data[0]?.invoiceNumber;
   // //                         bankSlipUrl = response?.data?.data[0]?.bankSlipUrl;
   // //                         dueDate_overdue_corrigida = dueDate_overdue?.split('-')?.reverse()?.join('/');
-  // //                         value_overdue_corrigida = value_overdue.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
+  // //                         value_overdue_corrigida = value_overdue.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
 
   // //                         const body = `Você tem *${totalCount_overdue}* fatura(s) vencida(s)! \nVou te enviar. Por favor aguarde!`;
   // //                         await sleep(2000)

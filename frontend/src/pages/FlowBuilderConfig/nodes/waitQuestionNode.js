@@ -301,7 +301,7 @@ export default memo(({ data, isConnectable, id }) => {
             <Timer style={{ width: "14px", height: "14px", color: "#f59e0b" }} />
             <strong>Timeout:</strong> {formatTimeout(data.timeoutTime || 60, data.timeoutUnit || "minutes")}
             <span style={{ marginLeft: "8px", color: "#92400e" }}>
-              → {data.timeoutAction === "close" ? "Fechar" : data.timeoutAction === "transfer" ? "Transferir" : "Continuar"}
+              → {data.timeoutAction === "close" ? "Cerrar" : data.timeoutAction === "transfer" ? "Transferir" : "Continuar"}
             </span>
           </div>
         </div>

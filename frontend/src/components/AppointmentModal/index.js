@@ -182,7 +182,7 @@ const AppointmentModal = (props) => {
       return;
     }
     if (!scheduleId) {
-      toast.error("Selecione uma agenda");
+      toast.error("Seleccione una agenda");
       return;
     }
     
@@ -340,7 +340,7 @@ const AppointmentModal = (props) => {
                 <MenuItem value="confirmed">Confirmado</MenuItem>
                 <MenuItem value="completed">Concluído</MenuItem>
                 <MenuItem value="cancelled">Cancelado</MenuItem>
-                <MenuItem value="no_show">Não compareceu</MenuItem>
+                <MenuItem value="no_show">No asistió</MenuItem>
               </TextField>
             </Grid>
           )}
@@ -356,7 +356,7 @@ const AppointmentModal = (props) => {
           variant="contained"
           disabled={submitting}
         >
-          {submitting ? <CircularProgress size={24} /> : appointment ? "Salvar" : "Criar"}
+          {submitting ? <CircularProgress size={24} /> : appointment ? "Guardar" : "Crear"}
         </Button>
       </DialogActions>
     </Dialog>

@@ -710,7 +710,7 @@ const ServiceOrderModal = ({ open, onClose, onSaved, orderId = null }) => {
                 <TextField
                   variant="outlined"
                   size="small"
-                  placeholder="Buscar no catálogo"
+                  placeholder="Buscar en catálogo"
                   value={catalogSearch}
                   onChange={event => setCatalogSearch(event.target.value)}
                   InputProps={{

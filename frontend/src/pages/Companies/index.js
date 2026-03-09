@@ -178,7 +178,7 @@ const Companies = () => {
     useEffect(() => {
         async function fetchData() {
             if (!user.super) {
-                toast.error("Esta empresa não possui permissão para acessar essa página! Estamos lhe redirecionando.");
+                toast.error("Esta empresa no tiene permiso para acceder a esta página. Redirigiendo.");
                 setTimeout(() => {
                     history.push(`/`)
                 }, 1000);
@@ -346,31 +346,31 @@ const Companies = () => {
     };
 
     const renderWhatsapp = (row) => {
-        return row.useWhatsapp === false ? "Não" : "Sim";
+        return row.useWhatsapp === false ? "No" : "Sí";
     };
 
     const renderFacebook = (row) => {
-        return row.useFacebook === false ? "Não" : "Sim";
+        return row.useFacebook === false ? "No" : "Sí";
     };
 
     const renderInstagram = (row) => {
-        return row.useInstagram === false ? "Não" : "Sim";
+        return row.useInstagram === false ? "No" : "Sí";
     };
 
     const renderCampaigns = (row) => {
-        return row.useCampaigns === false ? "Não" : "Sim";
+        return row.useCampaigns === false ? "No" : "Sí";
     };
 
     const renderSchedules = (row) => {
-        return row.useSchedules === false ? "Não" : "Sim";
+        return row.useSchedules === false ? "No" : "Sí";
     };
 
     const renderInternalChat = (row) => {
-        return row.useInternalChat === false ? "Não" : "Sim";
+        return row.useInternalChat === false ? "No" : "Sí";
     };
 
     const renderExternalApi = (row) => {
-        return row.useExternalApi === false ? "Não" : "Sim";
+        return row.useExternalApi === false ? "No" : "Sí";
     };
 
     const rowStyle = (record) => {
@@ -459,9 +459,9 @@ const Companies = () => {
                     ) : companies.length === 0 ? (
                         <Grid item xs={12}>
                             <div className={classes.emptyState}>
-                                <Typography variant="h6">Nenhuma empresa encontrada</Typography>
+                                <Typography variant="h6">Ninguna empresa encontrada</Typography>
                                 <Typography variant="body2">
-                                    Utilize o botão acima para cadastrar uma nova empresa.
+                                    Use el botón de arriba para registrar una nueva empresa.
                                 </Typography>
                             </div>
                         </Grid>

@@ -112,7 +112,7 @@ const CreateFinanceiroDespesaService = async ({
     });
 
     if (!fornecedor) {
-      throw new AppError("Fornecedor não encontrado.");
+      throw new AppError("Proveedor no encontrado.");
     }
   }
 
@@ -127,7 +127,7 @@ const CreateFinanceiroDespesaService = async ({
     });
 
     if (!categoria) {
-      throw new AppError("Categoria não encontrada.");
+      throw new AppError("Categoría no encontrada.");
     }
 
     if (categoria.tipo !== "despesa") {

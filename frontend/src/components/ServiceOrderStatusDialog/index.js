@@ -67,7 +67,7 @@ const ServiceOrderStatusDialog = ({ open, order, onClose, onSaved }) => {
       <DialogActions>
         <Button onClick={onClose}>Cancelar</Button>
         <Button color="primary" variant="contained" onClick={handleSubmit} disabled={saving || !status}>
-          {saving ? "Salvando..." : "Salvar"}
+          {saving ? "Guardando..." : "Guardar"}
         </Button>
       </DialogActions>
     </Dialog>

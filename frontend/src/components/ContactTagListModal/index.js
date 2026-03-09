@@ -498,7 +498,7 @@ const ContactTagListModal = ({ open, onClose, tag }) => {
               <div className={classes.emptyState}>
                 <PersonIcon className={classes.emptyIcon} />
                 <Typography variant="h6" className={classes.emptyText}>
-                  {searchTerm ? "Nenhum contato correspondente encontrado" : "Nenhum contato nesta tag"}
+                  {searchTerm ? "Ningún contacto coincidente encontrado" : "Ningún contacto en esta etiqueta"}
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
                   {searchTerm 

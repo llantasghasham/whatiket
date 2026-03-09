@@ -193,7 +193,7 @@ const ProjectDetails = () => {
       });
       setFaturas(data.faturamentos || data.records || data.faturas || []);
     } catch (err) {
-      console.error("Erro ao buscar faturas:", err);
+      console.error("Error al buscar facturas:", err);
     }
   };
 
@@ -205,8 +205,8 @@ const ProjectDetails = () => {
   }, [projectId]);
 
   const formatDate = (dateStr) => {
-    if (!dateStr) return "Não definido";
-    return new Date(dateStr).toLocaleDateString("pt-BR");
+    if (!dateStr) return "No definido";
+    return new Date(dateStr).toLocaleDateString("es");
   };
 
   const getProjectDays = () => {
@@ -260,7 +260,7 @@ const ProjectDetails = () => {
 
   const formatCurrency = (value) => {
     if (!value) return "$ 0.00";
-    return Number(value).toLocaleString("pt-BR", {
+    return Number(value).toLocaleString("es", {
       style: "currency",
       currency: "USD"
     });
@@ -278,8 +278,8 @@ const ProjectDetails = () => {
 
   const getFaturaStatusLabel = (status) => {
     const labels = {
-      aberta: "Aberta",
-      paga: "Paga",
+      aberta: "Abierta",
+      paga: "Pagada",
       vencida: "Vencida",
       cancelada: "Cancelada"
     };
@@ -365,7 +365,7 @@ const ProjectDetails = () => {
                 <BusinessIcon fontSize="small" />
                 <span className={classes.infoLabel}>Cliente:</span>
                 <span className={classes.infoValue}>
-                  {project.client?.name || "Não definido"}
+                  {project.client?.name || "No definido"}
                   {project.client?.companyName && ` (${project.client.companyName})`}
                 </span>
               </Box>
@@ -470,7 +470,7 @@ const ProjectDetails = () => {
 
               {tasks.length === 0 ? (
                 <Box className={classes.emptyState}>
-                  <Typography>Nenhuma tarefa cadastrada</Typography>
+                  <Typography>Ninguna tarea registrada</Typography>
                 </Box>
               ) : (
                 <Box mt={2}>
@@ -490,7 +490,7 @@ const ProjectDetails = () => {
                   ))}
                   {tasks.length > 5 && (
                     <Typography variant="body2" color="textSecondary" align="center" style={{ marginTop: 8 }}>
-                      +{tasks.length - 5} tarefas
+                      +{tasks.length - 5} tareas
                     </Typography>
                   )}
                 </Box>
@@ -504,7 +504,7 @@ const ProjectDetails = () => {
             <CardContent>
               <Typography className={classes.cardTitle}>
                 <PeopleIcon color="primary" />
-                Equipe ({users.length})
+                Equipo ({users.length})
               </Typography>
               
               {users.length === 0 ? (
@@ -531,19 +531,19 @@ const ProjectDetails = () => {
             <CardContent>
               <Typography className={classes.cardTitle}>
                 <BuildIcon color="primary" />
-                Serviços ({services.length})
+                Servicios ({services.length})
               </Typography>
               
               {services.length === 0 ? (
                 <Box className={classes.emptyState}>
-                  <Typography variant="body2">Nenhum serviço vinculado</Typography>
+                  <Typography variant="body2">Ningún servicio vinculado</Typography>
                 </Box>
               ) : (
                 <TableContainer>
                   <Table size="small">
                     <TableHead>
                       <TableRow>
-                        <TableCell>Serviço</TableCell>
+                        <TableCell>Servicio</TableCell>
                         <TableCell align="right">Qtd</TableCell>
                       </TableRow>
                     </TableHead>
@@ -565,19 +565,19 @@ const ProjectDetails = () => {
             <CardContent>
               <Typography className={classes.cardTitle}>
                 <ShoppingCartIcon color="primary" />
-                Produtos ({products.length})
+                Productos ({products.length})
               </Typography>
               
               {products.length === 0 ? (
                 <Box className={classes.emptyState}>
-                  <Typography variant="body2">Nenhum produto vinculado</Typography>
+                  <Typography variant="body2">Ningún producto vinculado</Typography>
                 </Box>
               ) : (
                 <TableContainer>
                   <Table size="small">
                     <TableHead>
                       <TableRow>
-                        <TableCell>Produto</TableCell>
+                        <TableCell>Producto</TableCell>
                         <TableCell align="right">Qtd</TableCell>
                       </TableRow>
                     </TableHead>
@@ -599,7 +599,7 @@ const ProjectDetails = () => {
             <CardContent>
               <Typography className={classes.cardTitle}>
                 <ReceiptIcon color="primary" />
-                Faturas ({faturas.length})
+                Facturas ({faturas.length})
               </Typography>
               
               {faturas.length === 0 ? (
@@ -611,7 +611,7 @@ const ProjectDetails = () => {
                   <Table size="small">
                     <TableHead>
                       <TableRow>
-                        <TableCell>Descrição</TableCell>
+                        <TableCell>Descripción</TableCell>
                         <TableCell align="right">Valor</TableCell>
                         <TableCell align="center">Status</TableCell>
                       </TableRow>

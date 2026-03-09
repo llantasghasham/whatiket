@@ -83,7 +83,7 @@ const EditMessageModal = ({ open, onClose, onSave, initialMessage }) => {
     <Dialog open={open} onClose={handleClose} className={classes.dialog}>
       <DialogTitle className={classes.title}>
         <EditIcon />
-        Editar mensagem
+        Editar mensaje
       </DialogTitle>
       <DialogContent className={classes.content}>
         <TextField
@@ -108,7 +108,7 @@ const EditMessageModal = ({ open, onClose, onSave, initialMessage }) => {
           className={classes.saveButton}
           disabled={!message.trim()}
         >
-          Salvar
+          Guardar
         </Button>
       </DialogActions>
     </Dialog>

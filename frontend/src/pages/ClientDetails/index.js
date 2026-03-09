@@ -691,7 +691,7 @@ const ClientDetails = () => {
         <TextField
           variant="outlined"
           size="small"
-          placeholder="Buscar por descrição ou status"
+          placeholder="Buscar por descripción o estado"
           value={faturasSearchInput}
           onChange={(event) => setFaturasSearchInput(event.target.value)}
           className={classes.filterField}

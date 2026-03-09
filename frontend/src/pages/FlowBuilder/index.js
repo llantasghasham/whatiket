@@ -522,7 +522,7 @@ const FlowBuilder = () => {
                 {importFile ? `${importFile.name}` : "Escolha um arquivo JSON"}
               </Typography>
               <Typography variant="body2" style={{ color: "#666", marginTop: 4 }}>
-                {importFile ? "Arquivo selecionado" : "Clique para selecionar"}
+                {importFile ? "Archivo seleccionado" : "Clic para seleccionar"}
               </Typography>
             </label>
           </Box>

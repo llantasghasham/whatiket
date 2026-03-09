@@ -34,7 +34,7 @@ const footerColumns = [
       "Sobre nós",
       "Carreiras",
       "Parceiros",
-      "Contato"
+      "Contacto"
     ]
   }
 ];

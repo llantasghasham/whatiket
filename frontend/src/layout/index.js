@@ -78,6 +78,8 @@ import TuneIcon from "@material-ui/icons/Tune";
 import MenuIcon from "@material-ui/icons/Menu";
 import CloseIcon from "@material-ui/icons/Close";
 import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
+import Brightness4Icon from "@material-ui/icons/Brightness4";
+import Brightness7Icon from "@material-ui/icons/Brightness7";
 import FolderIcon from "@material-ui/icons/Folder";
 import ShareIcon from "@material-ui/icons/Share";
 import ChatIcon from "@material-ui/icons/Chat";
@@ -97,6 +99,7 @@ import GavelIcon from "@material-ui/icons/Gavel";
 import DirectionsCarIcon from "@material-ui/icons/DirectionsCar";
 
 import { AuthContext } from "../context/Auth/AuthContext";
+import ColorModeContext from "./themeContext";
 import { usePlanPermissions } from "../context/PlanPermissionsContext";
 import { usePagePermissions } from "../context/PagePermissionsContext";
 import NotificationsVolume from "../components/NotificationsVolume";
@@ -1443,6 +1446,17 @@ const LoggedInLayout = ({ children }) => {
 
           {/* Seção Direita */}
           <div className={classes.headerRight}>
+            {/* Modo oscuro / claro */}
+            <Tooltip title={theme.palette.type === "dark" ? (i18n.t("layout.darkMode.light") || "Modo claro") : (i18n.t("layout.darkMode.dark") || "Modo oscuro")}>
+              <IconButton
+                className={classes.iconButton}
+                onClick={colorMode.toggleColorMode}
+                aria-label={theme.palette.type === "dark" ? "Modo claro" : "Modo oscuro"}
+              >
+                {theme.palette.type === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
+              </IconButton>
+            </Tooltip>
+
             {/* Botão Refresh */}
             <IconButton
               className={classes.iconButton}

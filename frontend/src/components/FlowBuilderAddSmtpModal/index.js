@@ -99,7 +99,7 @@ const FlowBuilderAddSmtpModal = ({ open, onSave, data, onUpdate, close }) => {
 
   useEffect(() => {
     if (open === "edit") {
-      setLabels({ title: "Editar envio SMTP", btn: "Salvar" });
+      setLabels({ title: "Editar envío SMTP", btn: "Guardar" });
       setFormData(mergedData);
       setActiveModal(true);
     } else if (open === "create") {

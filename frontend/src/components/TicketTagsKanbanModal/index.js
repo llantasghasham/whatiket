@@ -266,7 +266,7 @@ const TicketTagsKanbanModal = ({ open, onClose, contact, ticket, onUpdate }) => 
         setContactDetails(data);
       } catch (err) {
         console.error("Erro ao salvar informações adicionais:", err);
-        toast.error("Não foi possível salvar as informações adicionais.");
+        toast.error("No se pudo guardar la información adicional.");
       } finally {
         setExtraInfoSaving(false);
         autoSaveTimeoutRef.current = null;
@@ -342,7 +342,7 @@ const TicketTagsKanbanModal = ({ open, onClose, contact, ticket, onUpdate }) => 
       }
     } catch (err) {
       console.error("Erro ao salvar valor do ticket:", err);
-      toast.error("Não foi possível salvar o valor.");
+      toast.error("No se pudo guardar el valor.");
       setLeadValue(ticket?.leadValue || "");
     } finally {
       setSavingValue(false);
@@ -501,11 +501,11 @@ const TicketTagsKanbanModal = ({ open, onClose, contact, ticket, onUpdate }) => 
   );
 
   const formatDate = (value) => {
-    if (!value) return "Não informado";
+    if (!value) return "No informado";
     try {
       return new Date(value).toLocaleDateString("pt-BR");
     } catch {
-      return "Não informado";
+      return "No informado";
     }
   };
 
@@ -751,7 +751,7 @@ const TicketTagsKanbanModal = ({ open, onClose, contact, ticket, onUpdate }) => 
     return [
       {
         label: "CPF/CNPJ",
-        value: resolvedContact?.cpfCnpj || "Não informado",
+        value: resolvedContact?.cpfCnpj || "No informado",
       },
       {
         label: "Data aniversário",
@@ -759,11 +759,11 @@ const TicketTagsKanbanModal = ({ open, onClose, contact, ticket, onUpdate }) => 
       },
       {
         label: "Endereço",
-        value: resolvedContact?.address || "Não informado",
+        value: resolvedContact?.address || "No informado",
       },
       {
         label: "Email",
-        value: resolvedContact?.email || "Não informado",
+        value: resolvedContact?.email || "No informado",
         isEmail: Boolean(resolvedContact?.email),
       },
     ];
@@ -784,7 +784,7 @@ const TicketTagsKanbanModal = ({ open, onClose, contact, ticket, onUpdate }) => 
       );
     } catch (err) {
       console.error("Erro ao alternar chatbot:", err);
-      toast.error("Não foi possível atualizar o chatbot.");
+      toast.error("No se pudo actualizar el chatbot.");
     } finally {
       setBotToggleLoading(false);
     }
@@ -807,7 +807,7 @@ const TicketTagsKanbanModal = ({ open, onClose, contact, ticket, onUpdate }) => 
       );
     } catch (err) {
       console.error("Erro ao alternar áudio:", err);
-      toast.error("Não foi possível atualizar a permissão de áudio.");
+      toast.error("No se pudo actualizar el permiso de audio.");
     } finally {
       setAudioToggleLoading(false);
     }
@@ -829,7 +829,7 @@ const TicketTagsKanbanModal = ({ open, onClose, contact, ticket, onUpdate }) => 
       );
     } catch (err) {
       console.error("Erro ao alterar status do contato:", err);
-      toast.error("Não foi possível alterar o status do contato.");
+      toast.error("No se pudo cambiar el estado del contacto.");
     } finally {
       setActiveToggleLoading(false);
     }
@@ -961,7 +961,7 @@ const TicketTagsKanbanModal = ({ open, onClose, contact, ticket, onUpdate }) => 
               onClick={handleSaveLeadValue}
               disabled={savingValue}
             >
-              {savingValue ? "Salvando..." : "Salvar"}
+              {savingValue ? "Guardando..." : "Guardar"}
             </Button>
           </Box>
         </Box>
@@ -1148,7 +1148,7 @@ const TicketTagsKanbanModal = ({ open, onClose, contact, ticket, onUpdate }) => 
                   fontWeight: 600,
                 }}
               >
-                Adicionar informação
+                Agregar información
               </Button>
             </Box>
           </Box>

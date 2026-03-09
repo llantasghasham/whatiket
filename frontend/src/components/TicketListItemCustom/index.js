@@ -43,6 +43,9 @@ import { useSystemAlert } from "../SystemAlert";
 import { Done, HighlightOff, Replay, SwapHoriz, LocalOffer, DeleteOutline, Label } from "@material-ui/icons";
 import useCompanySettings from "../../hooks/useSettings/companySettings";
 import TicketTagsKanbanModal from "../TicketTagsKanbanModal";
+import { getBackendUrl } from "../../config";
+
+const backendUrl = getBackendUrl();
 
 const useStyles = makeStyles((theme) => ({
   ticket: {
@@ -422,9 +425,9 @@ const TicketListItemCustom = ({ setTabOpen, ticket }) => {
   const handleDeleteTicket = async (id) => {
     const confirmed = await showConfirm({
       type: "error",
-      title: "Excluir Ticket",
-      message: "Tem certeza que deseja excluir este ticket? O histórico será apagado e não poderá ser recuperado.",
-      confirmText: "Sim, excluir",
+      title: "Eliminar ticket",
+      message: "¿Está seguro de que desea eliminar este ticket? El historial se borrará y no podrá recuperarse.",
+      confirmText: "Sí, eliminar",
       cancelText: "Cancelar",
     });
 
@@ -645,7 +648,7 @@ const TicketListItemCustom = ({ setTabOpen, ticket }) => {
                 {ticket.lastMessage ? (
                   <>
                     {ticket.lastMessage.includes("fb.me") ? (
-                      <MarkdownWrapper>Clique de Anúncio</MarkdownWrapper>
+                      <MarkdownWrapper>Clic de anuncio</MarkdownWrapper>
                     ) : ticket.lastMessage.includes("data:image/png;base64") ? (
                       <MarkdownWrapper>Localização</MarkdownWrapper>
                     ) : (
@@ -701,7 +704,13 @@ const TicketListItemCustom = ({ setTabOpen, ticket }) => {
                       : i18n.t("tickets.withoutQueue")}
                   </span>
                   {ticket?.user && (
-                    <span className={classes.userTagText}>
+                    <span className={classes.userTagText} style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
+                      <Avatar
+                        src={ticket.user.profileImage && ticket.user.companyId ? `${backendUrl}/public/company${ticket.user.companyId}/user/${ticket.user.profileImage}` : null}
+                        style={{ width: 16, height: 16, fontSize: 10 }}
+                      >
+                        {(!ticket.user.profileImage && ticket.user.name) ? ticket.user.name.charAt(0).toUpperCase() : null}
+                      </Avatar>
                       {ticket.user?.name}
                     </span>
                   )}
@@ -811,7 +820,7 @@ const TicketListItemCustom = ({ setTabOpen, ticket }) => {
                   )}
                 <MenuItem onClick={() => { handleCloseMenu(); handleDeleteTicket(ticket.id); }}>
                   <DeleteOutline fontSize="small" style={{ marginRight: 8, color: "#E74C3C" }} />
-                  Excluir ticket
+                  Eliminar ticket
                 </MenuItem>
               </Menu>
             </>
@@ -908,7 +917,7 @@ const TicketListItemCustom = ({ setTabOpen, ticket }) => {
                 onClick={() => handleDeleteTicket(ticket.id)}
                 variant="contained"
               >
-                <Tooltip title="Excluir ticket">
+                <Tooltip title="Eliminar ticket">
                   <DeleteOutline fontSize="small" />
                 </Tooltip>
               </ButtonWithSpinner>

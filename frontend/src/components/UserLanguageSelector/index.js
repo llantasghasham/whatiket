@@ -7,12 +7,12 @@ import { AuthContext } from "../../context/Auth/AuthContext";
 import toastError from "../../errors/toastError";
 import api from "../../services/api";
 
-// Default languages (fallback if API fails): Español, English, Português, العربية
+// Orden: Español (por defecto), Libanés, Português, English. Siempre visibles en /atendimentos y resto.
 const defaultLanguages = [
     { code: "es", name: "Español" },
-    { code: "en", name: "English" },
-    { code: "ar", name: "العربية (لبنان)" },
+    { code: "ar", name: "العربية (لبنان) / Libanés" },
     { code: "pt-BR", name: "Português" },
+    { code: "en", name: "English" },
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -53,15 +53,15 @@ const UserLanguageSelector = () => {
         async function fetchLanguages() {
             try {
                 const { data } = await api.get("/translations/languages");
-                if (data && data.length > 0) {
-                    const activeLanguages = data.filter(l => l.active);
-                    // Solo usar lista del backend si hay más de 1 idioma; si no, mantener los 4 por defecto para que siempre se vea el icono
+                if (data && Array.isArray(data) && data.length > 1) {
+                    const activeLanguages = data.filter(l => l && (l.active !== false));
+                    // Solo usar lista del backend si hay 2+ idiomas; si no, mantener los 4 por defecto (es, ar, pt-BR, en)
                     if (activeLanguages.length > 1) {
-                        setLanguages(activeLanguages);
+                        setLanguages(activeLanguages.map(l => ({ code: l.code || l.id, name: l.name || l.code || "" })));
                     }
                 }
             } catch (err) {
-                console.log("Error loading languages, using defaults");
+                // Sin API o error: se usan defaultLanguages (Español, Libanés, Português, English)
             }
         }
         fetchLanguages();
@@ -100,22 +100,22 @@ const UserLanguageSelector = () => {
         try {
             await loadTranslationsForLanguage(language);
             await i18n.changeLanguage(language);
-            await api.put(`/users/${user.id}`, { language });
+            if (user && user.id) {
+                await api.put(`/users/${user.id}`, { language });
+            }
         } catch (err) {
             toastError(err);
         }
-
         handleCloseLanguageMenu();
     };
 
     const currentLang = i18n.language || "es";
-    const showSelector = languages.length > 1;
-
-    if (!showSelector) return null;
+    const isActiveLang = (code) => currentLang === code || (currentLang && currentLang.startsWith(code + "-")) || (code && code.startsWith(currentLang.split("-")[0]));
+    const displayLanguages = languages.length > 1 ? languages : defaultLanguages;
 
     return (
         <>
-            <Tooltip title="Idioma" placement="bottom">
+            <Tooltip title={i18n.t("layout.language.tooltip") || "Idioma"} placement="bottom">
                 <IconButton
                     className={classes.langButton}
                     onClick={handleOpenLanguageMenu}
@@ -129,11 +129,11 @@ const UserLanguageSelector = () => {
                 open={Boolean(langueMenuAnchorEl)}
                 onClose={handleCloseLanguageMenu}
             >
-                {languages.map((lang) => (
+                {displayLanguages.map((lang) => (
                     <MenuItem
                         key={lang.code}
                         onClick={() => handleChangeLanguage(lang.code)}
-                        className={`${classes.menuItem} ${currentLang === lang.code ? "active" : ""}`}
+                        className={`${classes.menuItem} ${isActiveLang(lang.code) ? "active" : ""}`}
                     >
                         {lang.name}
                     </MenuItem>

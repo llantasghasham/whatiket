@@ -14,7 +14,7 @@ const DeleteFinanceiroPagamentoDespesaService = async (
     });
 
     if (!record) {
-      throw new AppError("Pagamento não encontrado", 404);
+      throw new AppError("Pago no encontrado", 404);
     }
 
     await record.destroy();

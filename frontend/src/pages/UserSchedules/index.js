@@ -644,7 +644,7 @@ const UserSchedules = () => {
         <DialogActions>
           <Button onClick={handleCloseModal}>Cancelar</Button>
           <Button onClick={handleSubmit} color="primary" variant="contained">
-            {selectedSchedule ? "Salvar" : "Criar"}
+            {selectedSchedule ? "Guardar" : "Crear"}
           </Button>
         </DialogActions>
       </Dialog>

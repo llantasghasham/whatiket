@@ -236,7 +236,7 @@ const Helps = () => {
             Ir para Documentação
           </Button>
           <TextField
-            placeholder="Buscar vídeo..."
+            placeholder="Buscar video..."
             variant="outlined"
             size="small"
             value={searchParam}

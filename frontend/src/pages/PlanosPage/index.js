@@ -345,7 +345,7 @@ const PlanosPage = () => {
         </Box>
         <Box className={classes.headerRight}>
           <TextField
-            placeholder="Buscar plano..."
+            placeholder="Buscar plan..."
             variant="outlined"
             size="small"
             className={classes.searchField}
@@ -426,7 +426,7 @@ const PlanosPage = () => {
                     <TableCell align="center">
                       <Chip
                         size="small"
-                        label={row.isPublic ? "Sim" : "Não"}
+                        label={row.isPublic ? "Sí" : "No"}
                         className={classes.statusChip}
                         style={{
                           backgroundColor: row.isPublic ? "#dcfce7" : "#fee2e2",

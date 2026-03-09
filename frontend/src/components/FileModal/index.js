@@ -136,8 +136,8 @@ const useStyles = makeStyles((theme) => ({
 const FileListSchema = Yup.object().shape({
     name: Yup.string()
         .min(3, "Nome muito curto")
-        .required("Obrigatório"),
-    message: Yup.string().required("Obrigatório"),
+        .required("Requerido"),
+    message: Yup.string().required("Requerido"),
 });
 
 const FilesModal = ({ open, onClose, fileListId, reload }) => {

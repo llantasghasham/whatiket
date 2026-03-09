@@ -289,7 +289,7 @@ const Tags = () => {
         </div>
         <MainHeaderButtonsWrapper className={classes.headerButtonsWrapper}>
           <TextField
-            placeholder="Buscar quadros do Kanban..."
+            placeholder="Buscar tableros de Kanban..."
             type="search"
             value={searchParam}
             onChange={handleSearch}

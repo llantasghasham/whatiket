@@ -36,7 +36,7 @@ const SendWhatsAppMessage = async ({
   /// verificar se a mensagem é vazia, para não enviar mensagem vazia
   if (body === "" || body === undefined || formatBody(body, ticket) === "") {
     console.log("== BODY SEND MESSAGE == vazio");
-    console.log("Mensagem vazia, não enviar");
+    console.log("Mensaje vacío, no enviar");
     return {} as WAMessage;
   }
 

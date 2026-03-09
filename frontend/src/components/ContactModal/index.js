@@ -404,7 +404,7 @@ const ContactModal = ({ open, onClose, contactId, initialValues, onSave }) => {
                                   color="secondary"
                                   onClick={() => handleDeleteFile(file)}
                                 >
-                                  Excluir
+                                  Eliminar
                                 </Button>
                               </Box>
                             </Box>
@@ -512,7 +512,7 @@ const ContactModal = ({ open, onClose, contactId, initialValues, onSave }) => {
                     <Field
                       as={TextField}
                       type="date"
-                      label="Data comemorativa"
+                      label="Fecha conmemorativa"
                       name="anniversary"
                       fullWidth
                       InputLabelProps={{ shrink: true }}

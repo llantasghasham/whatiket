@@ -393,7 +393,7 @@ const Tags = () => {
                 <TableRow>
                   <TableCell colSpan={5}>
                     <Box className={classes.emptyState}>
-                      <Typography>Nenhuma tag encontrada</Typography>
+                      <Typography>Ninguna etiqueta encontrada</Typography>
                     </Box>
                   </TableCell>
                 </TableRow>

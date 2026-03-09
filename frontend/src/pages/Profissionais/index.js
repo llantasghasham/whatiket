@@ -125,7 +125,7 @@ const ProfissionaisPage = () => {
       setProfessionals(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Erro ao carregar profissionais:", error);
-      toast.error("Não foi possível carregar os profissionais");
+      toast.error("No se pudo cargar los profesionales");
     } finally {
       setLoading(false);
     }
@@ -154,7 +154,7 @@ const ProfissionaisPage = () => {
       fetchProfessionals();
     } catch (error) {
       console.error("Erro ao remover profissional:", error);
-      toast.error("Não foi possível remover o profissional");
+      toast.error("No se pudo eliminar al profesional");
     } finally {
       setDeleteDialogOpen(false);
       setProfessionalToDelete(null);
@@ -212,7 +212,7 @@ const ProfissionaisPage = () => {
             color="primary"
             onClick={() => handleOpenModal()}
           >
-            Novo Profissional
+            Nuevo profesional
           </Button>
         </MainHeaderButtonsWrapper>
       </MainHeader>
@@ -220,14 +220,14 @@ const ProfissionaisPage = () => {
       <Paper className={classes.mainPaper} variant="outlined">
         <Box className={classes.searchWrapper}>
           <TextField
-            label="Buscar profissional"
+            label="Buscar profesional"
             variant="outlined"
             size="small"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
           <Chip
-            label={`${filteredProfessionals.length} profissional${filteredProfessionals.length === 1 ? "" : "is"}`}
+            label={`${filteredProfessionals.length} profesional${filteredProfessionals.length === 1 ? "" : "es"}`}
             color="primary"
             variant="outlined"
           />
@@ -240,9 +240,9 @@ const ProfissionaisPage = () => {
         ) : filteredProfessionals.length === 0 ? (
           <Box className={classes.emptyState}>
             <PeopleIcon style={{ fontSize: 48, marginBottom: 16 }} />
-            <Typography variant="h6">Nenhum profissional cadastrado</Typography>
+            <Typography variant="h6">Ningún profesional registrado</Typography>
             <Typography variant="body2">
-              Clique em "Novo Profissional" para adicionar o primeiro membro da equipe.
+              Haga clic en "Nuevo profesional" para agregar el primer miembro del equipo.
             </Typography>
           </Box>
         ) : (

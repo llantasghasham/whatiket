@@ -277,7 +277,7 @@ const ContactDrawer = ({ open, handleDrawerClose, contact, ticket, loading }) =>
 			toast.success("Valor do ticket atualizado!");
 		} catch (err) {
 			console.error(err);
-			toast.error("Não foi possível salvar o valor.");
+			toast.error("No se pudo guardar el valor.");
 			setLeadValue(ticket?.leadValue ?? "");
 		} finally {
 			setSavingLeadValue(false);
@@ -294,7 +294,7 @@ const ContactDrawer = ({ open, handleDrawerClose, contact, ticket, loading }) =>
 			toast.success(i18n.t("contactDrawer.queueUpdated"));
 		} catch (err) {
 			console.error(err);
-			toast.error("Erro ao atualizar fila.");
+			toast.error("Error al actualizar la fila.");
 			setSelectedQueue(ticket?.queueId || "");
 		} finally {
 			setLoadingQueue(false);

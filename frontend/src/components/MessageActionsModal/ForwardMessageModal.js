@@ -168,7 +168,7 @@ const ForwardMessageModal = ({ open, onClose, onForward, message }) => {
             fullWidth
             size="small"
             variant="outlined"
-            placeholder="Buscar contato..."
+            placeholder="Buscar contacto..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className={classes.searchField}

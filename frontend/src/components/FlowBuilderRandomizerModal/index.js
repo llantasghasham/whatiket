@@ -170,7 +170,7 @@ const FlowBuilderRandomizerModal = ({
               className={classes.btnWrapper}
               onClick={() => handleSaveContact()}
             >
-              {open === "create" ? `Adicionar` : "Editar"}
+              {open === "create" ? `Agregar` : "Editar"}
             </Button>
           </DialogActions>
         </Stack>

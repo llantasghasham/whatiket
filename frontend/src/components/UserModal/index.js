@@ -617,10 +617,10 @@ const UserModal = ({ open, onClose, userId }) => {
       name: Yup.string()
         .min(2, "Curto!")
         .max(50, "Longo!")
-        .required("Obrigatório"),
+        .required("Requerido"),
       email: Yup.string()
         .email("Email Inválido")
-        .required("Obrigatório"),
+        .required("Requerido"),
     };
 
     if (!userId) {

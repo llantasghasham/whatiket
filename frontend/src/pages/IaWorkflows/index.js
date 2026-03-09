@@ -325,7 +325,7 @@ const IaWorkflows = () => {
         <Box className={classes.headerActions}>
           <TextField
             className={classes.searchField}
-            placeholder="Pesquisar..."
+            placeholder="Buscar..."
             type="search"
             value={searchParam}
             onChange={handleSearch}
@@ -360,7 +360,7 @@ const IaWorkflows = () => {
               <AccountTree />
               <Typography>
                 {searchParam 
-                  ? "Nenhum workflow encontrado"
+                  ? "Ningún workflow encontrado"
                   : "Crie seu primeiro workflow para conectar diferentes IAs"
                 }
               </Typography>

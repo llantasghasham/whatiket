@@ -129,7 +129,7 @@ const FlowBuilderOpenAIModal = ({ open, onSave, data, onUpdate, close }) => {
     if (open === "edit") {
       setLabels({
         title: "Editar Agente IA do fluxo",
-        btn: "Salvar",
+        btn: "Guardar",
       });
       const current = data?.data?.typebotIntegration || {};
       setIntegration({
@@ -141,7 +141,7 @@ const FlowBuilderOpenAIModal = ({ open, onSave, data, onUpdate, close }) => {
     } else if (open === "create") {
       setLabels({
         title: "Adicionar Agente IA ao fluxo",
-        btn: "Salvar",
+        btn: "Guardar",
       });
       setIntegration(initialState);
       setActiveModal(true);
@@ -611,7 +611,7 @@ Qual curso você tem interesse?"
                   className={classes.btnWrapper}
                   disabled={isSubmitting}
                 >
-                  {open === "create" ? "Adicionar" : "Editar"}
+                  {open === "create" ? "Agregar" : "Editar"}
                 </Button>
               </DialogActions>
             </Form>

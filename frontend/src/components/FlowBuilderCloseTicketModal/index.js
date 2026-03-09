@@ -44,7 +44,7 @@ const FlowBuilderCloseTicketModal = ({ open, onSave, onUpdate, data, close }) =>
 
   useEffect(() => {
     if (open === "edit") {
-      setLabels({ title: "Editar encerramento", btn: "Salvar" });
+      setLabels({ title: "Editar cierre", btn: "Guardar" });
       setMessage(initialMessage);
       setActiveModal(true);
     } else if (open === "create") {

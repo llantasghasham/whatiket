@@ -913,7 +913,7 @@ const Atendimentos = () => {
 
 	const handleOpenFaturaModal = async () => {
 		if (!selectedTicket) {
-			toast.error("Nenhum ticket selecionado.");
+			toast.error("Ningún ticket seleccionado.");
 			return;
 		}
 		
@@ -1165,7 +1165,7 @@ const Atendimentos = () => {
 								backgroundColor: "#ff9800",
 								color: "#fff",
 							}}
-							title="Fechar"
+							title="Cerrar"
 						>
 							<CheckCircleIcon style={{ fontSize: iconSize }} />
 						</IconButton>
@@ -1195,7 +1195,7 @@ const Atendimentos = () => {
 								backgroundColor: "#f44336",
 								color: "#fff",
 							}}
-							title="Excluir"
+							title="Eliminar"
 						>
 							<DeleteIcon style={{ fontSize: iconSize }} />
 						</IconButton>

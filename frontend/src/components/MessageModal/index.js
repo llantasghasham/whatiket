@@ -138,7 +138,7 @@ const MessageModal = ({ open, onClose, messageId, reload }) => {
    */
 
   const ScheduleMessageSchema = Yup.object().shape({
-    nome: Yup.string().min(3, "Mensagem muito curta").required("Obrigatório"),
+    nome: Yup.string().min(3, "Mensaje muy corto").required("Requerido"),
   });
 
   const handleClose = () => {

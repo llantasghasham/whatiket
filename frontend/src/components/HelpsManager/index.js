@@ -401,7 +401,7 @@ export default function HelpsManager () {
             const helpList = await list()
             setRecords(helpList)
         } catch (e) {
-            toast.error('Não foi possível carregar a lista de registros')
+            toast.error('No se pudo cargar la lista de registros')
         }
         setLoading(false)
     }
@@ -418,7 +418,7 @@ export default function HelpsManager () {
             handleCancel()
             toast.success('Operação realizada com sucesso!')
         } catch (e) {
-            toast.error('Não foi possível realizar a operação. Verifique se já existe uma helpo com o mesmo nome ou se os campos foram preenchidos corretamente')
+            toast.error('No se pudo realizar la operación. Verifique si ya existe un registro con el mismo nombre o si los campos están correctos')
         }
         setLoading(false)
     }
@@ -431,7 +431,7 @@ export default function HelpsManager () {
             handleCancel()
             toast.success('Operação realizada com sucesso!')
         } catch (e) {
-            toast.error('Não foi possível realizar a operação')
+            toast.error('No se pudo realizar la operación')
         }
         setLoading(false)
     }

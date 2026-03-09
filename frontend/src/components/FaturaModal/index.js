@@ -749,7 +749,7 @@ const FaturaModal = ({ open, onClose, fatura, onSaved, initialData }) => {
           Cancelar
         </Button>
         <Button onClick={handleSubmit} color="primary" disabled={loading}>
-          {loading ? "Salvando..." : "Salvar"}
+          {loading ? "Guardando..." : "Guardar"}
         </Button>
       </DialogActions>
     </Dialog>

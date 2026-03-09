@@ -714,7 +714,7 @@ const checkMessageMedia = (message) => {
         <ListPreview
           titulo={titulo}
           descricao={descricao}
-          textoBotao={listMessage.buttonText || "Clique aqui"} // Texto do botão
+          textoBotao={listMessage.buttonText || "Clic aquí"} // Texto do botão
           secoes={secoes}
           rodape={rodape}
           ticketId={message?.ticket?.id}

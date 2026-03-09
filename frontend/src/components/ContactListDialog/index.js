@@ -145,7 +145,7 @@ const ContactListSchema = Yup.object().shape({
   name: Yup.string()
     .min(2, "Curto!")
     .max(50, "Longo!")
-    .required("Obrigatório"),
+    .required("Requerido"),
 });
 
 // Componente para tornar a janela arrastável

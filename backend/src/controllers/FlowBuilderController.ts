@@ -253,7 +253,7 @@ export const importFlow = async (
   const importFile = req.file;
 
   if (!importFile) {
-    return res.status(400).json({ error: "Nenhum arquivo enviado" });
+    return res.status(400).json({ error: "Ningún archivo enviado" });
   }
 
   try {

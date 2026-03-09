@@ -98,7 +98,7 @@ const AffiliateCommissions = ({ commissions, onRefresh }) => {
         {(!commissions || commissions.length === 0) ? (
           <div className={classes.emptyState}>
             <Typography variant="body1" color="textSecondary">
-              Nenhuma comissão encontrada.
+              Ninguna comisión encontrada.
             </Typography>
           </div>
         ) : (

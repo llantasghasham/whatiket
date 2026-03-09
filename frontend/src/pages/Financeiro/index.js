@@ -254,7 +254,7 @@ const Invoices = () => {
       if (msgs.length > 0) {
         toast.success(`Cobrança enviada via ${msgs.join(" e ")}!`);
       } else {
-        toast.warn("Nenhum canal de envio disponível. Verifique se a empresa possui e-mail/telefone e se o WhatsApp está conectado.");
+        toast.warn("Ningún canal de envío disponible. Verifique que la empresa tenga email/teléfono y que WhatsApp esté conectado.");
       }
     } catch (err) {
       toastError(err);
@@ -390,7 +390,7 @@ const Invoices = () => {
             </Select>
           </FormControl>
           <TextField
-            placeholder="Buscar fatura..."
+            placeholder="Buscar factura..."
             variant="outlined"
             size="small"
             value={searchParam}

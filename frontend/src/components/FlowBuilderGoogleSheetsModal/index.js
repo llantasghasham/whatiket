@@ -166,7 +166,7 @@ const FlowBuilderGoogleSheetsModal = ({ open, onSave, data, onUpdate, close }) =
 
   useEffect(() => {
     if (open === "edit") {
-      setLabels({ title: "Editar Google Sheets", btn: "Salvar" });
+      setLabels({ title: "Editar Google Sheets", btn: "Guardar" });
       setFormData(mergedData);
       setActiveModal(true);
       checkAuthStatus({ showToast: false }); // Verificar status da autenticação

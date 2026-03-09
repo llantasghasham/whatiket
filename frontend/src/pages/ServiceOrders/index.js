@@ -275,7 +275,7 @@ const ServiceOrdersPage = () => {
         </Box>
         <Box className={classes.headerRight}>
           <TextField
-            placeholder="Buscar por cliente ou contato"
+            placeholder="Buscar por cliente o contacto"
             variant="outlined"
             size="small"
             value={search}

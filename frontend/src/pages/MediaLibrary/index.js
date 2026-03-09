@@ -276,7 +276,7 @@ const MediaLibrary = () => {
           <TextField
             size="small"
             variant="outlined"
-            placeholder="Buscar pastas por nome ou descrição"
+            placeholder="Buscar carpetas por nombre o descripción"
             value={searchParam}
             onChange={(event) => setSearchParam(event.target.value)}
             className={classes.searchField}

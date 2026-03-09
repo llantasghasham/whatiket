@@ -92,7 +92,7 @@ const FlowBuilderAddImgModal = ({ open, onSave, onUpdate, data, close }) => {
     if (open === "edit") {
       setLabels({
         title: "Editar arquivo",
-        btn: "Salvar",
+        btn: "Guardar",
       });
       setOldImage(data.data.url);
       setPreview(

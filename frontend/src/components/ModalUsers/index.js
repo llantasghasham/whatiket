@@ -60,9 +60,9 @@ const UserSchema = Yup.object().shape({
   name: Yup.string()
     .min(2, "Too Short!")
     .max(50, "Too Long!")
-    .required("Obrigatório"),
+    .required("Requerido"),
   password: Yup.string().min(5, "Too Short!").max(50, "Too Long!"),
-  email: Yup.string().email("Email Inválido").required("Obrigatório"),
+  email: Yup.string().email("Email Inválido").required("Requerido"),
 });
 
 const ModalUsers = ({ open, onClose, userId, companyId }) => {
