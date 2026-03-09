@@ -942,6 +942,7 @@ export const handleOpenAi = async (
   });
   const messages = messagesRaw.reverse();
 
+  console.log(`[AI] ticket ${ticket.id} | historial: ${messages.length} msgs (últimas ${maxMessages})`);
   const isSecondClientMessage = messages.filter(m => !m.fromMe).length >= 2;
   const isNearMaxMessages = isSecondClientMessage || messages.length >= maxMessages - 1;
 
@@ -1018,6 +1019,8 @@ ${openAiSettings.prompt}
       }
     }
     messagesOpenAi.push({ role: "user", content: bodyMessage! });
+    const ctxCount = messagesOpenAi.length - 1;
+    console.log(`[AI] ticket ${ticket.id} | enviando a IA: ${ctxCount} msgs de historial + mensaje actual`);
 
     let response: string | undefined;
 
