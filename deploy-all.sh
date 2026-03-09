@@ -6,6 +6,12 @@ set -e
 PROJECT_DIR="$(cd "$(dirname "$0")" && pwd)"
 cd "$PROJECT_DIR"
 
+echo "=== 0. Limpiar archivos que bloquean git pull ==="
+# Archivos locales que suelen causar "would be overwritten by merge"
+for f in INSTALACAO_INFO.txt; do
+  [ -f "$f" ] && mv "$f" "$f.bak.$(date +%Y%m%d)" 2>/dev/null || true
+done
+
 echo "=== 1. Git pull ==="
 git pull origin main
 
