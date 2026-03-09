@@ -75,9 +75,10 @@ import {
 	Android as AndroidIcon,
 	Archive as ArchiveIcon,
 	VisibilityOff as VisibilityOffIcon,
-	Receipt as ReceiptIcon,
-	Phone as CallIcon,
+	Receipt as ReceiptIcon
 } from "@material-ui/icons";
+import CallIcon from '@mui/icons-material/Call';
+import SmartToyIcon from '@mui/icons-material/SmartToy';
 import AudioModal from "../../components/AudioModal";
 import ModalImageCors from "../../components/ModalImageCors";
 import ScheduleModal from "../../components/ScheduleModal";
@@ -3680,7 +3681,7 @@ useEffect(() => {
 											{tabIndex === 4 && (ticket.lastFlowId || ticket.hashFlowId) && (
 												<Tooltip title={`ID: ${ticket.lastFlowId || ticket.hashFlowId}`} arrow>
 													<div style={{ display: 'flex', alignItems: 'center', backgroundColor: '#f3e8ff', padding: '2px 6px', borderRadius: 4 }}>
-														<AndroidIcon style={{ fontSize: 12, color: '#9054bc' }} />
+														<SmartToyIcon style={{ fontSize: 12, color: '#9054bc' }} />
 													</div>
 												</Tooltip>
 											)}
