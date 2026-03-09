@@ -10,5 +10,6 @@ module.exports = [{
   node_args: '--max-old-space-size=769',
   watch: false,
   kill_timeout: 5000,
-  exp_backoff_restart_delay: 5000
+  exp_backoff_restart_delay: 10000,
+  listen_timeout: 15000
 }]

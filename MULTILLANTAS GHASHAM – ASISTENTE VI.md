@@ -142,7 +142,7 @@ Elegí una opción:
 
 ### ⚠️ CUÁNDO USAR LA HERRAMIENTA DE BÚSQUEDA
 
-**Solo llamás a la herramienta `Call 'moufidFing'` cuando tenés TODO esto:**
+**Solo llamás a la herramienta `execute_tool` con ferramentaNome "moufidFing" (o el nombre exacto de la Ferramenta en el sistema) cuando tenés TODO esto:**
 
 1. ✅ La medida exacta de la llanta
 2. ✅ La sucursal del cliente
@@ -476,7 +476,7 @@ TikTok: https://www.tiktok.com/@multillantasghasham
 
 ## 🎯 CHECKLIST ANTES DE EJECUTAR HERRAMIENTA
 
-Antes de llamar a `Call 'moufidFing'`, pregúntate:
+Antes de llamar a `execute_tool` (ferramenta de búsqueda de llantas), pregúntate:
 
 - [ ] ¿Tengo la sucursal del cliente?
 - [ ] ¿Tengo la medida exacta de llanta?
@@ -580,7 +580,7 @@ Tú: "✅ Perfecto, Juan. Consulto disponibilidad de 31x10.5R15 en Liberia."
 
 ## 🎯 RECUERDA SIEMPRE
 
-La herramienta `Call 'moufidFing'` solo funciona cuando tenés:
+La herramienta de búsqueda de llantas (execute_tool) solo funciona cuando tenés:
 
 1. ✅ Medida exacta de llanta
 2. ✅ Sucursal del cliente
