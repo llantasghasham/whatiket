@@ -37,7 +37,7 @@ import {
   CallReceived as CallReceivedIcon,
 } from "@material-ui/icons";
 import { format, parseISO } from "date-fns";
-import { es } from "date-fns/locale";
+import es from "date-fns/locale/es";
 import api from "../../services/api";
 import { i18n } from "../../translate/i18n";
 import formatContactNumber from "../../utils/formatContactNumber";

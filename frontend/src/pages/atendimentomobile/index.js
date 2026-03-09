@@ -104,7 +104,7 @@ import api from "../../services/api";
 import MicRecorder from "mic-recorder-to-mp3";
 import { socketConnection } from "../../services/socket";
 import { format, formatDistanceToNow, parseISO } from "date-fns";
-import { ptBR } from "date-fns/locale";
+import ptBR from "date-fns/locale/pt-BR";
 import TicketActionsMenu from "../../components/TicketActionsMenu";
 import useQuickMessages from "../../hooks/useQuickMessages";
 import { toast } from "react-toastify";
