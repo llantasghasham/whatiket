@@ -60,7 +60,7 @@ import AllConnections from "../pages/AllConnections";
 import Reports from "../pages/Relatorios";
 import { FlowBuilderConfig } from "../pages/FlowBuilderConfig";
 import FlowBuilder from "../pages/FlowBuilder";
-import FlowDefault from "../pages/FlowDefault"
+import FlowDefault from "../pages/FlowDefault";
 import CampaignsPhrase from "../pages/CampaignsPhrase";
 import Subscription from "../pages/Subscription";
 import QueueIntegration from "../pages/Integracao";
@@ -231,6 +231,7 @@ const Routes = () => {
                   path="/flowbuilder/:id?"
                   component={FlowBuilderConfig}
                 />
+                <ProtectedRoute exact path="/flowdefault" component={FlowDefault} />
                 <ProtectedRoute exact path="/chats/:id?" component={Chat} />
                 <ProtectedRoute exact path="/files" component={Files} />
                 <ProtectedRoute exact path="/moments" component={ChatMoments} />

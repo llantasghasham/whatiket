@@ -740,6 +740,9 @@ const messages = {
           whenExpiresTicket:
             "Cerrar chats abiertos cuando el último mensaje sea",
           expiresInactiveMessage: "Mensaje al cerrar por inactividade",
+          flowInactiveTime: "Tiempo de inactividad del flujo (minutos)",
+          maxUseInactiveTime: "Cantidad máxima de uso en tiempo inactivo",
+          maxUselnactiveTime: "Cantidad máxima de uso en tiempo inactivo",
           prompt: "Prompt",
         },
         buttons: {
@@ -1264,6 +1267,8 @@ const messages = {
       mainDrawer: {
         listItems: {
           dashboard: "Dashboard",
+          reports: "Reportes",
+          management: "Gestión",
           connections: "Conexiones",
           chatsTempoReal: "Panel de Asistencia",
           tickets: "Inbox",
@@ -1288,6 +1293,16 @@ const messages = {
           kanban: "Kanban",
           prompts: "Talk.Ai",
           allConnections: "Admin conexiones",
+          sistema: "Panel del Sistema",
+          callHistory: "Historial de Llamadas",
+          catalogProducts: "Catálogo de Productos",
+          leads: "Leads",
+          clients: "Clientes",
+          services: "Servicios",
+          serviceOrders: "Órdenes de Servicio",
+          professionals: "Profesionales",
+          flowDefault: "Flujo Predeterminado",
+          consultas: "Consultas",
         },
         appBar: {
           user: {

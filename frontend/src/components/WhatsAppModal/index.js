@@ -823,6 +823,17 @@ const WhatsAppModal = ({ open, onClose, whatsAppId, channel }) => {
                             }
                             label={i18n.t("whatsappModal.form.default")}
                           />
+                          <FormControlLabel
+                            control={
+                              <Field
+                                as={Switch}
+                                color="primary"
+                                name="allowGroup"
+                                checked={values.allowGroup}
+                              />
+                            }
+                            label={i18n.t("whatsappModal.form.group")}
+                          />
                         </Grid>
                       </Grid>
                     </div>
@@ -885,7 +896,91 @@ const WhatsAppModal = ({ open, onClose, whatsAppId, channel }) => {
                       value={selectedIntegration || ""}
                     />
 
-                    {/* Seção "Importar mensagens do aparelho" removida */}
+                    {channel === "whatsapp" && (
+                      <div className={classes.importMessage}>
+                        <div className={classes.multFieldLine}>
+                          <FormControlLabel
+                            style={{ marginRight: 7, color: "gray" }}
+                            label={i18n.t("whatsappModal.form.importOldMessagesEnable")}
+                            labelPlacement="end"
+                            control={
+                              <Switch
+                                size="medium"
+                                checked={enableImportMessage}
+                                onChange={handleEnableImportMessage}
+                                name="importOldMessagesEnable"
+                                color="primary"
+                              />
+                            }
+                          />
+                          {enableImportMessage && (
+                            <>
+                              <FormControlLabel
+                                style={{ marginRight: 7, color: "gray" }}
+                                label={i18n.t("whatsappModal.form.importOldMessagesGroups")}
+                                labelPlacement="end"
+                                control={
+                                  <Switch
+                                    size="medium"
+                                    checked={importOldMessagesGroups}
+                                    onChange={(e) => setImportOldMessagesGroups(e.target.checked)}
+                                    name="importOldMessagesGroups"
+                                    color="primary"
+                                  />
+                                }
+                              />
+                              <FormControlLabel
+                                style={{ marginRight: 7, color: "gray" }}
+                                label={i18n.t("whatsappModal.form.closedTicketsPostImported")}
+                                labelPlacement="end"
+                                control={
+                                  <Switch
+                                    size="medium"
+                                    checked={closedTicketsPostImported}
+                                    onChange={(e) => setClosedTicketsPostImported(e.target.checked)}
+                                    name="closedTicketsPostImported"
+                                    color="primary"
+                                  />
+                                }
+                              />
+                            </>
+                          )}
+                        </div>
+                        {enableImportMessage && (
+                          <div className={classes.multFieldLine} style={{ marginTop: 12 }}>
+                            <Field
+                              as={TextField}
+                              label={i18n.t("whatsappModal.form.importOldMessages")}
+                              type="datetime-local"
+                              name="importOldMessages"
+                              value={importOldMessages}
+                              onChange={(e) => setImportOldMessages(e.target.value)}
+                              variant="outlined"
+                              margin="dense"
+                              InputLabelProps={{ shrink: true }}
+                              className={classes.textField}
+                            />
+                            <Field
+                              as={TextField}
+                              label={i18n.t("whatsappModal.form.importRecentMessages")}
+                              type="datetime-local"
+                              name="importRecentMessages"
+                              value={importRecentMessages}
+                              onChange={(e) => setImportRecentMessages(e.target.value)}
+                              variant="outlined"
+                              margin="dense"
+                              InputLabelProps={{ shrink: true }}
+                              className={classes.textField}
+                            />
+                          </div>
+                        )}
+                        {enableImportMessage && (
+                          <Typography variant="caption" color="error" display="block" style={{ marginTop: 8 }}>
+                            {i18n.t("whatsappModal.form.importAlert")}
+                          </Typography>
+                        )}
+                      </div>
+                    )}
 
                     <Box display="flex" alignItems="center">
                       <Grid xs={6} md={12} item>

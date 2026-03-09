@@ -738,6 +738,9 @@ const messages = {
           whenExpiresTicket:
             "Encerrar chats abertos quando última mensagem for",
           expiresInactiveMessage: "Mensagem de encerramento por inatividade",
+          flowInactiveTime: "Tempo de inatividade do fluxo (minutos)",
+          maxUseInactiveTime: "Quantidade máxima de uso em tempo inativo",
+          maxUselnactiveTime: "Quantidade máxima de uso em tempo inativo",
           prompt: "Prompt",
           collectiveVacationEnd: "Data final",
           collectiveVacationStart: "Data inicial",
@@ -1306,7 +1309,17 @@ const messages = {
           prompts: "Agende IA",
           allConnections: "Gerenciar conexões",
           reports: "Relatórios",
-          management: "Gerência"
+          management: "Gerência",
+          sistema: "Painel do Sistema",
+          callHistory: "Histórico de Chamadas",
+          catalogProducts: "Catálogo de Produtos",
+          leads: "Leads",
+          clients: "Clientes",
+          services: "Serviços",
+          serviceOrders: "Ordens de Serviço",
+          professionals: "Profissionais",
+          flowDefault: "Fluxo Padrão",
+          consultas: "Consultas",
         },
         appBar: {
           user: {

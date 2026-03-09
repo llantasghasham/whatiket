@@ -50,6 +50,11 @@ import GroupIcon from "@material-ui/icons/Group";
 import BuildIcon from "@material-ui/icons/Build";
 import ViewColumnIcon from "@material-ui/icons/ViewColumn";
 import SearchIcon from "@material-ui/icons/Search";
+import PhoneIcon from "@mui/icons-material/Phone";
+import PersonSearchIcon from "@mui/icons-material/PersonSearch";
+import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
+import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined";
+import DescriptionIcon from "@mui/icons-material/Description";
 const useStyles = makeStyles((theme) => ({
   root: {
     minHeight: "100vh",
@@ -279,6 +284,12 @@ const categories = [
         route: "/quick-messages",
         icon: SmsOutlinedIcon,
       },
+      {
+        title: "Histórico de Chamadas",
+        description: "Consulte o histórico de chamadas realizadas.",
+        route: "/call-history",
+        icon: PhoneIcon,
+      },
     ],
   },
   {
@@ -296,6 +307,12 @@ const categories = [
         title: "Construtor de fluxo",
         description: "Monte jornadas automatizadas com blocos visuais.",
         route: "/flowbuilders",
+        icon: AccountTreeOutlinedIcon,
+      },
+      {
+        title: "Fluxo Padrão",
+        description: "Configure fluxos de boas-vindas e resposta padrão.",
+        route: "/flowdefault",
         icon: AccountTreeOutlinedIcon,
       },
       {
@@ -382,13 +399,31 @@ const categories = [
         title: "Serviços",
         description: "Gestão de serviços prestados e pacotes.",
         route: "/servicos",
-        icon: BuildCircleIcon,
+        icon: WorkOutlineIcon,
+      },
+      {
+        title: "Ordens de Serviço",
+        description: "Gerencie ordens e atendimentos de serviço.",
+        route: "/ordens-servico",
+        icon: ListAltIcon,
+      },
+      {
+        title: "Profissionais",
+        description: "Cadastro de profissionais e equipe.",
+        route: "/profissionais",
+        icon: PeopleOutlineIcon,
       },
       {
         title: "Produtos",
         description: "Gerencie seu catálogo de produtos e serviços.",
         route: "/produtos",
         icon: CheckCircleOutlineIcon,
+      },
+      {
+        title: "Catálogo de Produtos",
+        description: "Visualize o catálogo completo de produtos.",
+        route: "/catalogo-produtos",
+        icon: Inventory2OutlinedIcon,
       },
     ],
   },
@@ -426,6 +461,49 @@ const categories = [
         description: "Gerencie projetos, tarefas e equipes.",
         route: "/projects",
         icon: FolderSpecialIcon,
+      },
+      {
+        title: "Leads",
+        description: "Gerencie leads e oportunidades de negócio.",
+        route: "/leads",
+        icon: PersonSearchIcon,
+      },
+      {
+        title: "Clientes",
+        description: "Cadastro e gestão de clientes.",
+        route: "/clientes",
+        icon: PeopleOutlineIcon,
+      },
+    ],
+  },
+  {
+    title: "Consultas",
+    tabLabel: "Consultas",
+    description: "Módulos de consulta e relatórios especializados.",
+    items: [
+      {
+        title: "Dados",
+        description: "Consultas de dados gerais.",
+        route: "/consultas/dados",
+        icon: DescriptionIcon,
+      },
+      {
+        title: "Dívidas e Crédito",
+        description: "Consultas de dívidas e créditos.",
+        route: "/consultas/dividas-credito",
+        icon: LocalAtmIcon,
+      },
+      {
+        title: "Jurídico",
+        description: "Consultas jurídicas.",
+        route: "/consultas/juridico",
+        icon: DescriptionIcon,
+      },
+      {
+        title: "Veículo",
+        description: "Consultas de veículos.",
+        route: "/consultas/veiculo",
+        icon: DescriptionIcon,
       },
     ],
   },
