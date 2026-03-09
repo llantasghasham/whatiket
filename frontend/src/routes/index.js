@@ -151,7 +151,7 @@ const Routes = () => {
             <WhatsAppsProvider>
               <QueueSelectedProvider>
               <LoggedInLayout>
-                <NotificationToast />
+                {/* NotificationToast desactivado temporalmente */}
                 <ProtectedRoute exact path="/financeiro" component={Financeiro} />
                 <ProtectedRoute exact path="/financeiro-manager" component={FinanceiroManager} />
 
