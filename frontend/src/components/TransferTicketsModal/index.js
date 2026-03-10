@@ -65,7 +65,7 @@ const TransferTicketsModal = ({ open, onClose, connections, onSuccess }) => {
         destinationWhatsappId: Number(destinationId),
       });
       toast.success(i18n.t("connections.transferTickets.success"));
-      onSuccess?.();
+      if (onSuccess) onSuccess();
       handleClose();
     } catch (err) {
       toastError(err);
