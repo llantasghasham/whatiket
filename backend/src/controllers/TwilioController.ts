@@ -6,7 +6,7 @@ import twilio from "twilio";
  * Requiere: TWILIO_ACCOUNT_SID, TWILIO_API_KEY_SID, TWILIO_API_KEY_SECRET, TWILIO_TWIML_APP_SID
  */
 export const getToken = async (req: Request, res: Response): Promise<Response> => {
-  const { companyId, id: userId, name } = req.user;
+  const { companyId, id: userId } = req.user;
 
   const accountSid = process.env.TWILIO_ACCOUNT_SID;
   const apiKeySid = process.env.TWILIO_API_KEY_SID;
