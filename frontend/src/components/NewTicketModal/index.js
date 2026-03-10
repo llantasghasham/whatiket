@@ -20,6 +20,7 @@ import { AuthContext } from "../../context/Auth/AuthContext";
 import { Grid, ListItemText, MenuItem, Select } from "@material-ui/core";
 import { toast } from "react-toastify";
 import { Facebook, Instagram, WhatsApp } from "@material-ui/icons";
+import Telegram from "@mui/icons-material/Telegram";
 import ShowTicketOpen from "../ShowTicketOpenModal";
 import CancelIcon from '@mui/icons-material/Cancel';
 import CheckIcon from '@mui/icons-material/Check';
@@ -144,6 +145,9 @@ const NewTicketModal = ({ modalOpen, onClose, initialContact, initialChannel }) 
     } else if (initialChannel === "instagram") {
       const igConn = whatsapps.find((w) => w.channel === "instagram");
       if (igConn) setSelectedWhatsapp(igConn.id);
+    } else if (initialChannel === "telegram") {
+      const tgConn = whatsapps.find((w) => w.channel === "telegram");
+      if (tgConn) setSelectedWhatsapp(tgConn.id);
     } else if (whatsappId != null && whatsappId !== undefined) {
       setSelectedWhatsapp(whatsappId);
     } else if (whatsapps[0]) {
@@ -166,6 +170,8 @@ const NewTicketModal = ({ modalOpen, onClose, initialContact, initialChannel }) 
             params.channel = "facebook";
           } else if (channelToUse === "instagram") {
             params.channel = "instagram";
+          } else if (channelToUse === "telegram") {
+            params.channel = "telegram";
           }
           const { data } = await api.get("contacts", { params });
           setOptions(data.contacts);
@@ -186,6 +192,8 @@ const NewTicketModal = ({ modalOpen, onClose, initialContact, initialChannel }) 
         return <Facebook style={{ color: "#3b5998", verticalAlign: "middle" }} />;
       case "instagram":
         return <Instagram style={{ color: "#e1306c", verticalAlign: "middle" }} />;
+      case "telegram":
+        return <Telegram style={{ color: "#0088cc", verticalAlign: "middle" }} />;
       case "whatsapp":
         return <WhatsApp style={{ color: "#25d366", verticalAlign: "middle" }} />;
       default:

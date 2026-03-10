@@ -230,6 +230,10 @@ const getAvatarChannel = (channel) => {
     if (channel === "instagram") {
         return insatagramIcon;
     }
+
+    if (channel === "telegram") {
+        return "https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg";
+    }
 };
 
 const getChannelColor = (channel) => {
@@ -238,6 +242,9 @@ const getChannelColor = (channel) => {
     }
     if (channel === "instagram") {
         return "#E4405F"; // Rosa do Instagram
+    }
+    if (channel === "telegram") {
+        return "#0088cc"; // Azul do Telegram
     }
     return "#25D366"; // Verde do WhatsApp (padrão)
 };

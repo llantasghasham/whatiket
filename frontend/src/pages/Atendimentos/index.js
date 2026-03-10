@@ -79,6 +79,7 @@ import {
 } from "@material-ui/icons";
 import CallIcon from '@mui/icons-material/Call';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
+import TelegramIcon from '@mui/icons-material/Telegram';
 import AudioModal from "../../components/AudioModal";
 import ModalImageCors from "../../components/ModalImageCors";
 import ScheduleModal from "../../components/ScheduleModal";
@@ -484,6 +485,7 @@ const CHANNEL_STYLES = {
 	whatsapp: { bg: "#e8f5e9", color: "#00a884" },
 	facebook: { bg: "#e7f0ff", color: "#1877F2" },
 	instagram: { bg: "#ffe7f1", color: "#E4405F" },
+	telegram: { bg: "#e3f2fd", color: "#0088cc" },
 };
 
 // Função para detectar se é mensagem automática de anúncio Facebook/Instagram
@@ -825,7 +827,8 @@ const Atendimentos = () => {
 	const channelQuickOptions = [
 		{ key: "whatsapp", label: "WhatsApp", color: "#25d366", icon: <WhatsAppIcon fontSize="small" /> },
 		{ key: "facebook", label: "Facebook", color: "#1877F2", icon: <FacebookIcon fontSize="small" /> },
-		{ key: "instagram", label: "Instagram", color: "#E4405F", icon: <InstagramIcon fontSize="small" /> }
+		{ key: "instagram", label: "Instagram", color: "#E4405F", icon: <InstagramIcon fontSize="small" /> },
+		{ key: "telegram", label: "Telegram", color: "#0088cc", icon: <TelegramIcon fontSize="small" /> }
 	];
 
 	const toggleChannelQuickFilter = channel => {

@@ -648,6 +648,11 @@ const messages = {
           success: "Facebook/Instagram conectado com sucesso",
           error: "Erro ao conectar. Verifique a configuração do app Meta.",
         },
+        telegram: {
+          title: "Conectar Telegram",
+          name: "Nome da conexão",
+          token: "Token do bot",
+        },
         waitConnection: "Aguarde... Suas conexões serão reiniciadas!",
         newConnection: "Nova Conexão",
         restartConnections: "Reiniciar Conexões",

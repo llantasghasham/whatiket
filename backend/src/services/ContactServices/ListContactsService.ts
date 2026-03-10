@@ -102,6 +102,8 @@ const ListContactsService = async ({
     channelVisibilityFilter = { channel: "facebook" };
   } else if (channel === "instagram") {
     channelVisibilityFilter = { channel: "instagram" };
+  } else if (channel === "telegram") {
+    channelVisibilityFilter = { channel: "telegram" };
   } else {
     channelVisibilityFilter = {
       [Op.or]: [

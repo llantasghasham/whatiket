@@ -25,6 +25,8 @@ import CreateMessageService from "../services/MessageServices/CreateMessageServi
 
 import { sendFacebookMessageMedia } from "../services/FacebookServices/sendFacebookMessageMedia";
 import sendFaceMessage from "../services/FacebookServices/sendFacebookMessage";
+import sendTelegramMessage from "../services/TelegramServices/sendTelegramMessage";
+import sendTelegramMedia from "../services/TelegramServices/sendTelegramMedia";
 
 import ShowPlanCompanyService from "../services/CompanyService/ShowPlanCompanyService";
 import ListMessagesServiceAll from "../services/MessageServices/ListMessagesServiceAll";
@@ -588,6 +590,40 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
             }
           }
 
+          if (ticket.channel === "telegram") {
+            try {
+              const conn = await Whatsapp.findByPk(ticket.whatsappId, {
+                attributes: ["id", "name", "token", "channel"]
+              });
+              if (conn?.token) {
+                const sent = await sendTelegramMedia({
+                  media,
+                  ticket,
+                  body: Array.isArray(body) ? body[index] : body,
+                  connection: conn
+                });
+                const caption = Array.isArray(body) ? body[index] : body || "";
+                const messageData = {
+                  wid: `tg-${sent?.message_id || Date.now()}-${index}`,
+                  ticketId: ticket.id,
+                  contactId: undefined,
+                  body: caption,
+                  fromMe: true,
+                  read: true,
+                  ack: 3,
+                  mediaType: media.mimetype?.split("/")[0] || "document",
+                  mediaUrl: media.filename,
+                  dataJson: JSON.stringify(sent || {}),
+                  channel: "telegram"
+                };
+                await CreateMessageService({ messageData, companyId: ticket.companyId });
+              }
+            } catch (error) {
+              console.error("[MessageController] Telegram media error:", error);
+              throw error;
+            }
+          }
+
           //limpar arquivo nao utilizado mais após envio
           const filePath = path.resolve("public", `company${companyId}`, media.filename);
           const fileExists = fs.existsSync(filePath);
@@ -626,8 +662,27 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
 
       } else if (["facebook", "instagram"].includes(ticket.channel)) {
         const sendText = await sendFaceMessage({ body, ticket, quotedMsg });
-        // Registrar texto enviado no histórico do ticket para ambos os canais
         await verifyMessageFace(sendText, body, ticket, ticket.contact, true);
+      } else if (ticket.channel === "telegram") {
+        const conn = await Whatsapp.findByPk(ticket.whatsappId, {
+          attributes: ["id", "name", "token", "channel"]
+        });
+        if (!conn?.token) {
+          throw new AppError("ERR_TELEGRAM: Conexión sin token de bot.", 400);
+        }
+        const sent = await sendTelegramMessage({ body, ticket, quotedMsg, connection: conn });
+        const messageData = {
+          wid: `tg-${sent?.message_id || Date.now()}`,
+          ticketId: ticket.id,
+          contactId: undefined,
+          body,
+          fromMe: true,
+          read: true,
+          ack: 3,
+          dataJson: JSON.stringify(sent || {}),
+          channel: "telegram"
+        };
+        await CreateMessageService({ messageData, companyId: ticket.companyId });
       }
     }
     return res.send();

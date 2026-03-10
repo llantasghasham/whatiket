@@ -144,9 +144,11 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
   console.log(req.body)
   console.log("==================================================")
 
+  const channelParam = (req.body as any).channel || "whatsapp";
   const { whatsapp, oldDefaultWhatsapp } = await CreateWhatsAppService({
     name,
-    status,
+    status: channelParam === "telegram" ? "CONNECTED" : status,
+    channel: channelParam,
     isDefault,
     greetingMessage,
     complationMessage,
@@ -183,7 +185,9 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
     flowIdWelcome
   });
 
-  StartWhatsAppSession(whatsapp, companyId);
+  if (channelParam !== "telegram") {
+    StartWhatsAppSession(whatsapp, companyId);
+  }
 
   const io = getIO();
   io.of(String(companyId))

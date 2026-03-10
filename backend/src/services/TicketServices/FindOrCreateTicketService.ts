@@ -267,8 +267,9 @@ const FindOrCreateTicketService = async (
       companyId
     };
 
-    if (channel === "facebook" || channel === "instagram") {
+    if (channel === "facebook" || channel === "instagram" || channel === "telegram") {
       baseWhere.channel = channel;
+      baseWhere.whatsappId = whatsapp.id;
     } else {
       baseWhere.whatsappId = whatsapp.id;
     }

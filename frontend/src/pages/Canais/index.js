@@ -47,6 +47,7 @@ import { Can } from "../../components/Can";
 import moment from "moment";
 import QrCodeIcon from "@mui/icons-material/QrCode";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import Telegram from "@mui/icons-material/Telegram";
 import AddIcon from "@material-ui/icons/Add";
 import LogoutIcon from "@mui/icons-material/Logout";
 import RepeatIcon from "@mui/icons-material/Repeat";
@@ -57,6 +58,7 @@ import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import ChannelModal from "../../HubEcosystem/components/ChannelModal";
 import notificame_logo from "../../assets/notificame_logo.png";
 import FacebookInstagramModal from "../../components/FacebookInstagramModal";
+import TelegramModal from "../../components/TelegramModal";
 import TransferTicketsModal from "../../components/TransferTicketsModal";
 import { getNumberSupport } from "../../config";
 
@@ -401,6 +403,7 @@ const Connections = () => {
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const [hubChannelModalOpen, setHubChannelModalOpen] = useState(false);
   const [fbIgModalOpen, setFbIgModalOpen] = useState(false);
+  const [telegramModalOpen, setTelegramModalOpen] = useState(false);
   const [searchParam, setSearchParam] = useState("");
   const { handleLogout } = useContext(AuthContext);
   const history = useHistory();
@@ -537,12 +540,18 @@ const Connections = () => {
     setSelectedWhatsApp(whatsApp);
     setModalChannel(whatsApp.channel);
     
-    // Abrir modal específico baseado no canal
     if (whatsApp.channel === "facebook" || whatsApp.channel === "instagram") {
       setFbIgModalOpen(true);
+    } else if (whatsApp.channel === "telegram") {
+      setTelegramModalOpen(true);
     } else {
       setWhatsAppModalOpen(true);
     }
+  };
+
+  const handleOpenTelegramModal = (connection = null) => {
+    setSelectedWhatsApp(connection);
+    setTelegramModalOpen(true);
   };
 
   const openInNewTab = (url) => {
@@ -893,6 +902,8 @@ const Connections = () => {
         return <MessengerIcon style={{ color: "#3b5998", fontSize: 28 }} />;
       case "instagram":
         return <Instagram style={{ color: "#e1306c", fontSize: 28 }} />;
+      case "telegram":
+        return <Telegram style={{ color: "#0088cc", fontSize: 28 }} />;
       case "whatsapp_official":
         return <WhatsApp style={{ color: "#128C7E", fontSize: 28 }} />;
       case "whatsapp":
@@ -907,6 +918,8 @@ const Connections = () => {
         return "#e7f3ff";
       case "instagram":
         return "#fce4ec";
+      case "telegram":
+        return "#e3f2fd";
       case "whatsapp_official":
         return "#e6f7f2";
       case "whatsapp":
@@ -952,6 +965,20 @@ const Connections = () => {
         whatsAppId={!qrModalOpen && fbIgModalOpen && selectedWhatsApp?.id}
         channel={modalChannel}
         companyId={companyId}
+      />
+      <TelegramModal
+        open={telegramModalOpen}
+        onClose={() => {
+          setTelegramModalOpen(false);
+          setSelectedWhatsApp(null);
+          setModalChannel(null);
+        }}
+        connectionId={selectedWhatsApp?.id}
+        onSuccess={() => {
+          setTelegramModalOpen(false);
+          setSelectedWhatsApp(null);
+          fetchWhatsApps();
+        }}
       />
       <ChannelModal
         open={hubChannelModalOpen}
@@ -1068,6 +1095,10 @@ const Connections = () => {
                     <Instagram fontSize="small" style={{ marginRight: 10, color: "#e1306c" }} />
                     Instagram
                   </MenuItem>
+                  <MenuItem onClick={() => { handleOpenTelegramModal(); setAddMenuAnchor(null); }}>
+                    <Telegram fontSize="small" style={{ marginRight: 10, color: "#0088cc" }} />
+                    Telegram
+                  </MenuItem>
                 </Menu>
               </>
             )}
@@ -1128,6 +1159,11 @@ const Connections = () => {
                       {whatsApp.channel === "instagram" && (
                         <span style={{ marginLeft: 8, fontSize: "0.7rem", color: "#e1306c", fontWeight: 500 }}>
                           <Instagram style={{ fontSize: 14, verticalAlign: 'middle' }} /> Instagram
+                        </span>
+                      )}
+                      {whatsApp.channel === "telegram" && (
+                        <span style={{ marginLeft: 8, fontSize: "0.7rem", color: "#0088cc", fontWeight: 500 }}>
+                          <Telegram style={{ fontSize: 14, verticalAlign: 'middle' }} /> Telegram
                         </span>
                       )}
                       {whatsApp.isDefault && (

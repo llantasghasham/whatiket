@@ -65,6 +65,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import TelegramIcon from '@mui/icons-material/Telegram';
 
 import api from "../../services/api";
 import { TicketsContext } from "../../context/Tickets/TicketsContext";
@@ -970,6 +971,20 @@ const TicketsManagerTabs = () => {
                   style={{ color: "#E4405F" }}
                 >
                   <InstagramIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
+
+              {/* Botón redondo Telegram */}
+              <Tooltip title="Nuevo ticket Telegram">
+                <IconButton
+                  className={classes.actionButton}
+                  onClick={() => {
+                    setNewTicketInitialChannel("telegram");
+                    setNewTicketModalOpen(true);
+                  }}
+                  style={{ color: "#0088cc" }}
+                >
+                  <TelegramIcon fontSize="small" />
                 </IconButton>
               </Tooltip>
 
