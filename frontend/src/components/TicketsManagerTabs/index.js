@@ -288,7 +288,7 @@ const useStyles = makeStyles((theme) => ({
     border: "none",
     padding: 6,
     "&:hover": {
-      backgroundColor: theme.mode === "light"
+      backgroundColor: (theme.palette && theme.palette.type) || 'light' === "light"
         ? "rgba(124, 77, 255, 0.08)"
         : "rgba(124, 77, 255, 0.15)",
       color: theme.palette.primary.main,
@@ -299,12 +299,12 @@ const useStyles = makeStyles((theme) => ({
   },
 
   actionButtonActive: {
-    backgroundColor: theme.mode === "light"
+    backgroundColor: (theme.palette && theme.palette.type) || 'light' === "light"
       ? "rgba(124, 77, 255, 0.12)"
       : "rgba(124, 77, 255, 0.25)",
     color: theme.palette.primary.main,
     "&:hover": {
-      backgroundColor: theme.mode === "light"
+      backgroundColor: (theme.palette && theme.palette.type) || 'light' === "light"
         ? "rgba(124, 77, 255, 0.18)"
         : "rgba(124, 77, 255, 0.35)",
     },
@@ -322,7 +322,7 @@ const useStyles = makeStyles((theme) => ({
     padding: 6,
     "&:hover": {
       borderColor: theme.palette.primary.main,
-      backgroundColor: theme.mode === "light"
+      backgroundColor: (theme.palette && theme.palette.type) || 'light' === "light"
         ? "rgba(124, 77, 255, 0.08)"
         : "rgba(124, 77, 255, 0.15)",
       color: theme.palette.primary.main,
@@ -335,12 +335,12 @@ const useStyles = makeStyles((theme) => ({
   tabButtonActive: {
     borderColor: theme.palette.primary.main,
     borderWidth: "2px",
-    backgroundColor: theme.mode === "light"
+    backgroundColor: (theme.palette && theme.palette.type) || 'light' === "light"
       ? "rgba(124, 77, 255, 0.12)"
       : "rgba(124, 77, 255, 0.25)",
     color: theme.palette.primary.main,
     "&:hover": {
-      backgroundColor: theme.mode === "light"
+      backgroundColor: (theme.palette && theme.palette.type) || 'light' === "light"
         ? "rgba(124, 77, 255, 0.18)"
         : "rgba(124, 77, 255, 0.35)",
     },
@@ -356,7 +356,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "transparent",
     padding: 6,
     "&:hover": {
-      backgroundColor: theme.mode === "light"
+      backgroundColor: (theme.palette && theme.palette.type) || 'light' === "light"
         ? "rgba(124, 77, 255, 0.08)"
         : "rgba(124, 77, 255, 0.15)",
       color: theme.palette.primary.main,
@@ -367,12 +367,12 @@ const useStyles = makeStyles((theme) => ({
   },
 
   filterButtonActive: {
-    backgroundColor: theme.mode === "light"
+    backgroundColor: (theme.palette && theme.palette.type) || 'light' === "light"
       ? "rgba(76, 175, 80, 0.12)"
       : "rgba(76, 175, 80, 0.25)",
     color: "#4CAF50",
     "&:hover": {
-      backgroundColor: theme.mode === "light"
+      backgroundColor: (theme.palette && theme.palette.type) || 'light' === "light"
         ? "rgba(76, 175, 80, 0.18)"
         : "rgba(76, 175, 80, 0.35)",
     },
@@ -408,7 +408,7 @@ const useStyles = makeStyles((theme) => ({
     minWidth: "100px",
     transition: "all 0.2s ease",
     "&:hover": {
-      backgroundColor: theme.mode === "light"
+      backgroundColor: (theme.palette && theme.palette.type) || 'light' === "light"
         ? "rgba(0, 0, 0, 0.04)"
         : "rgba(255, 255, 255, 0.08)",
       borderColor: theme.palette.text.secondary,
@@ -442,7 +442,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 2,
     padding: "4px 8px",
     "&:hover": {
-      backgroundColor: theme.mode === "light"
+      backgroundColor: (theme.palette && theme.palette.type) || 'light' === "light"
         ? "rgba(124, 77, 255, 0.08)"
         : "rgba(124, 77, 255, 0.15)",
     },
@@ -493,7 +493,7 @@ const useStyles = makeStyles((theme) => ({
       fontSize: "10px",
       fontWeight: 500,
       borderRadius: "4px",
-      backgroundColor: theme.mode === "light"
+      backgroundColor: (theme.palette && theme.palette.type) || 'light' === "light"
         ? "rgba(124, 77, 255, 0.12)"
         : "rgba(124, 77, 255, 0.25)",
       color: theme.palette.primary.main,

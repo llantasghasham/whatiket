@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 8,
     backgroundColor: theme.palette.background.paper,
     boxShadow:
-      theme.mode === "light"
+      (theme.palette && theme.palette.type) || 'light' === "light"
         ? "0 1px 4px rgba(15,23,42,0.06)"
         : "0 1px 4px rgba(15,23,42,0.35)",
     overflow: "hidden",
@@ -163,7 +163,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "space-between",
     marginLeft: "4px",
-    color: theme.mode === "light" ? "black" : "white",
+    color: (theme.palette && theme.palette.type) || 'light' === "light" ? "black" : "white",
   },
   contactNameText: {
     fontWeight: 600,
@@ -189,7 +189,7 @@ const useStyles = makeStyles((theme) => ({
     position: "relative",
     top: 0,
     marginRight: 0,
-    color: theme.mode === "light" ? "#94a3b8" : grey[500],
+    color: (theme.palette && theme.palette.type) || 'light' === "light" ? "#94a3b8" : grey[500],
     fontSize: 8,
   },
 
@@ -214,14 +214,14 @@ const useStyles = makeStyles((theme) => ({
   contactLastMessage: {
   paddingRight: "0%",
   marginLeft: "4px",
-  color: theme.mode === "light" ? grey[500] : grey[400],
+  color: (theme.palette && theme.palette.type) || 'light' === "light" ? grey[500] : grey[400],
   fontWeight: 400,
   fontSize: 11,
 },
 
 contactLastMessageUnread: {
   paddingRight: 16,
-  color: theme.mode === "light" ? "#9054BC" : grey[200],
+  color: (theme.palette && theme.palette.type) || 'light' === "light" ? "#9054BC" : grey[200],
   width: "50%",
   fontWeight: 400,
   fontSize: 11,
