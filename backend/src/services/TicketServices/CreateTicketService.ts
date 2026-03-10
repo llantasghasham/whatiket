@@ -35,7 +35,7 @@ const CreateTicketService = async ({
   queueId,
   companyId,
   whatsappId = "",
-  reuseOpenTicket = false
+  reuseOpenTicket = true
 }: Request): Promise<Ticket> => {
 
   const io = getIO();

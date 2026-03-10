@@ -135,8 +135,8 @@ const ListTicketsService = async ({
     {
       model: Message,
       as: "messages",
-      attributes: ["fromMe"],
-      limit: 1,
+      attributes: ["id", "body", "fromMe", "createdAt"],
+      limit: 3,
       order: [["createdAt", "DESC"]],
       separate: true
     }
@@ -598,7 +598,7 @@ if (searchParam) {
       return {
         model: Message,
         as: "messages",
-        attributes: ["id", "body"],
+        attributes: ["id", "body", "fromMe", "createdAt"],
         where: {
           body: where(
             fn("LOWER", fn('unaccent', col("messages.body"))),
@@ -754,12 +754,21 @@ const { count, rows: tickets } = await Ticket.findAndCountAll({
       };
     }
     
-    // Adicionar campo lastMessageFromMe baseado na última mensagem
+    // Adicionar lastMessageFromMe y recentMessages (últimas 3) para preview en lista
     if (ticketJSON.messages && ticketJSON.messages.length > 0) {
+      const sorted = [...ticketJSON.messages].sort(
+        (a: any, b: any) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+      );
       ticketJSON.lastMessageFromMe = ticketJSON.messages[0].fromMe;
-      delete ticketJSON.messages; // Remove messages do retorno para não sobrecarregar
+      ticketJSON.recentMessages = sorted.slice(-3).map((m: any) => ({
+        body: m.body,
+        fromMe: m.fromMe,
+        createdAt: m.createdAt
+      }));
+      delete ticketJSON.messages;
     } else {
       ticketJSON.lastMessageFromMe = null;
+      ticketJSON.recentMessages = [];
     }
     
     return ticketJSON;

@@ -60,6 +60,7 @@ const TelegramModal = ({ open, onClose, connectionId, companyId }) => {
   const classes = useStyles();
   const [name, setName] = useState("");
   const [token, setToken] = useState("");
+  const [greetingMessage, setGreetingMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [settingWebhook, setSettingWebhook] = useState(false);
 
@@ -70,6 +71,7 @@ const TelegramModal = ({ open, onClose, connectionId, companyId }) => {
     if (!open) return;
     setName("");
     setToken("");
+    setGreetingMessage("");
     if (connectionId) {
       setLoading(true);
       api
@@ -77,6 +79,7 @@ const TelegramModal = ({ open, onClose, connectionId, companyId }) => {
         .then(({ data }) => {
           setName(data.name || "");
           setToken(data.token ? "••••••••••••" : "");
+          setGreetingMessage(data.greetingMessage || "");
         })
         .catch(toastError)
         .finally(() => setLoading(false));
@@ -97,6 +100,11 @@ const TelegramModal = ({ open, onClose, connectionId, companyId }) => {
       try {
         const queues = await api.get("/queue").then((r) => r.data);
         const queueIds = queues?.map((q) => q.id) || [];
+        if (queueIds.length > 1 && !greetingMessage.trim()) {
+          toast.error(i18n.t("errors.ERR_WAPP_GREETING_REQUIRED") || "El mensaje de saludo es obligatorio cuando hay más de una fila.");
+          setLoading(false);
+          return;
+        }
         const { data } = await api.post("/whatsapp", {
           name: name.trim(),
           token: token.trim(),
@@ -104,6 +112,7 @@ const TelegramModal = ({ open, onClose, connectionId, companyId }) => {
           status: "CONNECTED",
           queueIds,
           isDefault: false,
+          greetingMessage: greetingMessage.trim() || undefined,
         });
         toast.success("Conexión Telegram creada. Configure el webhook.");
         onClose();
@@ -121,6 +130,7 @@ const TelegramModal = ({ open, onClose, connectionId, companyId }) => {
       try {
         await api.put(`/whatsapp/${connectionId}`, {
           name: name.trim(),
+          greetingMessage: greetingMessage.trim() || undefined,
           ...(token !== "••••••••••••" && token.trim() ? { token: token.trim() } : {}),
         });
         toast.success("Conexión actualizada.");
@@ -177,8 +187,26 @@ const TelegramModal = ({ open, onClose, connectionId, companyId }) => {
             placeholder="123456789:ABCdefGHIjklMNOpqrsTUVwxyz"
             disabled={loading}
             helperText="Obtenga el token en @BotFather de Telegram"
+            style={{ marginBottom: 16 }}
           />
         )}
+
+        <TextField
+          label={i18n.t("queueModal.form.greetingMessage") || "Mensaje de saludo"}
+          fullWidth
+          variant="outlined"
+          multiline
+          rows={3}
+          value={greetingMessage}
+          onChange={(e) => setGreetingMessage(e.target.value)}
+          placeholder="¡Hola! ¿En qué puedo ayudarte?"
+          disabled={loading}
+          helperText={
+            i18n.t("connections.telegram.greetingHelper") ||
+            "Obligatorio cuando hay más de una fila. Se muestra al usuario al iniciar conversación."
+          }
+          style={{ marginBottom: 16 }}
+        />
 
         <Box className={classes.instructionBox}>
           <Typography variant="subtitle2" style={{ fontWeight: 600, marginBottom: 8 }}>

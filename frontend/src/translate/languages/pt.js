@@ -652,6 +652,7 @@ const messages = {
           title: "Conectar Telegram",
           name: "Nome da conexão",
           token: "Token do bot",
+          greetingHelper: "Obrigatório quando há mais de uma fila. Exibido ao usuário ao iniciar conversa.",
         },
         waitConnection: "Aguarde... Suas conexões serão reiniciadas!",
         newConnection: "Nova Conexão",
@@ -1282,6 +1283,9 @@ const messages = {
           deleteTicket: "Deletar Ticket",
           quickmessageflash: "Mensagem Rápida",
         },
+        callButton: "Iniciar chamada",
+        callFacebookNotSupported: "As chamadas estão disponíveis apenas para WhatsApp. Contatos do Facebook/Instagram não têm número de telefone associado.",
+        callTokenOrPhoneMissing: "Token WAVoIP ou número de telefone não disponível. Configure o WAVoIP na conexão do WhatsApp.",
         closedTicket: {
           closedMessage: "Fechar Ticket Com Mensagem de Despedida",
           closedNotMessage: "Fechar Ticket Sem Mensagem de Despedida",
@@ -2107,6 +2111,9 @@ const messages = {
       },
       messagesList: {
         you: "Você",
+        success: "Mensagem enviada",
+        placeholder: "Digite uma resposta rápida...",
+        client: "Cliente",
         contact: "Contato",
         messageNotAvailable: "Mensagem não disponível",
         messageDeleted: "Mensagem apagada",

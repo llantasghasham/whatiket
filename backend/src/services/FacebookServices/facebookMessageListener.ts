@@ -778,10 +778,11 @@ export const handleMessage = async (
               ticket.amountUsedBotQueues <= getSession.maxUseBotQueues &&
               !isNil(settings?.lgpdMessage)
             ) {
+              const msgToStoreLgpd = { ...message, sender: webhookEvent.sender, recipient: webhookEvent.recipient };
               if (message.attachments) {
-                await verifyMessageMedia(message, ticket, contact);
+                await verifyMessageMedia(msgToStoreLgpd, ticket, contact);
               } else {
-                await verifyMessageFace(message, message.text, ticket, contact);
+                await verifyMessageFace(msgToStoreLgpd, message.text, ticket, contact);
               }
 
               if (
@@ -858,10 +859,12 @@ export const handleMessage = async (
         throw new Error(e);
       }
 
+      // Incluir sender/recipient en dataJson para que getPsidFromMessages pueda recuperar el PSID
+      const msgToStore = fromMe ? message : { ...message, sender: webhookEvent.sender, recipient: webhookEvent.recipient };
       if (message.attachments) {
-        await verifyMessageMedia(message, ticket, contact);
+        await verifyMessageMedia(msgToStore, ticket, contact);
       } else {
-        await verifyMessageFace(message, message.text, ticket, contact);
+        await verifyMessageFace(msgToStore, message.text, ticket, contact);
       }
 
       const flow = await FlowBuilderModel.findOne({

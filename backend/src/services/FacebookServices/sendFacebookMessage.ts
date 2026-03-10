@@ -12,19 +12,23 @@ interface Request {
 
 /** Obtiene PSID desde mensajes entrantes si contact.number no es válido */
 const getPsidFromMessages = async (ticketId: number): Promise<string | null> => {
-  const msg = await Message.findOne({
+  const messages = await Message.findAll({
     where: { ticketId, fromMe: false },
     order: [["id", "DESC"]],
-    attributes: ["dataJson"]
+    attributes: ["dataJson"],
+    limit: 10
   });
-  if (!msg?.dataJson) return null;
-  try {
-    const data = typeof msg.dataJson === "string" ? JSON.parse(msg.dataJson) : msg.dataJson;
-    const psid = data?.sender?.id;
-    return psid && /^\d+$/.test(String(psid)) ? String(psid) : null;
-  } catch {
-    return null;
+  for (const msg of messages) {
+    if (!msg?.dataJson) continue;
+    try {
+      const data = typeof msg.dataJson === "string" ? JSON.parse(msg.dataJson) : msg.dataJson;
+      const psid = data?.sender?.id ?? data?.senderId ?? data?.sender_id;
+      if (psid && /^\d+$/.test(String(psid))) return String(psid);
+    } catch {
+      continue;
+    }
   }
+  return null;
 };
 
 const sendFacebookMessage = async ({ body, ticket, quotedMsg }: Request): Promise<any> => {
@@ -58,7 +62,10 @@ const sendFacebookMessage = async ({ body, ticket, quotedMsg }: Request): Promis
 
   if (!recipientId || recipientId === "undefined" || recipientId === "null") {
     console.error("[FB_SEND] ABORT - recipient[id] inválido | contactId:", ticket.contact?.id, "| number:", ticket.contact?.number);
-    throw new AppError("ERR_SENDING_FACEBOOK_MSG: Param recipient[id] must be a valid ID string. El contacto no tiene PSID de Facebook/Instagram.");
+    throw new AppError(
+      "ERR_SENDING_FACEBOOK_MSG: El contacto no tiene PSID válido. " +
+      "Si el ticket fue transferido o el contacto importado, pida al usuario que envíe un nuevo mensaje por Facebook/Instagram para actualizar el ID."
+    );
   }
   if (!/^\d+$/.test(recipientId)) {
     console.error("[FB_SEND] ABORT - recipient no es PSID válido (debe ser numérico) | contact.number:", recipientId);

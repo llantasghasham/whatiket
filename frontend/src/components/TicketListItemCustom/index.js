@@ -24,6 +24,9 @@ import {
   Menu,
   MenuItem,
   useMediaQuery,
+  TextField,
+  InputAdornment,
+  Collapse,
 } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { AuthContext } from "../../context/Auth/AuthContext";
@@ -40,7 +43,7 @@ import ShowTicketOpen from "../ShowTicketOpenModal";
 import { isNil } from "lodash";
 import { toast } from "react-toastify";
 import { useSystemAlert } from "../SystemAlert";
-import { Done, HighlightOff, Replay, SwapHoriz, LocalOffer, DeleteOutline, Label } from "@material-ui/icons";
+import { Done, HighlightOff, Replay, SwapHoriz, LocalOffer, DeleteOutline, Label, Send } from "@material-ui/icons";
 import useCompanySettings from "../../hooks/useSettings/companySettings";
 import TicketTagsKanbanModal from "../TicketTagsKanbanModal";
 import { getBackendUrl } from "../../config";
@@ -327,6 +330,57 @@ contactLastMessageUnread: {
   btnBlue: { backgroundColor: "#40BFFF" },
   btnRed: { backgroundColor: "#FF6B6B" },
   btnGreen: { backgroundColor: "#2ECC71" },
+
+  // Preview de mensajes entrantes/enviados
+  messagesPreview: {
+    display: "flex",
+    flexDirection: "column",
+    gap: 4,
+    marginTop: 6,
+    marginBottom: 4,
+    maxHeight: 72,
+    overflow: "hidden",
+  },
+  messagePreviewRow: {
+    display: "flex",
+    alignItems: "flex-start",
+    gap: 6,
+    fontSize: 11,
+    lineHeight: 1.35,
+  },
+  messagePreviewIncoming: {
+    color: grey[700],
+    backgroundColor: "rgba(0,0,0,0.04)",
+    padding: "4px 8px",
+    borderRadius: 8,
+    maxWidth: "100%",
+    alignSelf: "flex-start",
+    "& strong": { fontWeight: 600, color: "#64748b", marginRight: 4 },
+  },
+  messagePreviewSent: {
+    color: "#9054bc",
+    backgroundColor: "rgba(144,84,188,0.08)",
+    padding: "4px 8px",
+    borderRadius: 8,
+    maxWidth: "100%",
+    alignSelf: "flex-end",
+    marginLeft: "auto",
+    "& strong": { fontWeight: 600, color: "#7c3aed", marginRight: 4 },
+  },
+  quickReplyArea: {
+    padding: "6px 8px",
+    borderRadius: 8,
+    backgroundColor: "rgba(0,0,0,0.02)",
+    border: "1px solid rgba(0,0,0,0.06)",
+    marginTop: 4,
+  },
+  quickReplyInput: {
+    "& .MuiInputBase-root": {
+      fontSize: 12,
+      borderRadius: 20,
+      backgroundColor: "#fff",
+    },
+  },
 }));
 
 const TicketListItemCustom = ({ setTabOpen, ticket }) => {
@@ -343,8 +397,11 @@ const TicketListItemCustom = ({ setTabOpen, ticket }) => {
   const [queueTicketOpen, setQueueTicketOpen] = useState("");
   const [openTagsKanbanModal, setOpenTagsKanbanModal] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [quickReplyText, setQuickReplyText] = useState("");
+  const [sendingQuickReply, setSendingQuickReply] = useState(false);
 
   const { ticketId } = useParams();
+  const isSelected = ticketId === ticket.uuid;
   const isMounted = useRef(true);
   const { setCurrentTicket } = useContext(TicketsContext);
   const { user } = useContext(AuthContext);
@@ -450,6 +507,35 @@ const TicketListItemCustom = ({ setTabOpen, ticket }) => {
     if (!isNil(str)) {
       if (str.length > len) return str.substring(0, len) + "...";
       return str;
+    }
+  };
+
+  const formatMsgPreview = (body) => {
+    if (!body) return "";
+    if (body.includes("fb.me")) return "Clic de anuncio";
+    if (body.includes("data:image/png;base64")) return "📍 Localización";
+    if (body.includes("BEGIN:VCARD")) return "👤 Contacto";
+    return truncate(body, 50);
+  };
+
+  const handleSendQuickReply = async (e) => {
+    if (e) e.stopPropagation();
+    const text = quickReplyText.trim();
+    if (!text || sendingQuickReply) return;
+    setSendingQuickReply(true);
+    try {
+      await api.post(`/messages/${ticket.id}`, {
+        body: text,
+        read: 1,
+        fromMe: true,
+        mediaUrl: "",
+      });
+      setQuickReplyText("");
+      toast.success(i18n.t("messagesList.success"));
+    } catch (err) {
+      toastError(err);
+    } finally {
+      setSendingQuickReply(false);
     }
   };
 
@@ -594,8 +680,7 @@ const TicketListItemCustom = ({ setTabOpen, ticket }) => {
     if (isIconClick) return;
 
     handleSelectTicket(ticket);
-    // opcional: se quiser já navegar ao clicar no item:
-    // history.push(`/tickets/${ticket.uuid}`);
+    history.push(`/atendimentos/${ticket.uuid || ticket.id}`);
   }}
   selected={ticketId && ticketId === ticket.uuid}
   className={clsx(classes.ticket, {
@@ -635,37 +720,86 @@ const TicketListItemCustom = ({ setTabOpen, ticket }) => {
           }
           secondary={
             <span className={classes.contactNameWrapper}>
-              <Typography
-                className={
-                  Number(ticket.unreadMessages) > 0
-                    ? classes.contactLastMessageUnread
-                    : classes.contactLastMessage
-                }
-                noWrap
-                component="span"
-                variant="body2"
-              >
-                {ticket.lastMessage ? (
-                  <>
-                    {ticket.lastMessage.includes("fb.me") ? (
-                      <MarkdownWrapper>Clic de anuncio</MarkdownWrapper>
-                    ) : ticket.lastMessage.includes("data:image/png;base64") ? (
-                      <MarkdownWrapper>Localização</MarkdownWrapper>
-                    ) : (
-                      <>
-                        {ticket.lastMessage.includes("BEGIN:VCARD") ? (
-                          <MarkdownWrapper>Contato</MarkdownWrapper>
-                        ) : (
-                          <MarkdownWrapper>
-                            {truncate(ticket.lastMessage, 40)}
-                          </MarkdownWrapper>
-                        )}
-                      </>
-                    )}
-                  </>
-                ) : (
-                  <br />
-                )}
+              {ticket.recentMessages && ticket.recentMessages.length > 0 ? (
+                <div className={classes.messagesPreview}>
+                  {ticket.recentMessages.map((msg, idx) => (
+                    <div
+                      key={idx}
+                      className={clsx(
+                        classes.messagePreviewRow,
+                        msg.fromMe ? classes.messagePreviewSent : classes.messagePreviewIncoming
+                      )}
+                    >
+                      <strong>{msg.fromMe ? `${i18n.t("messagesList.you")}:` : `${i18n.t("messagesList.client")}:`}</strong>
+                      <MarkdownWrapper>{formatMsgPreview(msg.body)}</MarkdownWrapper>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <Typography
+                  className={
+                    Number(ticket.unreadMessages) > 0
+                      ? classes.contactLastMessageUnread
+                      : classes.contactLastMessage
+                  }
+                  noWrap
+                  component="span"
+                  variant="body2"
+                >
+                  {ticket.lastMessage ? (
+                    <>
+                      {ticket.lastMessage.includes("fb.me") ? (
+                        <MarkdownWrapper>Clic de anuncio</MarkdownWrapper>
+                      ) : ticket.lastMessage.includes("data:image/png;base64") ? (
+                        <MarkdownWrapper>Localização</MarkdownWrapper>
+                      ) : (
+                        <>
+                          {ticket.lastMessage.includes("BEGIN:VCARD") ? (
+                            <MarkdownWrapper>Contacto</MarkdownWrapper>
+                          ) : (
+                            <MarkdownWrapper>
+                              {truncate(ticket.lastMessage, 40)}
+                            </MarkdownWrapper>
+                          )}
+                        </>
+                      )}
+                    </>
+                  ) : (
+                    <br />
+                  )}
+                </Typography>
+              )}
+
+              {(ticket.status === "open" || ticket.status === "group") && (
+                <Collapse in={isSelected}>
+                  <div className={classes.quickReplyArea} onClick={(e) => e.stopPropagation()}>
+                    <TextField
+                      size="small"
+                      placeholder={i18n.t("messagesList.placeholder") || "Escriba una respuesta rápida..."}
+                      value={quickReplyText}
+                      onChange={(e) => setQuickReplyText(e.target.value)}
+                      onKeyPress={(e) => e.key === "Enter" && !e.shiftKey && handleSendQuickReply(e)}
+                      className={classes.quickReplyInput}
+                      fullWidth
+                      variant="outlined"
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              size="small"
+                              onClick={handleSendQuickReply}
+                              disabled={!quickReplyText.trim() || sendingQuickReply}
+                              color="primary"
+                            >
+                              <Send fontSize="small" />
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </div>
+                </Collapse>
+              )}
 
                 <span className={classes.secondaryContentSecond}>
                   {ticket?.whatsapp && (
@@ -730,7 +864,6 @@ const TicketListItemCustom = ({ setTabOpen, ticket }) => {
                     </span>
                   )}
                 </span>
-              </Typography>
             </span>
           }
         />

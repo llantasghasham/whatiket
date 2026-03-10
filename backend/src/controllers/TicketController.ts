@@ -288,8 +288,8 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
   const { contactId, status, userId, queueId, whatsappId, reuseOpenTicket }: TicketData = req.body;
   const { companyId } = req.user;
 
-  // Aceptar reuseOpenTicket como boolean o string "true" para permitir mensaje rápido con ticket abierto
-  const allowReuse = reuseOpenTicket === true || reuseOpenTicket === "true";
+  // Por defecto true: permitir enviar mensaje aunque haya ticket abierto (mensaje rápido)
+  const allowReuse = reuseOpenTicket === false || reuseOpenTicket === "false" ? false : true;
 
   const ticket = await CreateTicketService({
     contactId,

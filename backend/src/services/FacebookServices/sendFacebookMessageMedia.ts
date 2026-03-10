@@ -1,5 +1,6 @@
 import fs from "fs";
 import AppError from "../../errors/AppError";
+import Message from "../../models/Message";
 import Ticket from "../../models/Ticket";
 import { sendAttachmentFromUrl } from "./graphAPI";
 import { getBackendUrl } from "../SettingService/UrlService";
@@ -11,6 +12,46 @@ interface Request {
   body?: string;
   url?: string;
 }
+
+/** Obtiene PSID desde mensajes entrantes (misma lógica que sendFacebookMessage) */
+const getPsidFromMessages = async (ticketId: number): Promise<string | null> => {
+  const messages = await Message.findAll({
+    where: { ticketId, fromMe: false },
+    order: [["id", "DESC"]],
+    attributes: ["dataJson"],
+    limit: 10
+  });
+  for (const msg of messages) {
+    if (!msg?.dataJson) continue;
+    try {
+      const data = typeof msg.dataJson === "string" ? JSON.parse(msg.dataJson) : msg.dataJson;
+      const psid = data?.sender?.id ?? data?.senderId ?? data?.sender_id;
+      if (psid && /^\d+$/.test(String(psid))) return String(psid);
+    } catch {
+      continue;
+    }
+  }
+  return null;
+};
+
+const resolveRecipientId = async (ticket: Ticket): Promise<string> => {
+  let recipientId = ticket.contact?.number ? String(ticket.contact.number).trim() : "";
+  const isValidPsid = recipientId && recipientId !== "undefined" && recipientId !== "null" && /^\d+$/.test(recipientId);
+  if (!isValidPsid) {
+    const psidFromMsg = await getPsidFromMessages(ticket.id);
+    if (psidFromMsg) {
+      recipientId = psidFromMsg;
+      if (ticket.contact?.id) {
+        const Contact = (await import("../../models/Contact")).default;
+        await Contact.update({ number: psidFromMsg }, { where: { id: ticket.contact.id } });
+      }
+    }
+  }
+  if (!recipientId || !/^\d+$/.test(recipientId)) {
+    throw new AppError("ERR_SENDING_FACEBOOK_MSG: El contacto no tiene PSID válido. Pida al usuario que envíe un nuevo mensaje por Facebook/Instagram.");
+  }
+  return recipientId;
+};
 
 export const typeAttachment = (media: Express.Multer.File) => {
   if (media.mimetype.includes("image")) {
@@ -32,6 +73,7 @@ export const sendFacebookMessageMedia = async ({
   body
 }: Request): Promise<any> => {
   try {
+    const recipientId = await resolveRecipientId(ticket);
     const type = typeAttachment(media);
 
     const backendUrl = await getBackendUrl(ticket.companyId);
@@ -39,7 +81,7 @@ export const sendFacebookMessageMedia = async ({
 
 
     const sendMessage = await sendAttachmentFromUrl(
-      ticket.contact.number,
+      recipientId,
       domain,
       type,
       ticket.whatsapp.facebookUserToken
@@ -61,12 +103,13 @@ export const sendFacebookMessageMediaExternal = async ({
   body
 }: Request): Promise<any> => {
   try {
+    const recipientId = await resolveRecipientId(ticket);
     const type = "image"
 
     // const domain = `${process.env.BACKEND_URL}/public/${media.filename}`
 
     const sendMessage = await sendAttachmentFromUrl(
-      ticket.contact.number,
+      recipientId,
       url,
       type,
       ticket.whatsapp.facebookUserToken
@@ -90,12 +133,13 @@ export const sendFacebookMessageFileExternal = async ({
   body
 }: Request): Promise<any> => {
   try {
+    const recipientId = await resolveRecipientId(ticket);
     const type = "file"
 
     // const domain = `${process.env.BACKEND_URL}/public/${media.filename}`
 
     const sendMessage = await sendAttachmentFromUrl(
-      ticket.contact.number,
+      recipientId,
       url,
       type,
       ticket.whatsapp.facebookUserToken

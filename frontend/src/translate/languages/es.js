@@ -686,6 +686,7 @@ const messages = {
           title: "Conectar Telegram",
           name: "Nombre de la conexión",
           token: "Token del bot",
+          greetingHelper: "Obligatorio cuando hay más de una fila. Se muestra al usuario al iniciar conversación.",
         },
         waitConnection: "Espere... Las conexiones serán reiniciadas!",
         newConnection: "Nueva Conexión",
@@ -1826,6 +1827,9 @@ const messages = {
       tickets: {
         withoutQueue: "Sin cola",
         withoutUser: "Sin usuario",
+        callButton: "Iniciar llamada",
+        callFacebookNotSupported: "Las llamadas solo están disponibles para WhatsApp. Los contactos de Facebook/Instagram no tienen número de teléfono asociado.",
+        callTokenOrPhoneMissing: "Token WAVoIP o número de teléfono no disponible. Configure WAVoIP en la conexión de WhatsApp.",
       },
       queueIntegration: {
         title: "Integraciones",
@@ -2111,8 +2115,12 @@ const messages = {
       },
       messagesList: {
         today: "Hoy",
+        success: "Mensaje enviado",
+        placeholder: "Escriba una respuesta rápida...",
+        you: "Tú",
+        youFormal: "Usted",
+        client: "Cliente",
         facebookPolicyWarning: "Usted tiene 24 horas para responder después de recibir un mensaje, según las políticas de Facebook.",
-        you: "Usted",
         contact: "Contacto",
         messageNotAvailable: "Mensaje no disponible",
         messageDeleted: "Mensaje eliminado",

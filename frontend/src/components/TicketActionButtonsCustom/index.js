@@ -198,6 +198,11 @@ const TicketActionButtonsCustom = ({ ticket }) => {
     };
 
     const handleOpenWavoipCall = async () => {
+        // Llamadas solo disponibles para WhatsApp (WAVoIP usa número de teléfono)
+        if (ticket.channel === "facebook" || ticket.channel === "instagram") {
+            toastError(i18n.t("tickets.callFacebookNotSupported") || "Las llamadas solo están disponibles para WhatsApp. Los contactos de Facebook/Instagram no tienen número de teléfono asociado.");
+            return;
+        }
         try {
             const { data } = await api.get(`/tickets/${ticket.id}`); // Busca os dados mais recentes
             console.log("Ticket Atualizado:", data);
@@ -207,7 +212,7 @@ const TicketActionButtonsCustom = ({ ticket }) => {
             const name = data?.contact?.name;
 
             if (!token || !phone) {
-                toastError("Erro: Token ou número de telefone não disponível.");
+                toastError(i18n.t("tickets.callTokenOrPhoneMissing") || "Token WAVoIP o número de teléfono no disponible. Configure WAVoIP en la conexión de WhatsApp.");
                 return;
             }
 
@@ -498,14 +503,16 @@ const TicketActionButtonsCustom = ({ ticket }) => {
                 )}
                 {(ticket.status === "open" || ticket.status === "group") && (
                     <>
-                        <IconButton 
-                            className={classes.bottomButtonVisibilityIcon} 
-                            onClick={handleOpenWavoipCall}
-                        >
-                            <Tooltip title="Iniciar chamada">
-                                <CallIcon />
-                            </Tooltip>
-                        </IconButton>
+                        {ticket.channel === "whatsapp" && (
+                            <IconButton 
+                                className={classes.bottomButtonVisibilityIcon} 
+                                onClick={handleOpenWavoipCall}
+                            >
+                                <Tooltip title={i18n.t("tickets.callButton") || "Iniciar chamada"}>
+                                    <CallIcon />
+                                </Tooltip>
+                            </IconButton>
+                        )}
 
                         <IconButton className={classes.bottomButtonVisibilityIcon} onClick={() => setOpenTagsKanbanModal(true)}>
                             <Tooltip title="Tags & Kanban">
