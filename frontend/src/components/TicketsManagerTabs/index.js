@@ -62,6 +62,9 @@ import { AuthContext } from "../../context/Auth/AuthContext";
 import { QueueSelectedContext } from "../../context/QueuesSelected/QueuesSelectedContext";
 import CancelIcon from '@mui/icons-material/Cancel';
 import CheckIcon from '@mui/icons-material/Check';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import InstagramIcon from '@mui/icons-material/Instagram';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 
 import api from "../../services/api";
 import { TicketsContext } from "../../context/Tickets/TicketsContext";
@@ -908,7 +911,7 @@ const TicketsManagerTabs = () => {
                 </DialogActions>
               </Dialog>
 
-              {/* New Ticket Button */}
+              {/* Nuevo ticket / Agregar cliente */}
               <Badge
                 color="primary"
                 invisible={!isHoveredNew}
@@ -919,29 +922,43 @@ const TicketsManagerTabs = () => {
                     onMouseEnter={() => setIsHoveredNew(true)}
                     onMouseLeave={() => setIsHoveredNew(false)}
                     className={classes.actionButton}
-                    onClick={() => {
-                      setNewTicketModalOpen(true);
-                    }}
+                    onClick={() => setNewTicketModalOpen(true)}
                   >
                     <AddIcon />
                   </IconButton>
               </Badge>
 
-              {/* Enviar Mensaje de WhatsApp - número que no ha escrito */}
+              {/* Botón redondo WhatsApp */}
               <Tooltip title={i18n.t("sendWhatsAppMessage.title") || "Enviar Mensaje de WhatsApp"}>
-                <Button
-                  size="small"
-                  variant="outlined"
+                <IconButton
+                  className={classes.actionButton}
                   onClick={() => setSendWhatsAppModalOpen(true)}
-                  style={{
-                    textTransform: "none",
-                    borderColor: "#25d366",
-                    color: "#25d366",
-                    marginLeft: 8,
-                  }}
+                  style={{ color: "#25d366" }}
                 >
-                  {i18n.t("sendWhatsAppMessage.shortLabel") || "Enviar WhatsApp"}
-                </Button>
+                  <WhatsAppIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
+
+              {/* Botón redondo Facebook */}
+              <Tooltip title="Nuevo ticket Facebook">
+                <IconButton
+                  className={classes.actionButton}
+                  onClick={() => setNewTicketModalOpen(true)}
+                  style={{ color: "#1877F2" }}
+                >
+                  <FacebookIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
+
+              {/* Botón redondo Instagram */}
+              <Tooltip title="Nuevo ticket Instagram">
+                <IconButton
+                  className={classes.actionButton}
+                  onClick={() => setNewTicketModalOpen(true)}
+                  style={{ color: "#E4405F" }}
+                >
+                  <InstagramIcon fontSize="small" />
+                </IconButton>
               </Tooltip>
 
               {/* Close All Button - Admin Only */}

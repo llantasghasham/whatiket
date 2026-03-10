@@ -64,6 +64,8 @@ interface TicketData {
   sendFarewellMessage?: boolean;
   whatsappId?: string;
   leadValue?: number;
+  /** Permite reutilizar ticket abierto para mensaje rápido */
+  reuseOpenTicket?: boolean;
 }
 
 export const index = async (req: Request, res: Response): Promise<Response> => {
@@ -281,7 +283,7 @@ export const kanban = async (req: Request, res: Response): Promise<Response> => 
 };
 
 export const store = async (req: Request, res: Response): Promise<Response> => {
-  const { contactId, status, userId, queueId, whatsappId }: TicketData = req.body;
+  const { contactId, status, userId, queueId, whatsappId, reuseOpenTicket }: TicketData = req.body;
   const { companyId } = req.user;
 
   const ticket = await CreateTicketService({
@@ -290,7 +292,8 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
     userId,
     companyId,
     queueId,
-    whatsappId
+    whatsappId,
+    reuseOpenTicket
   });
 
   const io = getIO();

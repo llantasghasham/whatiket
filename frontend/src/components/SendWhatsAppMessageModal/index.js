@@ -141,6 +141,7 @@ const SendWhatsAppMessageModal = ({ open, onClose }) => {
         whatsappId,
         userId: user.id,
         status: "open",
+        reuseOpenTicket: true, // Permite enviar mensaje aunque haya ticket abierto
       });
 
       await api.post(`/messages/${ticket.id}`, {
@@ -166,6 +167,7 @@ const SendWhatsAppMessageModal = ({ open, onClose }) => {
               whatsappId,
               userId: user.id,
               status: "open",
+              reuseOpenTicket: true,
             });
             await api.post(`/messages/${ticket.id}`, { body: message.trim(), read: 1, fromMe: true });
             toast.success(i18n.t("sendWhatsAppMessage.sent") || "Mensaje enviado.");

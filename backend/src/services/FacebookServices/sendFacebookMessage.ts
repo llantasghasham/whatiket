@@ -11,7 +11,6 @@ interface Request {
 }
 
 const sendFacebookMessage = async ({ body, ticket, quotedMsg }: Request): Promise<any> => {
-  const { number } = ticket.contact;
   const conn = ticket.whatsapp;
   const token = conn?.facebookUserToken;
   const connName = conn?.name || "?";
@@ -19,11 +18,25 @@ const sendFacebookMessage = async ({ body, ticket, quotedMsg }: Request): Promis
   const pageId = conn?.facebookPageUserId || "?";
   const channel = ticket.channel || conn?.channel || "?";
 
-  // Log obligatorio pre-envío
+  // Para Facebook/Instagram, recipient.id debe ser el PSID (Page-Scoped ID), no teléfono
+  let recipientId = ticket.contact?.number;
+  if (recipientId != null) {
+    recipientId = String(recipientId).trim();
+  }
+  if (!recipientId || recipientId === "undefined" || recipientId === "null") {
+    console.error("[FB_SEND] ABORT - recipient[id] inválido | contactId:", ticket.contact?.id, "| number:", ticket.contact?.number);
+    throw new AppError("ERR_SENDING_FACEBOOK_MSG: Param recipient[id] must be a valid ID string. El contacto no tiene PSID de Facebook/Instagram.");
+  }
+  // PSID debe ser numérico (solo dígitos)
+  if (!/^\d+$/.test(recipientId)) {
+    console.error("[FB_SEND] ABORT - recipient no es PSID válido (debe ser numérico) | contact.number:", recipientId);
+    throw new AppError("ERR_SENDING_FACEBOOK_MSG: El contacto tiene número de teléfono en lugar de PSID. Solo se puede responder a contactos que escribieron por Facebook/Instagram.");
+  }
+
   const tokenPreview = token
     ? `${token.substring(0, 8)}...${token.substring(token.length - 4)}`
     : "NULL";
-  console.log("[FB_SEND] INICIO | channel:", channel, "| conexion:", connName, "(id:", connId, ")", "| pageId:", pageId, "| recipient:", number, "| token:", tokenPreview);
+  console.log("[FB_SEND] INICIO | channel:", channel, "| conexion:", connName, "(id:", connId, ")", "| pageId:", pageId, "| recipient:", recipientId, "| token:", tokenPreview);
 
   if (!token) {
     console.error("[FB_SEND] ABORT - Conexión sin token | conexion:", connName, "| ticketId:", ticket.id);
@@ -31,16 +44,16 @@ const sendFacebookMessage = async ({ body, ticket, quotedMsg }: Request): Promis
   }
 
   try {
-    const send = await sendText(number, formatBody(body, ticket), token);
+    const send = await sendText(recipientId, formatBody(body, ticket), token);
     await ticket.update({ lastMessage: body });
-    console.log("[FB_SEND] OK | conexion:", connName, "| recipient:", number);
+    console.log("[FB_SEND] OK | conexion:", connName, "| recipient:", recipientId);
     return send;
   } catch (err: any) {
     const metaData = err?.response?.data?.error || {};
     const metaMsg = metaData.message || err?.message;
     const metaCode = metaData.code || err?.response?.status;
     const metaSubcode = metaData.error_subcode;
-    console.error("[FB_SEND] FAIL | conexion:", connName, "| recipient:", number, "| code:", metaCode, "| subcode:", metaSubcode, "| Meta:", metaMsg);
+    console.error("[FB_SEND] FAIL | conexion:", connName, "| recipient:", recipientId, "| code:", metaCode, "| subcode:", metaSubcode, "| Meta:", metaMsg);
     console.error("[FB_SEND] error.response.data:", JSON.stringify(err?.response?.data || {}));
     // Pasar mensaje de Meta al frontend para diagnóstico
     const userMsg = metaMsg || "Error al enviar mensaje a Facebook/Instagram";

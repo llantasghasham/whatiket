@@ -23,6 +23,8 @@ interface Request {
   companyId: number;
   queueId?: number;
   whatsappId: string;
+  /** Si true, permite reutilizar un ticket abierto para enviar mensaje rápido */
+  reuseOpenTicket?: boolean;
 }
 
 const CreateTicketService = async ({
@@ -32,7 +34,8 @@ const CreateTicketService = async ({
   userId,
   queueId,
   companyId,
-  whatsappId = ""
+  whatsappId = "",
+  reuseOpenTicket = false
 }: Request): Promise<Ticket> => {
 
   const io = getIO();
@@ -56,8 +59,10 @@ const CreateTicketService = async ({
   if (!defaultWhatsapp)
     defaultWhatsapp = await GetDefaultWhatsApp(whatsapp.id, companyId);
 
-  // console.log("defaultWhatsapp", defaultWhatsapp.id, defaultWhatsapp.channel)
-  await CheckContactOpenTickets(contactId, defaultWhatsapp.id, companyId);
+  // Solo validar ticket abierto si no se permite reutilizar (mensaje rápido)
+  if (!reuseOpenTicket) {
+    await CheckContactOpenTickets(contactId, defaultWhatsapp.id, companyId);
+  }
 
   const { isGroup } = contact;
 

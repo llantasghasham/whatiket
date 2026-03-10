@@ -211,6 +211,7 @@ const NewTicketModal = ({ modalOpen, onClose, initialContact }) => {
         whatsappId,
         userId: assignUserId,
         status: "open",
+        reuseOpenTicket: true, // Permite abrir/reutilizar ticket aunque haya uno abierto
       });
 
       onClose(ticket);
