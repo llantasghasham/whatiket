@@ -7,9 +7,8 @@ WORKDIR /app
 # Copie os arquivos de definição de pacotes
 COPY package.json package-lock.json* ./
 
-# Instale as dependências de produção
-# Use 'npm ci' para garantir instalações consistentes baseadas no package-lock.json
-RUN npm ci --only=production
+# Instale todas as dependências (incluindo devDependencies para o build)
+RUN npm ci
 
 # Copie o restante do código da aplicação
 COPY . .

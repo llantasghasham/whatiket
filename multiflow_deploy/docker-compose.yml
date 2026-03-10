@@ -1,0 +1,82 @@
+# Docker Compose para Whatiket
+# Uso: docker-compose up -d
+# Requiere: .env con variables de entorno
+
+version: '3.9'
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: whatiket_postgres
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    environment:
+      POSTGRES_USER: ${DB_USER:-whatiket}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME:-whatiket}
+    networks:
+      - whatiket_net
+
+  redis:
+    image: redis:7-alpine
+    container_name: whatiket_redis
+    restart: always
+    volumes:
+      - redis_data:/data
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    networks:
+      - whatiket_net
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: whatiket_backend
+    restart: always
+    ports:
+      - "${BACKEND_PORT:-4010}:4010"
+    environment:
+      NODE_ENV: production
+      PORT: 4010
+      BACKEND_URL: ${BACKEND_URL}
+      FRONTEND_URL: ${FRONTEND_URL}
+      DB_DIALECT: postgres
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: ${DB_USER:-whatiket}
+      DB_PASS: ${DB_PASS}
+      DB_NAME: ${DB_NAME:-whatiket}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
+      REDIS_URI: redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - whatiket_net
+
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    container_name: whatiket_frontend
+    restart: always
+    ports:
+      - "${FRONTEND_PORT:-80}:80"
+    environment:
+      REACT_APP_BACKEND_URL: ${BACKEND_URL}
+    depends_on:
+      - backend
+    networks:
+      - whatiket_net
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  whatiket_net:
+    driver: bridge

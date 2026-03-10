@@ -974,11 +974,6 @@ const Connections = () => {
           setModalChannel(null);
         }}
         connectionId={selectedWhatsApp?.id}
-        onSuccess={() => {
-          setTelegramModalOpen(false);
-          setSelectedWhatsApp(null);
-          fetchWhatsApps();
-        }}
       />
       <ChannelModal
         open={hubChannelModalOpen}
