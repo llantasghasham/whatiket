@@ -678,7 +678,7 @@ const Atendimentos = () => {
 	const shouldHideMobileMenu = mobileApp && hideMenu;
 	
 	// Índice inicial da aba: 0 para todos (Automação para admin, Aguardando para não-admin)
-	const [tabIndex, setTabIndex] = useState(0);
+	const [tabIndex, setTabIndex] = useState(2); // Por defecto: "En atención" para ver tickets activos y responder
 	const [tickets, setTickets] = useState([]);
 	const [selectedTicket, setSelectedTicket] = useState(null);
 	const [messages, setMessages] = useState([]);
@@ -752,7 +752,7 @@ const Atendimentos = () => {
 	const [showAllTickets, setShowAllTickets] = useState(() => {
 		if (isRestrictedUserType) return false;
 		const savedState = localStorage.getItem('showAllTickets');
-		return savedState ? JSON.parse(savedState) : false;
+		return savedState ? JSON.parse(savedState) : true; // Por defecto: ver todos los tickets (mensajes visibles)
 	});
 	const [isSendingMessage, setIsSendingMessage] = useState(false);
 	const [selectedQuickIndex, setSelectedQuickIndex] = useState(-1);
@@ -4379,6 +4379,15 @@ useEffect(() => {
 									>
 										<EmojiIcon />
 									</IconButton>
+									<Tooltip title={i18n.t("atendimentos.quickReplies") || "Respuestas rápidas - responder con un clic"}>
+										<IconButton 
+											size="small"
+											onClick={() => setQuickMessagesOpen(true)}
+											style={{ color: '#00a884' }}
+										>
+											<QuickMessageIcon />
+										</IconButton>
+									</Tooltip>
 								</>
 							)}
 							<input
@@ -4493,12 +4502,14 @@ useEffect(() => {
 								</Paper>
 							)}
 							{inputMessage.trim() ? (
-								<IconButton
-									color="primary"
-									onClick={handleSendMessage}
-								>
-									<SendIcon />
-								</IconButton>
+								<Tooltip title="Enviar (Enter)">
+									<IconButton
+										color="primary"
+										onClick={handleSendMessage}
+									>
+										<SendIcon />
+									</IconButton>
+								</Tooltip>
 							) : recording ? (
 								<div style={{ display: 'flex', alignItems: 'center', gap: 8, backgroundColor: '#f0f2f5', padding: '8px 12px', borderRadius: 20, flex: 1 }}>
 									<IconButton
