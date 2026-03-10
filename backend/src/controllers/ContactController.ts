@@ -43,6 +43,7 @@ type IndexQuery = {
   pageNumber: string;
   contactTag: string;
   isGroup?: string;
+  channel?: string;
 };
 
 type IndexGetContactQuery = {
@@ -169,10 +170,8 @@ export const deleteContactFile = async (req: Request, res: Response): Promise<Re
 };
 
 export const index = async (req: Request, res: Response): Promise<Response> => {
-  const { searchParam, pageNumber, contactTag: tagIdsStringified, isGroup } = req.query as IndexQuery;
+  const { searchParam, pageNumber, contactTag: tagIdsStringified, isGroup, channel } = req.query as IndexQuery;
   const { id: userId, companyId } = req.user;
-
-  console.log("index", { companyId, userId, searchParam })
 
   let tagsIds: number[] = [];
 
@@ -186,7 +185,8 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
     companyId,
     tagsIds,
     isGroup,
-    userId: Number(userId)
+    userId: Number(userId),
+    channel
   });
 
   return res.json({ contacts, count, hasMore });

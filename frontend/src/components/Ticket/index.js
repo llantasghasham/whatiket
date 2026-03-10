@@ -92,10 +92,8 @@ const Ticket = () => {
 
             const { data } = await api.get("/tickets/u/" + ticketId);
 
-            setContact(data.contact);
-            // setWhatsapp(data.whatsapp);
-            // setQueueId(data.queueId);
-            setNotificameHub(data.whatsapp.notificameHub);
+            setContact(data.contact || {});
+            setNotificameHub(data.whatsapp?.notificameHub ?? false);
             setTicket(data);
             if (["pending", "open", "group"].includes(data.status)) {
               setTabOpen(data.status);

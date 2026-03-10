@@ -154,13 +154,25 @@ const SendWhatsAppMessageModal = ({ open, onClose }) => {
       handleClose();
       history.push(`/atendimentos/${ticket.uuid || ticket.id}`);
     } catch (err) {
-      if (err.response?.data?.message?.includes("Já existe") || err.response?.data?.error === "ERR_DUPLICATED_CONTACT") {
+      const errCode = err.response?.data?.error;
+      const errMsg = err.response?.data?.message || "";
+
+      if (
+        errCode === "ERR_OTHER_OPEN_TICKET" ||
+        errMsg.includes("Já existe") ||
+        errCode === "ERR_DUPLICATED_CONTACT"
+      ) {
         try {
           const { data: list } = await api.get("/contacts", { params: { searchParam: fullNumber } });
           const contact = (list?.contacts || []).find((c) => String(c.number).replace(/\D/g, "") === String(fullNumber).replace(/\D/g, ""));
           if (contact) {
             const queueId = user.queues?.length ? user.queues[0].id : null;
             const whatsappId = user.whatsappId || (await api.get("/whatsapp").then((r) => r.data[0]?.id)) || null;
+            if (!whatsappId) {
+              toast.error(i18n.t("sendWhatsAppMessage.noConnection") || "No hay conexión de WhatsApp.");
+              setSending(false);
+              return;
+            }
             const { data: ticket } = await api.post("/tickets", {
               contactId: contact.id,
               queueId,
@@ -172,7 +184,7 @@ const SendWhatsAppMessageModal = ({ open, onClose }) => {
             await api.post(`/messages/${ticket.id}`, { body: message.trim(), read: 1, fromMe: true });
             toast.success(i18n.t("sendWhatsAppMessage.sent") || "Mensaje enviado.");
             handleClose();
-            history.push(`/atendimentos/${ticket.uuid || ticket.id}`);
+            history.push(`/tickets/${ticket.uuid || ticket.id}`);
             return;
           }
         } catch (e) {

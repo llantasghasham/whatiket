@@ -357,11 +357,14 @@ export const showFromUUID = async (
   const { uuid } = req.params;
   const { id: userId, companyId } = req.user;
 
-
   const ticket: Ticket = await ShowTicketUUIDService(uuid, companyId);
 
   if (ticket.channel === "whatsapp" && ticket.whatsappId && ticket.unreadMessages > 0) {
-    SetTicketMessagesAsRead(ticket);
+    try {
+      await SetTicketMessagesAsRead(ticket);
+    } catch (err) {
+      console.warn("[showFromUUID] SetTicketMessagesAsRead:", err);
+    }
   }
   await CreateLogTicketService({
     userId,

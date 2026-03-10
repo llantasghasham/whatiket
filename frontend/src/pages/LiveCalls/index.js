@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef, useContext } from "react";
+import { useHistory } from "react-router-dom";
 import {
   makeStyles,
   Paper,
@@ -153,6 +154,7 @@ const formatPhoneDisplay = (value) => {
 
 const LiveCalls = () => {
   const classes = useStyles();
+  const history = useHistory();
   const { user } = useContext(AuthContext);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [device, setDevice] = useState(null);
@@ -200,10 +202,13 @@ const LiveCalls = () => {
       setDevice(newDevice);
       setStatus("ready");
     } catch (err) {
-      const msg =
-        err?.response?.data?.error ||
-        err?.message ||
-        "Error al inicializar el dispositivo. Por favor, recarga la página o verifica tu configuración de Twilio.";
+      const statusCode = err?.response?.status;
+      let msg = err?.response?.data?.error || err?.message;
+      if (statusCode === 404) {
+        msg = "El endpoint de Twilio no fue encontrado (404). Verifique que el backend esté actualizado con la última versión, reiniciado después del deploy, y que las rutas /twilio/* estén disponibles. Configure Twilio en el menú.";
+      } else if (!msg) {
+        msg = "Error al inicializar. Verifique la configuración de Twilio en el servidor.";
+      }
       setError(msg);
       setStatus("disconnected");
     } finally {
@@ -379,6 +384,15 @@ const LiveCalls = () => {
             <Button variant="contained" className={classes.retryBtn} onClick={initDevice}>
               {i18n.t("liveCalls.retry")}
             </Button>
+            <Box mt={2}>
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() => history.push("/twilio-config")}
+              >
+                Configurar Twilio
+              </Button>
+            </Box>
           </Box>
         ) : (
           <>

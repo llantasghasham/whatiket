@@ -166,25 +166,6 @@ const useStyles = makeStyles((theme) => ({
       }
     }
   },
-  actionButtonsRow: {
-    display: "flex",
-    flexWrap: "wrap",
-    gap: 12,
-    padding: "16px 24px",
-    backgroundColor: "#fff",
-    borderBottom: "1px solid #e0e0e0"
-  },
-  actionBtn: {
-    borderRadius: 10,
-    padding: "10px 20px",
-    textTransform: "none",
-    fontWeight: 600,
-    fontSize: "0.9rem",
-    boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-    "&:hover": {
-      boxShadow: "0 4px 12px rgba(0,0,0,0.12)"
-    }
-  },
   content: {
     flex: 1,
     display: "flex",
@@ -1017,10 +998,26 @@ const Connections = () => {
           <Button
             variant="outlined"
             className={classes.ghostButton}
+            startIcon={<SwapHorizIcon style={{ fontSize: 18 }} />}
+            onClick={() => setTransferModalOpen(true)}
+          >
+            {i18n.t("connections.buttons.transferTickets")}
+          </Button>
+          <Button
+            variant="outlined"
+            className={classes.ghostButton}
             startIcon={<RestartAltIcon style={{ fontSize: 18 }} />}
             onClick={restartWhatsapps}
           >
-            Reiniciar
+            {i18n.t("connections.restartConnections")}
+          </Button>
+          <Button
+            variant="outlined"
+            className={classes.ghostButton}
+            startIcon={<SupportAgentIcon style={{ fontSize: 18 }} />}
+            onClick={handleCallSupport}
+          >
+            {i18n.t("connections.callSupport")}
           </Button>
           <Can
             role={user.profile}
@@ -1076,51 +1073,6 @@ const Connections = () => {
             )}
           />
         </Box>
-      </Box>
-
-      <Box className={classes.actionButtonsRow}>
-        <Button
-          variant="contained"
-          color="primary"
-          className={classes.actionBtn}
-          startIcon={<SwapHorizIcon />}
-          onClick={() => setTransferModalOpen(true)}
-        >
-          {i18n.t("connections.buttons.transferTickets")}
-        </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          className={classes.actionBtn}
-          startIcon={<RestartAltIcon />}
-          onClick={restartWhatsapps}
-        >
-          {i18n.t("connections.restartConnections")}
-        </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          className={classes.actionBtn}
-          startIcon={<SupportAgentIcon />}
-          onClick={handleCallSupport}
-        >
-          {i18n.t("connections.callSupport")}
-        </Button>
-        <Can
-          role={user.profile}
-          perform="connections-page:addConnection"
-          yes={() => (
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.actionBtn}
-              startIcon={<AddIcon />}
-              onClick={(e) => setAddMenuAnchor(e.currentTarget)}
-            >
-              {i18n.t("connections.newConnection")}
-            </Button>
-          )}
-        />
       </Box>
 
       <Box className={classes.content}>

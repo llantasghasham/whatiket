@@ -160,9 +160,14 @@ const NewTicketModal = ({ modalOpen, onClose, initialContact, initialChannel }) 
     const delayDebounceFn = setTimeout(() => {
       const fetchContacts = async () => {
         try {
-          const { data } = await api.get("contacts", {
-            params: { searchParam },
-          });
+          const params = { searchParam };
+          const channelToUse = initialChannel || whatsapps.find((w) => w.id === selectedWhatsapp)?.channel;
+          if (channelToUse === "facebook") {
+            params.channel = "facebook";
+          } else if (channelToUse === "instagram") {
+            params.channel = "instagram";
+          }
+          const { data } = await api.get("contacts", { params });
           setOptions(data.contacts);
           setLoading(false);
         } catch (err) {
@@ -173,7 +178,7 @@ const NewTicketModal = ({ modalOpen, onClose, initialContact, initialChannel }) 
       fetchContacts();
     }, 500);
     return () => clearTimeout(delayDebounceFn);
-  }, [searchParam, modalOpen]);
+  }, [searchParam, modalOpen, initialChannel, selectedWhatsapp, whatsapps]);
 
   const IconChannel = (channel) => {
     switch (channel) {

@@ -76,6 +76,25 @@ const CreateTicketService = async ({
     order: [["updatedAt", "DESC"]]
   });
 
+  // Se reuseOpenTicket e não achou por whatsappId, busca qualquer ticket aberto do contato
+  if (!ticket && reuseOpenTicket) {
+    ticket = await Ticket.findOne({
+      where: {
+        contactId,
+        companyId,
+        status: { [Op.or]: ["open", "pending", "group"] }
+      },
+      order: [["updatedAt", "DESC"]]
+    });
+    if (ticket) {
+      await ticket.update({
+        userId,
+        queueId: queueId ?? ticket.queueId,
+        status: isGroup ? "group" : ticket.status
+      });
+    }
+  }
+
   if (ticket && ["closed", "nps", "lgpd"].includes(ticket.status)) {
     await ticket.update({
       whatsappId: defaultWhatsapp.id,

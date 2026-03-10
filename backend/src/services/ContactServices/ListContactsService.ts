@@ -18,6 +18,7 @@ interface Request {
   isGroup?: string;
   userId?: number;
   limit?: number;
+  channel?: string;
 }
 
 interface Response {
@@ -35,7 +36,8 @@ const ListContactsService = async ({
   tagsIds,
   isGroup,
   userId,
-  limit = 100
+  limit = 100,
+  channel
 }: Request): Promise<Response> => {
   let whereCondition: Filterable["where"];
 
@@ -95,13 +97,20 @@ const ListContactsService = async ({
   }
 
   const baseCondition = whereCondition || {};
-  const channelVisibilityFilter = {
-    [Op.or]: [
-      { channel: { [Op.is]: null } },
-      { channel: "" },
-      { channel: { [Op.in]: WHATSAPP_CHANNELS } }
-    ]
-  };
+  let channelVisibilityFilter: Filterable["where"];
+  if (channel === "facebook") {
+    channelVisibilityFilter = { channel: "facebook" };
+  } else if (channel === "instagram") {
+    channelVisibilityFilter = { channel: "instagram" };
+  } else {
+    channelVisibilityFilter = {
+      [Op.or]: [
+        { channel: { [Op.is]: null } },
+        { channel: "" },
+        { channel: { [Op.in]: WHATSAPP_CHANNELS } }
+      ]
+    };
+  }
 
   whereCondition = {
     [Op.and]: [
