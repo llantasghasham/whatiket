@@ -117,6 +117,9 @@ const MANAGER_DENIED_PATHS = new Set(["/financeiro"]);
 const PROFESSIONAL_ALLOWED_PATHS = new Set([
   "/atendimentos",
   "/chamadas",
+  "/live-calls",
+  "/llamadas-en-vivo",
+  "/twilio-config",
   "/kanban",
   "/funil",
   "/etiquetas",
@@ -133,6 +136,9 @@ const PROFESSIONAL_ALLOWED_PATHS = new Set([
 const ATTENDANT_ALLOWED_PATHS = new Set([
   "/atendimentos",
   "/chamadas",
+  "/live-calls",
+  "/llamadas-en-vivo",
+  "/twilio-config",
   "/kanban",
   "/funil",
   "/etiquetas",
@@ -154,7 +160,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
     height: "100vh",
-    backgroundColor: "#f8f9fa",
+    backgroundColor: theme.palette.background?.default || (theme.palette.type === "dark" ? "#121212" : "#f8f9fa"),
   },
   // Header Styles - Fundo transparente
   appBar: (props) => ({
@@ -214,18 +220,18 @@ const useStyles = makeStyles((theme) => ({
   }),
   searchContainer: {
     position: "relative",
-    backgroundColor: "#f3f4f6",
+    backgroundColor: theme.palette.type === "dark" ? "#2d2d2d" : "#f3f4f6",
     borderRadius: "12px",
-    border: "1px solid #e5e7eb",
+    border: `1px solid ${theme.palette.type === "dark" ? "#404040" : "#e5e7eb"}`,
     width: "100%",
     maxWidth: "400px",
     transition: "all 0.2s ease",
     "&:hover": {
-      borderColor: "#3b82f6",
+      borderColor: theme.palette.primary?.main || "#3b82f6",
     },
     "&:focus-within": {
-      borderColor: "#3b82f6",
-      boxShadow: "0 0 0 3px rgba(59, 130, 246, 0.1)",
+      borderColor: theme.palette.primary?.main || "#3b82f6",
+      boxShadow: `0 0 0 3px ${theme.palette.type === "dark" ? "rgba(59, 130, 246, 0.2)" : "rgba(59, 130, 246, 0.1)"}`,
     },
     [theme.breakpoints.down("sm")]: {
       display: "none",
@@ -251,7 +257,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    color: "#000000",
+    color: theme.palette.type === "dark" ? "#e0e0e0" : "#374151",
   },
   searchButton: (props) => ({
     position: "absolute",
@@ -270,7 +276,7 @@ const useStyles = makeStyles((theme) => ({
     },
   }),
   inputRoot: {
-    color: "#3b82f6",
+    color: theme.palette.text?.primary || (theme.palette.type === "dark" ? "#e0e0e0" : "#374151"),
     width: "100%",
   },
   inputInput: {
@@ -279,9 +285,9 @@ const useStyles = makeStyles((theme) => ({
     transition: theme.transitions.create("width"),
     width: "100%",
     fontSize: "14px",
-    color: "#3b82f6",
+    color: theme.palette.text?.primary || (theme.palette.type === "dark" ? "#e0e0e0" : "#374151"),
     "&::placeholder": {
-      color: "#000000",
+      color: theme.palette.type === "dark" ? "#9ca3af" : "#6b7280",
       opacity: 1,
     },
   },
@@ -479,7 +485,7 @@ const useStyles = makeStyles((theme) => ({
   }),
   submenuParent: (props) => ({
     padding: props.drawerWidth > collapsedDrawerWidth ? "10px 14px" : "12px",
-    margin: "0",
+    margin: "0 0 2px 0",
     borderRadius: "12px",
     transition: "all 0.2s ease",
     minHeight: "auto",
@@ -490,6 +496,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: props.drawerWidth > collapsedDrawerWidth ? "flex-start" : "center",
     gap: props.drawerWidth > collapsedDrawerWidth ? "12px" : 0,
     cursor: "pointer",
+    position: "relative",
     "&:hover": {
       backgroundColor: props.sidebarHoverBg || "rgba(59, 130, 246, 0.1)",
       "& .MuiListItemIcon-root": {
@@ -497,7 +504,9 @@ const useStyles = makeStyles((theme) => ({
       },
     },
     "&.active": {
-      backgroundColor: props.sidebarActiveBg || "rgba(59, 130, 246, 0.08)",
+      backgroundColor: props.sidebarActiveBg || "rgba(59, 130, 246, 0.12)",
+      borderLeft: "3px solid #ffffff",
+      paddingLeft: props.drawerWidth > collapsedDrawerWidth ? "11px" : "12px",
     },
   }),
   submenuExpandIcon: (props) => ({
@@ -508,26 +517,39 @@ const useStyles = makeStyles((theme) => ({
     transition: "transform 0.2s ease",
   }),
   submenuList: (props) => ({
-    paddingLeft: props.drawerWidth > collapsedDrawerWidth ? "20px" : 0,
+    paddingLeft: props.drawerWidth > collapsedDrawerWidth ? "12px" : 0,
     paddingTop: 0,
     paddingBottom: 0,
+    borderLeft: props.drawerWidth > collapsedDrawerWidth ? "2px solid rgba(255,255,255,0.15)" : "none",
+    marginLeft: props.drawerWidth > collapsedDrawerWidth ? "12px" : 0,
   }),
   submenuItem: (props) => ({
-    padding: props.drawerWidth > collapsedDrawerWidth ? "6px 14px 6px 16px" : "8px",
-    margin: "0",
+    padding: props.drawerWidth > collapsedDrawerWidth ? "8px 12px 8px 10px" : "8px",
+    margin: "0 0 2px 0",
     borderRadius: "8px",
     transition: "all 0.2s ease",
     minHeight: "auto",
     width: props.drawerWidth > collapsedDrawerWidth ? "100%" : "40px",
-    height: "36px",
+    height: "38px",
     display: "flex",
     alignItems: "center",
     justifyContent: props.drawerWidth > collapsedDrawerWidth ? "flex-start" : "center",
+    gap: "10px",
     "&:hover": {
       backgroundColor: props.sidebarHoverBg || "rgba(59, 130, 246, 0.1)",
     },
     "&.active": {
-      backgroundColor: "transparent",
+      backgroundColor: props.sidebarActiveBg || "rgba(59, 130, 246, 0.15)",
+      borderLeft: "3px solid #ffffff",
+      paddingLeft: props.drawerWidth > collapsedDrawerWidth ? "7px" : "8px",
+    },
+  }),
+  submenuItemIcon: (props) => ({
+    minWidth: "28px !important",
+    marginRight: "4px",
+    "& .MuiSvgIcon-root": {
+      fontSize: "18px",
+      color: props.sidebarIconColor ? (props.sidebarIconColor + "cc") : "rgba(255, 255, 255, 0.85)",
     },
   }),
   submenuText: (props) => ({
@@ -555,7 +577,7 @@ const useStyles = makeStyles((theme) => ({
     flex: 1,
     overflow: "auto",
     marginTop: props.shouldHideLayout ? 0 : "64px",
-    backgroundColor: "#f8f9fa",
+    backgroundColor: theme.palette.background?.default || (theme.palette.type === "dark" ? "#121212" : "#f8f9fa"),
     height: props.shouldHideLayout ? "100vh" : "calc(100vh - 64px)",
     transition: "width 0.2s ease",
     [theme.breakpoints.down("md")]: {
@@ -573,14 +595,14 @@ const useStyles = makeStyles((theme) => ({
       left: 0,
       right: 0,
       height: "70px",
-      backgroundColor: "#ffffff",
-      borderTop: "1px solid #e5e7eb",
+      backgroundColor: theme.palette.background?.paper || (theme.palette.type === "dark" ? "#1e1e1e" : "#ffffff"),
+      borderTop: `1px solid ${theme.palette.type === "dark" ? "#404040" : "#e5e7eb"}`,
       justifyContent: "space-around",
       alignItems: "center",
       zIndex: theme.zIndex.drawer + 2,
       padding: "0 8px",
       paddingBottom: "env(safe-area-inset-bottom)",
-      boxShadow: "0 -4px 20px rgba(0, 0, 0, 0.08)",
+      boxShadow: theme.palette.type === "dark" ? "0 -4px 20px rgba(0, 0, 0, 0.4)" : "0 -4px 20px rgba(0, 0, 0, 0.08)",
     },
   },
   mobileNavItem: {
@@ -592,19 +614,19 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "12px",
     cursor: "pointer",
     transition: "all 0.2s ease",
-    color: "#000000",
+    color: theme.palette.text?.primary || (theme.palette.type === "dark" ? "#e0e0e0" : "#374151"),
     minWidth: "56px",
     "&:hover": {
-      backgroundColor: "rgba(59, 130, 246, 0.08)",
+      backgroundColor: theme.palette.type === "dark" ? "rgba(255,255,255,0.08)" : "rgba(59, 130, 246, 0.08)",
     },
     "&.active": {
-      color: "#3b82f6",
-      backgroundColor: "rgba(59, 130, 246, 0.12)",
+      color: theme.palette.primary?.main || "#3b82f6",
+      backgroundColor: theme.palette.type === "dark" ? "rgba(59, 130, 246, 0.2)" : "rgba(59, 130, 246, 0.12)",
       "& $mobileNavIcon": {
-        color: "#3b82f6",
+        color: theme.palette.primary?.main || "#3b82f6",
       },
       "& $mobileNavLabel": {
-        color: "#3b82f6",
+        color: theme.palette.primary?.main || "#3b82f6",
         fontWeight: 600,
       },
     },
@@ -658,24 +680,25 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "8px",
     "& .MuiPaper-root": {
       borderRadius: "12px",
-      boxShadow: "0 10px 25px rgba(0, 0, 0, 0.15)",
-      border: "1px solid #e5e7eb",
+      boxShadow: theme.palette.type === "dark" ? "0 10px 25px rgba(0, 0, 0, 0.4)" : "0 10px 25px rgba(0, 0, 0, 0.15)",
+      border: `1px solid ${theme.palette.type === "dark" ? "#404040" : "#e5e7eb"}`,
+      backgroundColor: theme.palette.background?.paper || (theme.palette.type === "dark" ? "#1e1e1e" : "#ffffff"),
     },
   },
   dropdownItem: {
     padding: "12px 16px",
     fontSize: "14px",
     "&:hover": {
-      backgroundColor: "#f3f4f6",
+      backgroundColor: theme.palette.type === "dark" ? "rgba(255,255,255,0.08)" : "#f3f4f6",
     },
   },
   dropdownIcon: {
     minWidth: "36px",
-    color: "#6b7280",
+    color: theme.palette.type === "dark" ? "#9ca3af" : "#6b7280",
   },
   divider: {
     margin: "8px 0",
-    backgroundColor: "#e5e7eb",
+    backgroundColor: theme.palette.type === "dark" ? "#404040" : "#e5e7eb",
   },
   // Estilos do Banner IA SDR
   aiSdrBanner: {
@@ -730,10 +753,10 @@ const useStyles = makeStyles((theme) => ({
   bannerButton: {
     width: "100%",
     padding: "10px 16px",
-    background: "#ffffff",
+    background: theme.palette.type === "dark" ? "#404040" : "#ffffff",
     border: "none",
     borderRadius: "8px",
-    color: "#2a2a2a",
+    color: theme.palette.type === "dark" ? "#e0e0e0" : "#2a2a2a",
     fontSize: "12px",
     fontWeight: "600",
     cursor: "pointer",
@@ -743,7 +766,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     gap: "6px",
     "&:hover": {
-      background: "#f0f0f0",
+      background: theme.palette.type === "dark" ? "#525252" : "#f0f0f0",
       transform: "translateY(-1px)",
     },
   },
@@ -912,126 +935,139 @@ const LoggedInLayout = ({ children }) => {
 
   const menuGroups = useMemo(
     () => [
+      // 1. INICIO - Dashboard y reportes
       {
-        title: i18n.t("layout.menu.painel"),
+        title: i18n.t("layout.menu.inicio") || "Inicio",
         icon: <DashboardIcon />,
         disabled: !planActive && location.pathname !== "/financeiro",
         children: [
-          { title: i18n.t("layout.menu.dashboard"), path: "/painel", exact: true },
-          { title: i18n.t("layout.menu.relatorios"), path: "/relatorios" },
+          { title: i18n.t("layout.menu.dashboard"), path: "/painel", exact: true, icon: <DashboardIcon /> },
+          { title: i18n.t("layout.menu.relatorios"), path: "/relatorios", icon: <BarChartIcon /> },
         ],
       },
+      // 2. ATENCIÓN - Tickets, llamadas, chat
       {
-        title: i18n.t("layout.menu.inbox"),
+        title: i18n.t("layout.menu.atencion") || "Atención",
         icon: <ChatIcon />,
         disabled: !planActive && location.pathname !== "/financeiro",
         children: [
-          { title: i18n.t("layout.menu.conversas"), path: "/atendimentos" },
-          { title: i18n.t("layout.menu.chamadas"), path: "/chamadas" },
+          { title: i18n.t("layout.menu.conversas"), path: "/atendimentos", icon: <WhatsAppIcon /> },
+          { title: i18n.t("layout.menu.chamadas"), path: "/chamadas", icon: <PhoneIcon /> },
+          { title: i18n.t("layout.menu.chats") || "Chat interno", path: "/chats", icon: <ChatBubbleOutlineIcon /> },
         ],
       },
+      // 3. CONTACTOS - CRM y gestión de contactos
       {
-        title: i18n.t("layout.menu.kanban"),
-        icon: <ViewKanbanIcon />,
+        title: i18n.t("layout.menu.contactos") || "Contactos",
+        icon: <ContactsIcon />,
         disabled: !planActive && location.pathname !== "/financeiro",
         children: [
-          { title: i18n.t("layout.menu.kanban"), path: "/kanban" },
-          { title: i18n.t("layout.menu.funil"), path: "/funil" },
-          { title: i18n.t("layout.menu.etiquetas"), path: "/etiquetas" },
+          { title: i18n.t("layout.menu.contatos"), path: "/contatos", icon: <ContactsIcon /> },
+          { title: i18n.t("layout.menu.leads"), path: "/leads", icon: <PersonAddIcon /> },
+          { title: i18n.t("layout.menu.clientes"), path: "/clientes", icon: <PeopleOutlineIcon /> },
+          { title: i18n.t("layout.menu.listaContatos"), path: "/contact-lists", icon: <ViewListIcon /> },
+          { title: i18n.t("layout.menu.importarContatos"), path: "/contatos/import", icon: <CloudUploadOutlinedIcon /> },
         ],
       },
+      // 4. COMUNICACIÓN - Campañas, respuestas, SMS
       {
-        title: i18n.t("layout.menu.consultas"),
-        icon: <SearchIcon />,
+        title: i18n.t("layout.menu.comunicacion") || "Comunicación",
+        icon: <CampaignOutlinedIcon />,
         disabled: !planActive && location.pathname !== "/financeiro",
         children: [
-          { title: i18n.t("layout.menu.dados"), path: "/consultas/dados" },
-          { title: i18n.t("layout.menu.dividasCredito"), path: "/consultas/dividas-credito" },
-          { title: i18n.t("layout.menu.juridico"), path: "/consultas/juridico" },
-          { title: i18n.t("layout.menu.veiculo"), path: "/consultas/veiculo" },
+          { title: i18n.t("layout.menu.disparos"), path: "/campanhas", icon: <CampaignOutlinedIcon /> },
+          { title: i18n.t("layout.menu.respostasRapidas"), path: "/quick-messages", icon: <FlashOnIcon /> },
+          { title: i18n.t("mainDrawer.listItems.smsAndCalls"), path: "/live-calls", icon: <PhoneIcon /> },
+          { title: i18n.t("mainDrawer.listItems.callHistory"), path: "/call-history", icon: <PhoneIcon /> },
         ],
       },
-      {
-        title: i18n.t("layout.menu.usuarios"),
-        icon: <GroupIcon />,
-        disabled: !planActive && location.pathname !== "/financeiro",
-        children: [
-          { title: i18n.t("layout.menu.contatos"), path: "/contatos" },
-          { title: i18n.t("layout.menu.leads"), path: "/leads" },
-          { title: i18n.t("layout.menu.clientes"), path: "/clientes" },
-          { title: i18n.t("layout.menu.usuarios"), path: "/users" },
-        ],
-      },
+      // 5. AUTOMATIZACIÓN - IA, flujos, integraciones
       {
         title: i18n.t("layout.menu.automacao"),
         icon: <SmartToyIcon />,
         disabled: !planActive && location.pathname !== "/financeiro",
         children: [
-          { title: i18n.t("layout.menu.agenteIA"), path: "/agentes" },
-          { title: i18n.t("layout.menu.construtorFluxo"), path: "/flowbuilders" },
-          { title: i18n.t("layout.menu.disparos"), path: "/campanhas" },
-          { title: i18n.t("layout.menu.campanhas"), path: "/phrase-lists" },
-          { title: i18n.t("layout.menu.respostasRapidas"), path: "/quick-messages" },
-          { title: i18n.t("layout.menu.integracoes"), path: "/integracao" },
-          { title: i18n.t("layout.menu.ferramentas"), path: "/ferramentas" },
+          { title: i18n.t("layout.menu.agenteIA"), path: "/agentes", icon: <PsychologyIcon /> },
+          { title: i18n.t("layout.menu.construtorFluxo"), path: "/flowbuilders", icon: <AccountTreeIcon /> },
+          { title: i18n.t("layout.menu.campanhas"), path: "/phrase-lists", icon: <CampaignOutlinedIcon /> },
+          { title: i18n.t("layout.menu.integracoes"), path: "/integracao", icon: <ExtensionIcon /> },
+          { title: i18n.t("layout.menu.automacoes"), path: "/automations", icon: <TuneIcon /> },
         ],
       },
+      // 6. PRODUCTOS Y SERVICIOS
       {
-        title: i18n.t("layout.menu.produtividade"),
-        icon: <TrendingUpIcon />,
+        title: i18n.t("layout.menu.produtosServicios") || "Productos y Servicios",
+        icon: <FolderIcon />,
         disabled: !planActive && location.pathname !== "/financeiro",
         children: [
-          { title: i18n.t("layout.menu.produtos"), path: "/produtos" },
-          { title: i18n.t("layout.menu.catalogo"), path: "/catalogo-produtos" },
-          { title: i18n.t("layout.menu.servicos"), path: "/servicos" },
-          { title: i18n.t("layout.menu.ordensServico"), path: "/ordens-servico" },
-          { title: i18n.t("layout.menu.agenda"), path: "/user-schedules" },
-          { title: i18n.t("layout.menu.projetos"), path: "/projects" },
+          { title: i18n.t("layout.menu.produtos"), path: "/produtos", icon: <FolderIcon /> },
+          { title: i18n.t("layout.menu.catalogo"), path: "/catalogo-produtos", icon: <ViewListIcon /> },
+          { title: i18n.t("layout.menu.servicos"), path: "/servicos", icon: <BuildCircleIcon /> },
+          { title: i18n.t("layout.menu.ordensServico"), path: "/ordens-servico", icon: <CheckCircleOutlineIcon /> },
+          { title: i18n.t("layout.menu.agenda"), path: "/user-schedules", icon: <CalendarMonthIcon /> },
+          { title: i18n.t("layout.menu.projetos"), path: "/projects", icon: <FolderSpecialIcon /> },
         ],
       },
+      // 7. KANBAN Y ORGANIZACIÓN
       {
-        title: i18n.t("layout.menu.ajuda"),
-        icon: <HelpOutlineIcon />,
+        title: i18n.t("layout.menu.kanban"),
+        icon: <ViewKanbanIcon />,
         disabled: !planActive && location.pathname !== "/financeiro",
         children: [
-          { title: i18n.t("layout.menu.ajuda"), path: "/helps" },
-          { title: i18n.t("layout.menu.documentacao"), path: "/messages-api" },
+          { title: i18n.t("layout.menu.kanban"), path: "/kanban", icon: <ViewKanbanIcon /> },
+          { title: i18n.t("layout.menu.funil"), path: "/funil", icon: <TrendingUpIcon /> },
+          { title: i18n.t("layout.menu.etiquetas"), path: "/etiquetas", icon: <LabelOutlinedIcon /> },
         ],
       },
+      // 8. CONSULTAS
       {
-        title: i18n.t("layout.menu.configuracoes"),
+        title: i18n.t("layout.menu.consultas"),
+        icon: <SearchIcon />,
+        disabled: !planActive && location.pathname !== "/financeiro",
+        children: [
+          { title: i18n.t("layout.menu.dados"), path: "/consultas/dados", icon: <BarChartIcon /> },
+          { title: i18n.t("layout.menu.dividasCredito"), path: "/consultas/dividas-credito", icon: <CreditCardIcon /> },
+          { title: i18n.t("layout.menu.juridico"), path: "/consultas/juridico", icon: <GavelIcon /> },
+          { title: i18n.t("layout.menu.veiculo"), path: "/consultas/veiculo", icon: <DirectionsCarIcon /> },
+        ],
+      },
+      // 9. CONFIGURACIÓN
+      {
+        title: i18n.t("layout.menu.configuraciones") || "Configuración",
         icon: <SettingsIcon />,
         disabled: !planActive && location.pathname !== "/financeiro",
         children: [
-          { title: i18n.t("layout.menu.canais"), path: "/canais" },
-          { title: i18n.t("layout.menu.departamentos"), path: "/departamentos" },
-          { title: i18n.t("layout.menu.pagamentos"), path: "/payment-settings" },
-          { title: i18n.t("layout.menu.faturas"), path: "/faturas" },
-          { title: i18n.t("layout.menu.contasPagar"), path: "/financeiro-manager" },
+          { title: i18n.t("layout.menu.canais"), path: "/canais", icon: <DeviceHubIcon /> },
+          { title: i18n.t("layout.menu.departamentos"), path: "/departamentos", icon: <QueueIcon /> },
+          { title: i18n.t("layout.menu.usuarios"), path: "/users", icon: <GroupIcon /> },
+          { title: i18n.t("layout.menu.pagamentos"), path: "/payment-settings", icon: <CreditCardIcon /> },
+          { title: i18n.t("layout.menu.faturas"), path: "/faturas", icon: <AttachMoneyIcon /> },
+          { title: i18n.t("layout.menu.contasPagar"), path: "/financeiro-manager", icon: <LocalAtmIcon /> },
         ],
       },
+      // 10. SISTEMA - Herramientas y administración
       {
         title: i18n.t("layout.menu.sistema"),
         icon: <BuildIcon />,
         disabled: !planActive && location.pathname !== "/financeiro",
         children: [
-          { title: i18n.t("layout.menu.listaContatos"), path: "/contact-lists" },
-          { title: i18n.t("layout.menu.importarContatos"), path: "/contatos/import" },
-          { title: i18n.t("layout.menu.automacoes"), path: "/automations" },
-          { title: i18n.t("layout.menu.financeiro"), path: "/financeiro" },
-          { title: i18n.t("layout.menu.lembretes"), path: "/lembretes" },
-          { title: i18n.t("layout.menu.configuracoes"), path: "/settings" },
-          { title: i18n.t("layout.menu.meuPainelAfiliado"), path: "/afiliados" },
-          { title: i18n.t("layout.menu.afiliados"), path: "/admin/afiliados", superAdmin: true },
-          { title: i18n.t("layout.menu.cupons"), path: "/admin/cupons", superAdmin: true },
-          { title: i18n.t("layout.menu.comissoes"), path: "/admin/comissoes", superAdmin: true },
-          { title: i18n.t("layout.menu.saques"), path: "/admin/saques", superAdmin: true },
-          { title: i18n.t("layout.menu.banners"), path: "/slider-banners", superAdmin: true },
-          { title: i18n.t("layout.menu.videoTutorial"), path: "/tutorial-videos", superAdmin: true },
-          { title: i18n.t("layout.menu.traducoes"), path: "/translation-manager", superAdmin: true },
-          { title: i18n.t("layout.menu.whitelabel"), path: "/whitelabel", superAdmin: true },
-          { title: i18n.t("layout.menu.empresas"), path: "/empresas", superAdmin: true },
-          { title: i18n.t("layout.menu.planos"), path: "/planos", superAdmin: true },
+          { title: i18n.t("layout.menu.ferramentas"), path: "/ferramentas", icon: <BuildOutlinedIcon /> },
+          { title: i18n.t("layout.menu.lembretes"), path: "/lembretes", icon: <ScheduleIcon /> },
+          { title: i18n.t("layout.menu.configuracoes"), path: "/settings", icon: <SettingsIcon /> },
+          { title: i18n.t("layout.menu.financeiro"), path: "/financeiro", icon: <LocalAtmIcon /> },
+          { title: i18n.t("layout.menu.ajuda"), path: "/helps", icon: <HelpOutlineIcon /> },
+          { title: i18n.t("layout.menu.documentacao"), path: "/messages-api", icon: <AttachFileIcon /> },
+          { title: i18n.t("layout.menu.meuPainelAfiliado"), path: "/afiliados", icon: <PeopleIcon /> },
+          { title: i18n.t("layout.menu.afiliados"), path: "/admin/afiliados", superAdmin: true, icon: <PeopleIcon /> },
+          { title: i18n.t("layout.menu.cupons"), path: "/admin/cupons", superAdmin: true, icon: <LabelIcon /> },
+          { title: i18n.t("layout.menu.comissoes"), path: "/admin/comissoes", superAdmin: true, icon: <AttachMoneyIcon /> },
+          { title: i18n.t("layout.menu.saques"), path: "/admin/saques", superAdmin: true, icon: <LocalAtmIcon /> },
+          { title: i18n.t("layout.menu.banners"), path: "/slider-banners", superAdmin: true, icon: <PhotoIcon /> },
+          { title: i18n.t("layout.menu.videoTutorial"), path: "/tutorial-videos", superAdmin: true, icon: <PlayCircleFilledIcon /> },
+          { title: i18n.t("layout.menu.traducoes"), path: "/translation-manager", superAdmin: true, icon: <ShareIcon /> },
+          { title: i18n.t("layout.menu.whitelabel"), path: "/whitelabel", superAdmin: true, icon: <BusinessIcon /> },
+          { title: i18n.t("layout.menu.empresas"), path: "/empresas", superAdmin: true, icon: <BusinessCenterIcon /> },
+          { title: i18n.t("layout.menu.planos"), path: "/planos", superAdmin: true, icon: <ViewListIcon /> },
         ],
       },
     ],
@@ -1311,6 +1347,11 @@ const LoggedInLayout = ({ children }) => {
                           }}
                           className={`${classes.submenuItem} ${isChildActive ? "active" : ""}`}
                         >
+                          {child.icon && (
+                            <ListItemIcon className={classes.submenuItemIcon}>
+                              {child.icon}
+                            </ListItemIcon>
+                          )}
                           <ListItemText
                             primary={child.title}
                             classes={{ primary: `${classes.submenuText} ${isChildActive ? classes.submenuTextActive : ""}` }}

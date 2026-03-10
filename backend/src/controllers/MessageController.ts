@@ -546,13 +546,26 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
   const { companyId } = req.user;
   const userId = Number(req.user.id);
 
-  const ticket = await ShowTicketService(ticketId, companyId, userId);
-
-  if (ticket.channel === "whatsapp" && ticket.whatsappId) {
-    SetTicketMessagesAsRead(ticket);
-  }
-
   try {
+    const ticket = await ShowTicketService(ticketId, companyId, userId);
+
+    // Permitir siempre responder: si el ticket está cerrado, reabrirlo automáticamente
+    if (ticket.status === "closed" || ticket.status === "nps") {
+      await UpdateTicketService({
+        ticketId: ticket.id,
+        ticketData: {
+          status: ticket.isGroup && ticket.channel === "whatsapp" ? "group" : "open",
+          userId
+        },
+        companyId
+      });
+      ticket.status = "open";
+      ticket.userId = userId;
+    }
+
+    if (ticket.channel === "whatsapp" && ticket.whatsappId) {
+      SetTicketMessagesAsRead(ticket);
+    }
     if (medias) {
       await Promise.all(
         medias.map(async (media: Express.Multer.File, index) => {
@@ -618,9 +631,11 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
       }
     }
     return res.send();
-  } catch (error) {
-    console.log(error);
-    return res.status(400).json({ error: error.message });
+  } catch (error: any) {
+    console.error("[MessageController.store] Error:", error?.message || error);
+    const statusCode = error?.statusCode || 400;
+    const message = error?.message || "Error al enviar mensaje. Intente de nuevo.";
+    return res.status(statusCode).json({ error: message });
   }
 };
 

@@ -682,6 +682,13 @@ const MainListItems = ({ collapsed, drawerClose, onSubmenuOpen, submenuOpen, onT
     location.pathname.startsWith("/translation-manager") ||
     location.pathname.startsWith("/consultas");
 
+  const isSmsAndCallsActive =
+    location.pathname.startsWith("/live-calls") ||
+    location.pathname.startsWith("/llamadas-en-vivo") ||
+    location.pathname.startsWith("/twilio-config") ||
+    location.pathname.startsWith("/call-history") ||
+    location.pathname.startsWith("/chamadas");
+
   const isIntegrationActive =
     location.pathname.startsWith("/kanban") ||
     location.pathname.startsWith("/todolist") ||
@@ -814,6 +821,8 @@ const MainListItems = ({ collapsed, drawerClose, onSubmenuOpen, submenuOpen, onT
           return !isCampaignRouteActive;
         case "flows":
           return !isFlowbuilderRouteActive;
+        case "smsAndCalls":
+          return !isSmsAndCallsActive;
         case "tools":
           return !isIntegrationActive;
         case "administration":
@@ -995,6 +1004,37 @@ const MainListItems = ({ collapsed, drawerClose, onSubmenuOpen, submenuOpen, onT
                 to="/campaigns-config"
                 primary={i18n.t("campaigns.subMenus.settings")}
                 icon={<SettingsOutlinedIcon />}
+                onNavigate={handleNavigateFromSubmenu}
+              />
+            </div>
+          </>
+        );
+
+      case "smsAndCalls":
+        return (
+          <>
+            <div className={classes.submenuHeader}>
+              <Typography className={classes.submenuTitle}>
+                {i18n.t("mainDrawer.listItems.smsAndCalls")}
+              </Typography>
+            </div>
+            <div className={classes.submenuContent}>
+              <ListItemLink
+                to="/twilio-config"
+                primary={i18n.t("mainDrawer.listItems.twilioConfig")}
+                icon={<SettingsOutlinedIcon />}
+                onNavigate={handleNavigateFromSubmenu}
+              />
+              <ListItemLink
+                to="/live-calls"
+                primary={i18n.t("mainDrawer.listItems.liveCalls")}
+                icon={<PhoneIcon />}
+                onNavigate={handleNavigateFromSubmenu}
+              />
+              <ListItemLink
+                to="/call-history"
+                primary={i18n.t("mainDrawer.listItems.callHistory")}
+                icon={<PhoneIcon />}
                 onNavigate={handleNavigateFromSubmenu}
               />
             </div>
@@ -1399,6 +1439,32 @@ const MainListItems = ({ collapsed, drawerClose, onSubmenuOpen, submenuOpen, onT
                 primary={
                   <Typography className={`${classes.listItemText} ${activeSubmenu === "communication" ? "active" : ""}`}>
                     Comunicação
+                  </Typography>
+                }
+              />
+            )}
+          </ListItem>
+        </Tooltip>
+
+        <Tooltip title={collapsed ? i18n.t("mainDrawer.listItems.smsAndCalls") : ""} placement="right">
+          <ListItem
+            button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleMenuClick("smsAndCalls");
+            }}
+            className={`${classes.listItem} ${activeSubmenu === "smsAndCalls" ? "active" : ""}`}
+          >
+            <ListItemIcon className={classes.listItemIcon}>
+              <Avatar className={`${classes.iconWrapper} ${classes.iconWrapperCommunication}`}>
+                <PhoneIcon />
+              </Avatar>
+            </ListItemIcon>
+            {!collapsed && (
+              <ListItemText
+                primary={
+                  <Typography className={`${classes.listItemText} ${activeSubmenu === "smsAndCalls" ? "active" : ""}`}>
+                    {i18n.t("mainDrawer.listItems.smsAndCalls")}
                   </Typography>
                 }
               />

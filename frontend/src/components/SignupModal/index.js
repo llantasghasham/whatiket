@@ -351,7 +351,7 @@ const SignupModal = ({ open, onClose, plan }) => {
               <Box className={classes.phoneInputContainer}>
                 <PhoneInput
                   international
-                  defaultCountry="BR"
+                  defaultCountry="CR"
                   value={formData.phone}
                   onChange={handlePhoneChange}
                   placeholder="Telefone"

@@ -106,6 +106,7 @@ import contactSettingsRoutes from "./contactSettingsRoutes";
 import contactAnalyticsRoutes from "./contactAnalyticsRoutes";
 import notificationRoutes from "./notificationRoutes";
 import callRecordRoutes from "./callRecordRoutes";
+import twilioRoutes from "./twilioRoutes";
 import translationRoutes from "./translationRoutes";
 import serviceOrderRoutes from "./serviceOrderRoutes";
 import financeiroCategoriaRoutes from "./financeiroCategoriaRoutes";
@@ -240,6 +241,9 @@ routes.use("/notifications", notificationRoutes);
 
 // Histórico de Chamadas
 routes.use(callRecordRoutes);
+
+// Twilio Voice (Llamadas en Vivo)
+routes.use(twilioRoutes);
 
 // Traduções
 routes.use(translationRoutes);

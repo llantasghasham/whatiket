@@ -757,11 +757,7 @@ const MessageInput = ({ ticketId, ticketStatus, droppedFiles, contactId, ticketC
   }, [inputMessage]);
 
   const disableOption = () => {
-    return (
-      loading ||
-      recording ||
-      (ticketStatus !== "open" && ticketStatus !== "group" && ticketStatus !== "pending")
-    );
+    return loading || recording;
   };
 
   const handleUploadCamera = async (blob) => {

@@ -270,26 +270,26 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const UserSchema = Yup.object().shape({
+const getUserSchema = () => Yup.object().shape({
     name: Yup.string()
-        .min(2, "Muito curto!")
-        .max(50, "Muito extenso!")
-        .required("Obrigatório"),
+        .min(2, i18n.t("empresaSignup.validation.tooShort"))
+        .max(50, i18n.t("empresaSignup.validation.tooLong"))
+        .required(i18n.t("empresaSignup.validation.required")),
     password: Yup.string()
-        .min(5, "Muito curto!")
-        .max(50, "Muito extenso!")
-        .required("Obrigatório"),
+        .min(5, i18n.t("empresaSignup.validation.tooShort"))
+        .max(50, i18n.t("empresaSignup.validation.tooLong"))
+        .required(i18n.t("empresaSignup.validation.required")),
     confirmPassword: Yup.string()
-        .oneOf([Yup.ref('password'), null], "As senhas não são iguais.")
-        .required("Por favor, confirme sua senha."),
+        .oneOf([Yup.ref('password'), null], i18n.t("empresaSignup.validation.passwordsNotMatch"))
+        .required(i18n.t("empresaSignup.validation.confirmPassword")),
     email: Yup.string()
-        .email("Email inválido")
-        .required("Obrigatório"),
+        .email(i18n.t("empresaSignup.validation.invalidEmail"))
+        .required(i18n.t("empresaSignup.validation.required")),
     phone: Yup.string()
-        .required("Telefone é obrigatório"),
+        .required(i18n.t("empresaSignup.validation.phoneRequired")),
     document: Yup.string()
-        .required("CPF/CNPJ é obrigatório")
-        .test("valid-document", "CPF/CNPJ inválido", (value) => {
+        .required(i18n.t("empresaSignup.validation.documentRequired"))
+        .test("valid-document", i18n.t("empresaSignup.validation.documentInvalid"), (value) => {
             if (!value) return false;
             return isValidDocument(value);
         }),
@@ -357,12 +357,12 @@ const SignUp = () => {
                     <Container component="main" className={classes.formContainer}>
                         <CssBaseline />
                         <Typography component="h1" variant="h4" align="center" className={classes.title}>
-                            {i18n.t("CADASTRO DE EMPRESA")}
+                            {i18n.t("empresaSignup.title")}
                         </Typography>
                         <Formik
                             initialValues={user}
                             enableReinitialize={true}
-                            validationSchema={UserSchema}
+                            validationSchema={getUserSchema()}
                             onSubmit={(values, actions) => {
                                 setTimeout(() => {
                                     handleSignUp(values);
@@ -380,7 +380,7 @@ const SignUp = () => {
                                         error={touched.companyName && Boolean(errors.companyName)}
                                         helperText={touched.companyName && errors.companyName}
                                         name="companyName"
-                                        placeholder="Nome da Empresa"
+                                        placeholder={i18n.t("empresaSignup.form.companyName")}
                                         autoComplete="companyName"
                                         autoFocus
                                         className={classes.textField}
@@ -401,7 +401,7 @@ const SignUp = () => {
                                         as={TextField}
                                         autoComplete="name"
                                         name="name"
-                                        placeholder="Seu Nome Completo"
+                                        placeholder={i18n.t("empresaSignup.form.fullName")}
                                         error={touched.name && Boolean(errors.name)}
                                         helperText={touched.name && errors.name}
                                         variant="outlined"
@@ -427,7 +427,7 @@ const SignUp = () => {
                                         fullWidth
                                         id="email"
                                         name="email"
-                                        placeholder="Seu Melhor Email"
+                                        placeholder={i18n.t("empresaSignup.form.email")}
                                         error={touched.email && Boolean(errors.email)}
                                         helperText={touched.email && errors.email}
                                         autoComplete="email"
@@ -451,7 +451,7 @@ const SignUp = () => {
                                         required
                                         fullWidth
                                         name="password"
-                                        placeholder="Crie uma Senha Segura"
+                                        placeholder={i18n.t("empresaSignup.form.password")}
                                         error={touched.password && Boolean(errors.password)}
                                         helperText={touched.password && errors.password}
                                         type={showPassword ? "text" : "password"}
@@ -487,7 +487,7 @@ const SignUp = () => {
                                         required
                                         fullWidth
                                         name="confirmPassword"
-                                        placeholder="Confirme sua Senha"
+                                        placeholder={i18n.t("empresaSignup.form.confirmPassword")}
                                         error={touched.confirmPassword && Boolean(errors.confirmPassword)}
                                         helperText={touched.confirmPassword && errors.confirmPassword}
                                         type={showPassword ? "text" : "password"}
@@ -520,11 +520,11 @@ const SignUp = () => {
                                     <div className={classes.phoneInputContainer}>
                                         <PhoneInput
                                             international
-                                            defaultCountry="BR"
+                                            defaultCountry="CR"
                                             value={values.phone}
                                             onChange={(value) => setFieldValue('phone', value)}
                                             flags={flags}
-                                            placeholder="Digite seu telefone"
+                                            placeholder={i18n.t("empresaSignup.form.phone")}
                                             className={classes.phoneInput}
                                         />
                                         {touched.phone && errors.phone && (
@@ -540,7 +540,7 @@ const SignUp = () => {
                                         required
                                         fullWidth
                                         name="document"
-                                        placeholder="CPF ou CNPJ"
+                                        placeholder={i18n.t("empresaSignup.form.document")}
                                         error={touched.document && Boolean(errors.document)}
                                         helperText={touched.document && errors.document}
                                         id="document"
@@ -583,22 +583,22 @@ const SignUp = () => {
                                                 return (
                                                     <div style={{ display: 'flex', alignItems: 'center' }}>
                                                         <CardMembershipIcon className={classes.icon} style={{ marginRight: 8 }} />
-                                                        <span>Selecione um Plano</span>
+                                                        <span>{i18n.t("empresaSignup.form.selectPlan")}</span>
                                                     </div>
                                                 );
                                             }
                                             const plan = plans.find(p => p.id === selected);
-                                            return plan ? plan.name : "Selecione um Plano";
+                                            return plan ? plan.name : i18n.t("empresaSignup.form.selectPlan");
                                         }}
                                     >
                                         <MenuItem value="" disabled>
                                             <CardMembershipIcon className={classes.icon} style={{ marginRight: 8 }} />
-                                            Selecione um Plano
+                                            {i18n.t("empresaSignup.form.selectPlan")}
                                         </MenuItem>
                                         {plans.map((plan, key) => (
                                             <MenuItem key={key} value={plan.id}>
                                                 {plan.name} - Atendentes: {plan.users} - Conexões: {plan.connections} - Filas:{" "}
-                                                {plan.queues} - $ {plan.amount}
+                                                {plan.queues} - {i18n.t("empresaSignup.currencySymbol")} {plan.amount}
                                             </MenuItem>
                                         ))}
                                     </Field>
@@ -635,10 +635,10 @@ const SignUp = () => {
                 <div className={classes.progressContainer}>
                     <CircularProgress size={60} thickness={5} style={{ color: '#0f65ab' }} />
                     <Typography variant="h6" className={classes.progressText}>
-                        Realizando Cadastro...
+                        {i18n.t("empresaSignup.progress.title")}
                     </Typography>
                     <Typography variant="body1" style={{ color: '#0f65ab', marginTop: '10px' }}>
-                        Por favor, aguarde enquanto processamos seu cadastro.
+                        {i18n.t("empresaSignup.progress.message")}
                     </Typography>
                 </div>
             </Dialog>
@@ -652,19 +652,19 @@ const SignUp = () => {
                 className={classes.modal}
             >
                 <DialogTitle id="modal-title" style={{ backgroundColor: "#0f65ab", color: "#ffffff" }}>
-                    Cadastro Realizado com Sucesso!
+                    {i18n.t("empresaSignup.success.title")}
                 </DialogTitle>
                 <DialogContent style={{ backgroundColor: "#ffffff" }}>
                     <Typography variant="h6" id="modal-description" style={{ color: "#0f65ab" }}>
-                        Parabéns! Seu cadastro foi realizado com sucesso.
+                        {i18n.t("empresaSignup.success.message")}
                     </Typography>
                     <Typography variant="body1" style={{ color: "#0f65ab" }}>
-                        Agora a Empresa podera acessar sua conta e começar a usar nossa plataforma.
+                        {i18n.t("empresaSignup.success.submessage")}
                     </Typography>
                 </DialogContent>
                 <DialogActions style={{ backgroundColor: "#ffffff" }}>
                     <Button onClick={handleCloseModal} style={{ color: "#0f65ab" }}>
-                        Fechar
+                        {i18n.t("empresaSignup.success.close")}
                     </Button>
                 </DialogActions>
             </Dialog>

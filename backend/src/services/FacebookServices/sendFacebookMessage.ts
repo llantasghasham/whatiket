@@ -10,6 +10,23 @@ interface Request {
   quotedMsg?: Message;
 }
 
+/** Obtiene PSID desde mensajes entrantes si contact.number no es válido */
+const getPsidFromMessages = async (ticketId: number): Promise<string | null> => {
+  const msg = await Message.findOne({
+    where: { ticketId, fromMe: false },
+    order: [["id", "DESC"]],
+    attributes: ["dataJson"]
+  });
+  if (!msg?.dataJson) return null;
+  try {
+    const data = typeof msg.dataJson === "string" ? JSON.parse(msg.dataJson) : msg.dataJson;
+    const psid = data?.sender?.id;
+    return psid && /^\d+$/.test(String(psid)) ? String(psid) : null;
+  } catch {
+    return null;
+  }
+};
+
 const sendFacebookMessage = async ({ body, ticket, quotedMsg }: Request): Promise<any> => {
   const conn = ticket.whatsapp;
   const token = conn?.facebookUserToken;
@@ -23,11 +40,26 @@ const sendFacebookMessage = async ({ body, ticket, quotedMsg }: Request): Promis
   if (recipientId != null) {
     recipientId = String(recipientId).trim();
   }
+  const isValidPsid = recipientId && recipientId !== "undefined" && recipientId !== "null" && /^\d+$/.test(recipientId);
+
+  // Fallback: si contact.number no es PSID válido, intentar obtenerlo de mensajes entrantes
+  if (!isValidPsid) {
+    const psidFromMsg = await getPsidFromMessages(ticket.id);
+    if (psidFromMsg) {
+      recipientId = psidFromMsg;
+      console.log("[FB_SEND] Usando PSID desde mensaje entrante | ticketId:", ticket.id, "| psid:", recipientId);
+      // Actualizar contacto para futuros envíos
+      if (ticket.contact?.id) {
+        const Contact = (await import("../../models/Contact")).default;
+        await Contact.update({ number: psidFromMsg }, { where: { id: ticket.contact.id } });
+      }
+    }
+  }
+
   if (!recipientId || recipientId === "undefined" || recipientId === "null") {
     console.error("[FB_SEND] ABORT - recipient[id] inválido | contactId:", ticket.contact?.id, "| number:", ticket.contact?.number);
     throw new AppError("ERR_SENDING_FACEBOOK_MSG: Param recipient[id] must be a valid ID string. El contacto no tiene PSID de Facebook/Instagram.");
   }
-  // PSID debe ser numérico (solo dígitos)
   if (!/^\d+$/.test(recipientId)) {
     console.error("[FB_SEND] ABORT - recipient no es PSID válido (debe ser numérico) | contact.number:", recipientId);
     throw new AppError("ERR_SENDING_FACEBOOK_MSG: El contacto tiene número de teléfono en lugar de PSID. Solo se puede responder a contactos que escribieron por Facebook/Instagram.");

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Switch } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import { useTheme } from "@material-ui/core/styles";
 
 import LoggedInLayout from "../layout";
 import Dashboard from "../pages/Painel";
@@ -92,6 +93,8 @@ import ProjectDetails from "../pages/ProjectDetails";
 import UserSchedules from "../pages/UserSchedules";
 import Agenda from "../pages/Agenda";
 import CallHistory from "../pages/CallHistory";
+import LiveCalls from "../pages/LiveCalls";
+import TwilioConfig from "../pages/TwilioConfig";
 import Afiliados from "../pages/Afiliados";
 import TranslationManager from "../pages/TranslationManager";
 import WhitelabelPage from "../pages/WhitelabelPage";
@@ -118,6 +121,8 @@ import { QueueSelectedProvider } from "../context/QueuesSelected/QueuesSelectedC
 import NotificationToast from "../components/NotificationToast";
 const Routes = () => {
   const [showCampaigns, setShowCampaigns] = useState(false);
+  const theme = useTheme();
+  const isDark = theme?.palette?.type === "dark";
 
   useEffect(() => {
     const cshow = localStorage.getItem("cshow");
@@ -270,6 +275,9 @@ const Routes = () => {
                 <ProtectedRoute exact path="/contact-analytics" component={ContactAnalytics} />
                 <ProtectedRoute exact path="/call-history" component={CallHistory} />
                 <ProtectedRoute exact path="/chamadas" component={CallHistory} />
+                <ProtectedRoute exact path="/live-calls" component={LiveCalls} />
+                <ProtectedRoute exact path="/llamadas-en-vivo" component={LiveCalls} />
+                <ProtectedRoute exact path="/twilio-config" component={TwilioConfig} />
                 <ProtectedRoute exact path="/afiliados" component={Afiliados} />
                 <ProtectedRoute exact path="/admin/afiliados/:id" component={AdminAfiliadoDetalhes} />
                 <ProtectedRoute exact path="/admin/afiliados" component={AdminAfiliados} />
@@ -292,7 +300,7 @@ const Routes = () => {
               </QueueSelectedProvider>
             </WhatsAppsProvider>
           </Switch>
-          <ToastContainer position="top-center" autoClose={3000} />
+          <ToastContainer position="top-center" autoClose={3000} theme={isDark ? "dark" : "light"} />
         </TicketsContextProvider>
         </PlanPermissionsProvider>
         </PagePermissionsProvider>

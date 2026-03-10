@@ -81,26 +81,27 @@ const useStyles = makeStyles((theme) => ({
   },
   summaryLabel: {
     fontSize: 12,
-    color: "#667781",
+    color: theme.palette.text?.secondary || (theme.palette.type === "dark" ? "#9ca3af" : "#667781"),
     fontWeight: 500,
   },
   tableContainer: {
     borderRadius: 12,
-    boxShadow: "0 1px 3px rgba(0,0,0,0.08)",
+    boxShadow: theme.palette.type === "dark" ? "0 1px 3px rgba(0,0,0,0.3)" : "0 1px 3px rgba(0,0,0,0.08)",
+    backgroundColor: theme.palette.background?.paper || (theme.palette.type === "dark" ? "#1e1e1e" : "#ffffff"),
   },
   tableHead: {
-    backgroundColor: "#f8f9fa",
+    backgroundColor: theme.palette.type === "dark" ? "#2d2d2d" : "#f8f9fa",
   },
   tableHeadCell: {
     fontWeight: 600,
     fontSize: 12,
-    color: "#667781",
+    color: theme.palette.text?.secondary || (theme.palette.type === "dark" ? "#9ca3af" : "#667781"),
     textTransform: "uppercase",
     letterSpacing: "0.5px",
   },
   tableRow: {
     "&:hover": {
-      backgroundColor: "#f8f9fa",
+      backgroundColor: theme.palette.type === "dark" ? "rgba(255,255,255,0.05)" : "#f8f9fa",
     },
   },
   contactCell: {
@@ -114,7 +115,7 @@ const useStyles = makeStyles((theme) => ({
   },
   contactNumber: {
     fontSize: 12,
-    color: "#667781",
+    color: theme.palette.text?.secondary || (theme.palette.type === "dark" ? "#9ca3af" : "#667781"),
   },
   durationCell: {
     display: "flex",

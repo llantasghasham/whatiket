@@ -29,4 +29,6 @@ ticketRoutes.post("/tickets/closeAll", isAuth, TicketController.closeAll);
 
 ticketRoutes.post("/tickets/cleanup", isAuth, TicketController.cleanupAll);
 
+ticketRoutes.post("/tickets/transfer-between-connections", isAuth, TicketController.transferBetweenConnections);
+
 export default ticketRoutes;

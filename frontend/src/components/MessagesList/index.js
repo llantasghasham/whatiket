@@ -964,7 +964,7 @@ const renderDailyTimestamps = (message, index) => {
         key={`timestamp-${message.id}`}
       >
         <div className={classes.dailyTimestampText}>
-          {today === format(parseISO(messagesList[index].createdAt), "dd/MM/yyyy") ? "HOJE" : format(parseISO(messagesList[index].createdAt), "dd/MM/yyyy")}
+          {today === format(parseISO(messagesList[index].createdAt), "dd/MM/yyyy") ? (i18n.t("messagesList.today") || "Hoy") : format(parseISO(messagesList[index].createdAt), "dd/MM/yyyy")}
         </div>
       </span>
     );
@@ -980,7 +980,7 @@ const renderDailyTimestamps = (message, index) => {
             key={`timestamp-${message.id}`}
           >
             <div className={classes.dailyTimestampText}>
-              {today === format(parseISO(messagesList[index].createdAt), "dd/MM/yyyy") ? "HOJE" : format(parseISO(messagesList[index].createdAt), "dd/MM/yyyy")}
+              {today === format(parseISO(messagesList[index].createdAt), "dd/MM/yyyy") ? (i18n.t("messagesList.today") || "Hoy") : format(parseISO(messagesList[index].createdAt), "dd/MM/yyyy")}
             </div>
           </span>
         );
@@ -1497,8 +1497,7 @@ return (
         )}
 
         <span>
-          Você tem 24h para responder após receber uma mensagem, de acordo
-          com as políticas do Facebook.
+          {i18n.t("messagesList.facebookPolicyWarning") || "Tienes 24 horas para responder después de recibir un mensaje, según las políticas de Facebook."}
         </span>
       </div>
     )}

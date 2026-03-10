@@ -1,7 +1,9 @@
 // @ts-nocheck
 import { Request, Response } from "express";
+import { Op } from "sequelize";
 import { getIO } from "../libs/socket";
 import Ticket from "../models/Ticket";
+import Whatsapp from "../models/Whatsapp";
 
 import CreateTicketService from "../services/TicketServices/CreateTicketService";
 import DeleteTicketService from "../services/TicketServices/DeleteTicketService";
@@ -286,6 +288,9 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
   const { contactId, status, userId, queueId, whatsappId, reuseOpenTicket }: TicketData = req.body;
   const { companyId } = req.user;
 
+  // Aceptar reuseOpenTicket como boolean o string "true" para permitir mensaje rápido con ticket abierto
+  const allowReuse = reuseOpenTicket === true || reuseOpenTicket === "true";
+
   const ticket = await CreateTicketService({
     contactId,
     status,
@@ -293,7 +298,7 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
     companyId,
     queueId,
     whatsappId,
-    reuseOpenTicket
+    reuseOpenTicket: allowReuse
   });
 
   const io = getIO();
@@ -454,4 +459,47 @@ export const cleanupAll = async (req: Request, res: Response): Promise<Response>
   });
 
   return res.status(200).json({ message: "All tickets for this company have been deleted" });
+};
+
+export const transferBetweenConnections = async (req: Request, res: Response): Promise<Response> => {
+  const { companyId } = req.user;
+  const { sourceWhatsappId, destinationWhatsappId } = req.body;
+
+  if (!sourceWhatsappId || !destinationWhatsappId) {
+    return res.status(400).json({ error: "sourceWhatsappId and destinationWhatsappId are required" });
+  }
+
+  if (sourceWhatsappId === destinationWhatsappId) {
+    return res.status(400).json({ error: "Source and destination must be different" });
+  }
+
+  const [sourceWhatsapp, destWhatsapp] = await Promise.all([
+    Whatsapp.findOne({ where: { id: sourceWhatsappId, companyId } }),
+    Whatsapp.findOne({ where: { id: destinationWhatsappId, companyId } })
+  ]);
+
+  if (!sourceWhatsapp || !destWhatsapp) {
+    return res.status(404).json({ error: "One or both connections not found or not in your company" });
+  }
+
+  const [updatedCount] = await Ticket.update(
+    { whatsappId: destinationWhatsappId },
+    {
+      where: {
+        companyId,
+        whatsappId: sourceWhatsappId,
+        status: { [Op.ne]: "closed" }
+      }
+    }
+  );
+
+  const io = getIO();
+  io.of(String(companyId)).emit(`company-${companyId}-ticket`, {
+    action: "refresh"
+  });
+
+  return res.status(200).json({
+    message: "Tickets transferred successfully",
+    transferredCount: updatedCount
+  });
 };

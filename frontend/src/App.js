@@ -201,18 +201,22 @@ const App = () => {
         palette: {
           type: mode,
           primary: { main: mode === "light" ? primaryColorLight : primaryColorDark },
+          background: {
+            default: mode === "light" ? "#f8f9fa" : "#121212",
+            paper: mode === "light" ? "#ffffff" : "#1e1e1e",
+          },
           textPrimary: mode === "light" ? primaryColorLight : primaryColorDark,
           borderPrimary: mode === "light" ? primaryColorLight : primaryColorDark,
           dark: { main: mode === "light" ? "#333333" : "#F3F3F3" },
           light: { main: mode === "light" ? "#F3F3F3" : "#333333" },
           fontColor: mode === "light" ? primaryColorLight : primaryColorDark,
-          tabHeaderBackground: mode === "light" ? "#EEE" : "#666",
-          optionsBackground: mode === "light" ? "#fafafa" : "#333",
-          fancyBackground: mode === "light" ? "#fafafa" : "#333",
-          total: mode === "light" ? "#fff" : "#222",
+          tabHeaderBackground: mode === "light" ? "#EEE" : "#2d2d2d",
+          optionsBackground: mode === "light" ? "#fafafa" : "#2d2d2d",
+          fancyBackground: mode === "light" ? "#fafafa" : "#252525",
+          total: mode === "light" ? "#fff" : "#1e1e1e",
           messageIcons: mode === "light" ? "grey" : "#F3F3F3",
-          inputBackground: mode === "light" ? "#FFFFFF" : "#333",
-          barraSuperior: mode === "light" ? primaryColorLight : "#666",
+          inputBackground: mode === "light" ? "#FFFFFF" : "#2d2d2d",
+          barraSuperior: mode === "light" ? primaryColorLight : "#2d2d2d",
         },
         mode,
         appLogoLight,
@@ -327,6 +331,21 @@ const App = () => {
     const root = document.documentElement;
     root.style.setProperty("--primaryColor", mode === "light" ? primaryColorLight : primaryColorDark);
   }, [primaryColorLight, primaryColorDark, mode]);
+
+  // Aplicar modo oscuro al body y html para que todo el proyecto herede
+  useEffect(() => {
+    const body = document.body;
+    const html = document.documentElement;
+    if (mode === "dark") {
+      body.style.backgroundColor = "#121212";
+      body.style.color = "#e0e0e0";
+      html.setAttribute("data-theme", "dark");
+    } else {
+      body.style.backgroundColor = "#f8f9fa";
+      body.style.color = "#212121";
+      html.setAttribute("data-theme", "light");
+    }
+  }, [mode]);
 
   // Atualiza o título da página com o nome do sistema
   useEffect(() => {

@@ -74,7 +74,7 @@ const filter = createFilterOptions({
   trim: true,
 });
 
-const NewTicketModal = ({ modalOpen, onClose, initialContact }) => {
+const NewTicketModal = ({ modalOpen, onClose, initialContact, initialChannel }) => {
   const classes = useStyles();
   const [options, setOptions] = useState([]);
   const [channelFilter, setChannelFilter] = useState(null);
@@ -122,10 +122,6 @@ const NewTicketModal = ({ modalOpen, onClose, initialContact }) => {
         }
       };
 
-      if (whatsappId !== null && whatsappId !== undefined) {
-        setSelectedWhatsapp(whatsappId);
-      }
-
       if (user.queues.length === 1) {
         setSelectedQueue(user.queues[0].id);
       }
@@ -138,6 +134,22 @@ const NewTicketModal = ({ modalOpen, onClose, initialContact }) => {
     }, 500);
     return () => clearTimeout(delayDebounceFn);
   }, [selectedContact, channelFilter]);
+
+  // Pre-seleccionar conexión según initialChannel (facebook/instagram) o whatsappId por defecto
+  useEffect(() => {
+    if (!modalOpen || !whatsapps?.length) return;
+    if (initialChannel === "facebook") {
+      const fbConn = whatsapps.find((w) => w.channel === "facebook");
+      if (fbConn) setSelectedWhatsapp(fbConn.id);
+    } else if (initialChannel === "instagram") {
+      const igConn = whatsapps.find((w) => w.channel === "instagram");
+      if (igConn) setSelectedWhatsapp(igConn.id);
+    } else if (whatsappId != null && whatsappId !== undefined) {
+      setSelectedWhatsapp(whatsappId);
+    } else if (whatsapps[0]) {
+      setSelectedWhatsapp(whatsapps[0].id);
+    }
+  }, [modalOpen, whatsapps, initialChannel]);
 
   useEffect(() => {
     if (!modalOpen || searchParam.length < 3) {

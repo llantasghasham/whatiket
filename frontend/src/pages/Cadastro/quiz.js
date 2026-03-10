@@ -556,7 +556,7 @@ const QuizForm = ({ values, errors, touched, setFieldValue, nextStep, prevStep, 
                     <PhoneInput
                       {...field}
                       international
-                      defaultCountry={(values.country && ["BR","US","MX","AR","CO","CL","PE","EC","UY","PY","VE","BO","ES","PT"].includes(values.country)) ? values.country : "BR"}
+                      defaultCountry={(values.country && ["BR","US","MX","AR","CO","CL","PE","EC","UY","PY","VE","BO","ES","PT","CR"].includes(values.country)) ? values.country : "CR"}
                       onChange={(value) => setFieldValue('phone', value)}
                       className={classes.phoneInput}
                       placeholder="(00) 00000-0000"

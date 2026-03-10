@@ -110,6 +110,42 @@ const messages = {
 					login: "لديك حساب؟ سجّل الدخول",
 				},
 			},
+			empresaSignup: {
+				title: "تسجيل الشركة",
+				form: {
+					companyName: "اسم الشركة",
+					fullName: "اسمك الكامل",
+					email: "أفضل بريدك الإلكتروني",
+					password: "أنشئ كلمة مرور آمنة",
+					confirmPassword: "أكد كلمة المرور",
+					phone: "أدخل رقم هاتفك",
+					document: "الهوية أو الرقم الضريبي",
+					selectPlan: "اختر خطة",
+				},
+				progress: {
+					title: "جاري التسجيل...",
+					message: "يرجى الانتظار أثناء معالجة تسجيلك.",
+				},
+				success: {
+					title: "تم التسجيل بنجاح!",
+					message: "تهانينا! تم تسجيلك بنجاح.",
+					submessage: "يمكن للشركة الآن الوصول إلى حسابها والبدء في استخدام منصتنا.",
+					close: "إغلاق",
+				},
+				validation: {
+					tooShort: "قصير جداً!",
+					tooLong: "طويل جداً!",
+					required: "مطلوب",
+					passwordsNotMatch: "كلمات المرور غير متطابقة.",
+					confirmPassword: "يرجى تأكيد كلمة المرور.",
+					invalidEmail: "البريد الإلكتروني غير صالح",
+					phoneRequired: "الهاتف مطلوب",
+					documentRequired: "الهوية مطلوبة",
+					documentInvalid: "الهوية غير صالحة",
+				},
+				currency: "USD",
+				currencySymbol: "$",
+			},
 			login: {
 				title: "تسجيل الدخول",
 				form: {

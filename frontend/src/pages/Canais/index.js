@@ -4,7 +4,6 @@ import { add, format, parseISO } from "date-fns";
 
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import PopupState, { bindTrigger, bindMenu } from "material-ui-popup-state";
 import { makeStyles } from "@material-ui/core/styles";
 import { green } from "@material-ui/core/colors";
 import {
@@ -53,9 +52,13 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import RepeatIcon from "@mui/icons-material/Repeat";
 import PowerIcon from "@mui/icons-material/Power";
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
+import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import ChannelModal from "../../HubEcosystem/components/ChannelModal";
 import notificame_logo from "../../assets/notificame_logo.png";
 import FacebookInstagramModal from "../../components/FacebookInstagramModal";
+import TransferTicketsModal from "../../components/TransferTicketsModal";
+import { getNumberSupport } from "../../config";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -161,6 +164,25 @@ const useStyles = makeStyles((theme) => ({
         color: "#9e9e9e",
         opacity: 1
       }
+    }
+  },
+  actionButtonsRow: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: 12,
+    padding: "16px 24px",
+    backgroundColor: "#fff",
+    borderBottom: "1px solid #e0e0e0"
+  },
+  actionBtn: {
+    borderRadius: 10,
+    padding: "10px 20px",
+    textTransform: "none",
+    fontWeight: 600,
+    fontSize: "0.9rem",
+    boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+    "&:hover": {
+      boxShadow: "0 4px 12px rgba(0,0,0,0.12)"
     }
   },
   content: {
@@ -413,6 +435,8 @@ const Connections = () => {
     confirmationModalInitialState
   );
   const [planConfig, setPlanConfig] = useState(false);
+  const [transferModalOpen, setTransferModalOpen] = useState(false);
+  const [addMenuAnchor, setAddMenuAnchor] = useState(null);
 
   const { user, socket } = useContext(AuthContext);
 
@@ -542,6 +566,17 @@ const Connections = () => {
 
   const openInNewTab = (url) => {
     window.open(url, "_blank", "noopener,noreferrer");
+  };
+
+  const handleCallSupport = () => {
+    const supportNumber = getNumberSupport();
+    if (supportNumber) {
+      const clean = String(supportNumber).replace(/\D/g, "");
+      const waUrl = `https://wa.me/${clean}`;
+      window.open(waUrl, "_blank", "noopener,noreferrer");
+    } else {
+      toast.info(i18n.t("connections.callSupport") + " - " + "Configure REACT_APP_NUMBER_SUPPORT");
+    }
   };
 
   const handleOpenConfirmationModal = (action, whatsAppId, channel) => {
@@ -941,6 +976,12 @@ const Connections = () => {
         open={hubChannelModalOpen}
         onClose={() => setHubChannelModalOpen(false)}
       />
+      <TransferTicketsModal
+        open={transferModalOpen}
+        onClose={() => setTransferModalOpen(false)}
+        connections={whatsApps}
+        onSuccess={() => history.go(0)}
+      />
 
       <Box className={classes.header}>
         <Box className={classes.headerLeft}>
@@ -949,10 +990,10 @@ const Connections = () => {
           </Box>
           <Box>
             <Typography className={classes.headerTitle}>
-              Conexões
+              {i18n.t("connections.title")}
             </Typography>
             <Typography className={classes.headerSubtitle}>
-              {whatsApps.length} conexões configuradas
+              {i18n.t("connections.configured", { count: whatsApps.length })}
             </Typography>
           </Box>
         </Box>
@@ -981,60 +1022,105 @@ const Connections = () => {
           >
             Reiniciar
           </Button>
-          <PopupState variant="popover" popupId="demo-popup-menu">
-            {(popupState) => (
-              <React.Fragment>
-                <Can
-                  role={user.profile}
-                  perform="connections-page:addConnection"
-                  yes={() => (
-                    <>
-                      <IconButton
-                        className={classes.addButton}
-                        {...bindTrigger(popupState)}
-                      >
-                        <AddIcon />
-                      </IconButton>
-                      <Menu {...bindMenu(popupState)}>
-                        <MenuItem
-                          disabled={planConfig?.plan?.useWhatsapp ? false : true}
-                          onClick={() => {
-                            handleOpenWhatsAppModal();
-                            popupState.close();
-                          }}
-                        >
-                          <WhatsApp fontSize="small" style={{ marginRight: 10, color: "#25D366" }} />
-                          WhatsApp
-                        </MenuItem>
-                        <MenuItem
-                          onClick={() => {
-                            handleOpenWhatsAppOfficialModal();
-                            popupState.close();
-                          }}
-                        >
-                          <WhatsApp fontSize="small" style={{ marginRight: 10, color: "#128C7E" }} />
-                          WhatsApp Oficial
-                        </MenuItem>
-                        <MenuItem onClick={() => { setHubChannelModalOpen(true); popupState.close(); }}>
-                          <img src={notificame_logo} alt="NotificaMe Hub" style={{ width: 16, height: 16, marginRight: 10, marginLeft: 2 }} />
-                          NotificaMe Hub
-                        </MenuItem>
-                        <MenuItem onClick={() => { handleOpenFacebookModal("facebook"); popupState.close(); }}>
-                          <Facebook fontSize="small" style={{ marginRight: 10, color: "#3b5998" }} />
-                          Facebook
-                        </MenuItem>
-                        <MenuItem onClick={() => { handleOpenFacebookModal("instagram"); popupState.close(); }}>
-                          <Instagram fontSize="small" style={{ marginRight: 10, color: "#e1306c" }} />
-                          Instagram
-                        </MenuItem>
-                      </Menu>
-                    </>
-                  )}
-                />
-              </React.Fragment>
+          <Can
+            role={user.profile}
+            perform="connections-page:addConnection"
+            yes={() => (
+              <>
+                <IconButton
+                  className={classes.addButton}
+                  onClick={(e) => setAddMenuAnchor(e.currentTarget)}
+                >
+                  <AddIcon />
+                </IconButton>
+                <Menu
+                  anchorEl={addMenuAnchor}
+                  open={!!addMenuAnchor}
+                  onClose={() => setAddMenuAnchor(null)}
+                  anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                  transformOrigin={{ vertical: "top", horizontal: "right" }}
+                >
+                  <MenuItem
+                    disabled={planConfig?.plan?.useWhatsapp ? false : true}
+                    onClick={() => {
+                      handleOpenWhatsAppModal();
+                      setAddMenuAnchor(null);
+                    }}
+                  >
+                    <WhatsApp fontSize="small" style={{ marginRight: 10, color: "#25D366" }} />
+                    WhatsApp
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      handleOpenWhatsAppOfficialModal();
+                      setAddMenuAnchor(null);
+                    }}
+                  >
+                    <WhatsApp fontSize="small" style={{ marginRight: 10, color: "#128C7E" }} />
+                    WhatsApp Oficial
+                  </MenuItem>
+                  <MenuItem onClick={() => { setHubChannelModalOpen(true); setAddMenuAnchor(null); }}>
+                    <img src={notificame_logo} alt="NotificaMe Hub" style={{ width: 16, height: 16, marginRight: 10, marginLeft: 2 }} />
+                    NotificaMe Hub
+                  </MenuItem>
+                  <MenuItem onClick={() => { handleOpenFacebookModal("facebook"); setAddMenuAnchor(null); }}>
+                    <Facebook fontSize="small" style={{ marginRight: 10, color: "#3b5998" }} />
+                    Facebook
+                  </MenuItem>
+                  <MenuItem onClick={() => { handleOpenFacebookModal("instagram"); setAddMenuAnchor(null); }}>
+                    <Instagram fontSize="small" style={{ marginRight: 10, color: "#e1306c" }} />
+                    Instagram
+                  </MenuItem>
+                </Menu>
+              </>
             )}
-          </PopupState>
+          />
         </Box>
+      </Box>
+
+      <Box className={classes.actionButtonsRow}>
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.actionBtn}
+          startIcon={<SwapHorizIcon />}
+          onClick={() => setTransferModalOpen(true)}
+        >
+          {i18n.t("connections.buttons.transferTickets")}
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.actionBtn}
+          startIcon={<RestartAltIcon />}
+          onClick={restartWhatsapps}
+        >
+          {i18n.t("connections.restartConnections")}
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.actionBtn}
+          startIcon={<SupportAgentIcon />}
+          onClick={handleCallSupport}
+        >
+          {i18n.t("connections.callSupport")}
+        </Button>
+        <Can
+          role={user.profile}
+          perform="connections-page:addConnection"
+          yes={() => (
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.actionBtn}
+              startIcon={<AddIcon />}
+              onClick={(e) => setAddMenuAnchor(e.currentTarget)}
+            >
+              {i18n.t("connections.newConnection")}
+            </Button>
+          )}
+        />
       </Box>
 
       <Box className={classes.content}>

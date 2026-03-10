@@ -882,7 +882,7 @@ const SignUp = () => {
                                                     <PhoneInput
                                                         {...field}
                                                         international
-                                                        defaultCountry="BR"
+                                                        defaultCountry="CR"
                                                         onChange={(value) => setFieldValue('phone', value)}
                                                         className={classes.phoneInput}
                                                         placeholder="Telefone"

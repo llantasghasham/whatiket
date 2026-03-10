@@ -38,7 +38,7 @@ const useStyles = makeStyles(theme => ({
   root: {
     padding: theme.spacing(3),
     minHeight: "100vh",
-    backgroundColor: "#f5f7fb",
+    backgroundColor: theme.palette.type === "dark" ? "#1e1e1e" : "#f5f7fb",
     display: "flex",
     flexDirection: "column",
     gap: theme.spacing(3)
@@ -62,8 +62,8 @@ const useStyles = makeStyles(theme => ({
   integrationItem: {
     padding: theme.spacing(2),
     borderRadius: 14,
-    border: "1px solid #e2e8f0",
-    backgroundColor: "#fff",
+    border: `1px solid ${theme.palette.type === "dark" ? "#404040" : "#e2e8f0"}`,
+    backgroundColor: theme.palette.background?.paper || (theme.palette.type === "dark" ? "#252525" : "#fff"),
     cursor: "pointer",
     transition: "border-color 0.2s ease, box-shadow 0.2s ease",
     "&:hover": {
@@ -96,7 +96,7 @@ const useStyles = makeStyles(theme => ({
   tokenBox: {
     padding: theme.spacing(2),
     borderRadius: 12,
-    backgroundColor: "#f8fafc",
+    backgroundColor: theme.palette.type === "dark" ? "#2d2d2d" : "#f8fafc",
     border: "1px solid #e2e8f0",
     fontFamily: "monospace",
     wordBreak: "break-all",

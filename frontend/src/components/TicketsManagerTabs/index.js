@@ -529,6 +529,7 @@ const TicketsManagerTabs = () => {
   const [searchParam, setSearchParam] = useState("");
   const [tab, setTab] = useState("open");
   const [newTicketModalOpen, setNewTicketModalOpen] = useState(false);
+  const [newTicketInitialChannel, setNewTicketInitialChannel] = useState(null);
   const [sendWhatsAppModalOpen, setSendWhatsAppModalOpen] = useState(false);
   const [showAllTickets, setShowAllTickets] = useState(false);
   const [sortTickets, setSortTickets] = useState(false);
@@ -764,8 +765,10 @@ const TicketsManagerTabs = () => {
       <NewTicketModal
         modalOpen={newTicketModalOpen}
         onClose={(ticket) => {
+          setNewTicketInitialChannel(null);
           handleCloseOrOpenTicket(ticket);
         }}
+        initialChannel={newTicketInitialChannel}
       />
       <SendWhatsAppMessageModal
         open={sendWhatsAppModalOpen}
@@ -922,7 +925,10 @@ const TicketsManagerTabs = () => {
                     onMouseEnter={() => setIsHoveredNew(true)}
                     onMouseLeave={() => setIsHoveredNew(false)}
                     className={classes.actionButton}
-                    onClick={() => setNewTicketModalOpen(true)}
+                    onClick={() => {
+                      setNewTicketInitialChannel(null);
+                      setNewTicketModalOpen(true);
+                    }}
                   >
                     <AddIcon />
                   </IconButton>
@@ -943,7 +949,10 @@ const TicketsManagerTabs = () => {
               <Tooltip title="Nuevo ticket Facebook">
                 <IconButton
                   className={classes.actionButton}
-                  onClick={() => setNewTicketModalOpen(true)}
+                  onClick={() => {
+                    setNewTicketInitialChannel("facebook");
+                    setNewTicketModalOpen(true);
+                  }}
                   style={{ color: "#1877F2" }}
                 >
                   <FacebookIcon fontSize="small" />
@@ -954,7 +963,10 @@ const TicketsManagerTabs = () => {
               <Tooltip title="Nuevo ticket Instagram">
                 <IconButton
                   className={classes.actionButton}
-                  onClick={() => setNewTicketModalOpen(true)}
+                  onClick={() => {
+                    setNewTicketInitialChannel("instagram");
+                    setNewTicketModalOpen(true);
+                  }}
                   style={{ color: "#E4405F" }}
                 >
                   <InstagramIcon fontSize="small" />
