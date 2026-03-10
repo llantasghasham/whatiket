@@ -125,6 +125,7 @@ class Whatsapp extends Model<Whatsapp> {
   @Column(DataType.TEXT)
   tokenMeta: string;
 
+  @Default("whatsapp")
   @Column(DataType.TEXT)
   channel: string;
 

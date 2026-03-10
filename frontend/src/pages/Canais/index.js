@@ -928,6 +928,15 @@ const Connections = () => {
     }
   };
 
+  // Fallback: si channel no viene del backend, inferir de nombre (ej. "telegram_bot") o token sin número
+  const getEffectiveChannel = (conn) => {
+    if (conn.channel) return conn.channel;
+    const name = (conn.name || "").toLowerCase();
+    if (name.includes("telegram")) return "telegram";
+    if (conn.token && !conn.number) return "telegram";
+    return "whatsapp";
+  };
+
   if (user.profile === "user" && user.allowConnections === "disabled") {
     return <ForbiddenPage />;
   }
@@ -1135,28 +1144,30 @@ const Connections = () => {
           ) : (
             filteredConnections.map((whatsApp) => {
               const statusInfo = getStatusBadge(whatsApp.status);
+              const channel = getEffectiveChannel(whatsApp);
+              const whatsAppWithChannel = { ...whatsApp, channel };
               return (
                 <Box key={whatsApp.id} className={classes.card}>
                   <Box
                     className={classes.channelIcon}
-                    style={{ backgroundColor: getChannelBg(whatsApp.channel) }}
+                    style={{ backgroundColor: getChannelBg(channel) }}
                   >
-                    {getChannelIcon(whatsApp.channel)}
+                    {getChannelIcon(channel)}
                   </Box>
                   <Box className={classes.cardInfo}>
                     <Typography variant="subtitle1" style={{ fontWeight: 600 }}>
                       {whatsApp.name}
-                      {whatsApp.channel === "facebook" && (
+                      {channel === "facebook" && (
                         <span style={{ marginLeft: 8, fontSize: "0.7rem", color: "#3b5998", fontWeight: 500 }}>
                           <Facebook style={{ fontSize: 14, verticalAlign: 'middle' }} /> Facebook
                         </span>
                       )}
-                      {whatsApp.channel === "instagram" && (
+                      {channel === "instagram" && (
                         <span style={{ marginLeft: 8, fontSize: "0.7rem", color: "#e1306c", fontWeight: 500 }}>
                           <Instagram style={{ fontSize: 14, verticalAlign: 'middle' }} /> Instagram
                         </span>
                       )}
-                      {whatsApp.channel === "telegram" && (
+                      {channel === "telegram" && (
                         <span style={{ marginLeft: 8, fontSize: "0.7rem", color: "#0088cc", fontWeight: 500 }}>
                           <Telegram style={{ fontSize: 14, verticalAlign: 'middle' }} /> Telegram
                         </span>
@@ -1168,7 +1179,7 @@ const Connections = () => {
                       )}
                     </Typography>
                     <Box className={classes.metaRow}>
-                      {whatsApp.channel === "whatsapp" && (
+                      {channel === "whatsapp" && (
                         <>
                           <span>
                             {whatsApp.number
@@ -1188,7 +1199,7 @@ const Connections = () => {
                     </Box>
                   </Box>
                   <Box className={classes.cardActions}>
-                    {renderActionButtons(whatsApp)}
+                    {renderActionButtons(whatsAppWithChannel)}
                     <Can
                       role={user.profile}
                       perform="connections-page:addConnection"
@@ -1197,7 +1208,7 @@ const Connections = () => {
                           <Tooltip title="Editar">
                             <IconButton
                               className={`${classes.actionButton} ${classes.editButton}`}
-                              onClick={() => handleEditConnection(whatsApp)}
+                              onClick={() => handleEditConnection(whatsAppWithChannel)}
                             >
                               <Edit fontSize="small" />
                             </IconButton>
@@ -1205,7 +1216,7 @@ const Connections = () => {
                           <Tooltip title="Excluir">
                             <IconButton
                               className={`${classes.actionButton} ${classes.deleteButton}`}
-                              onClick={() => handleOpenConfirmationModal("delete", whatsApp.id, whatsApp.channel)}
+                              onClick={() => handleOpenConfirmationModal("delete", whatsApp.id, channel)}
                             >
                               <DeleteOutline fontSize="small" />
                             </IconButton>
