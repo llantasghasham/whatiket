@@ -117,19 +117,22 @@ import PublicCheckout from "../pages/PublicCheckout";
 import AtendimentosMobile from "../pages/atendimentomobile";
 import { QueueSelectedProvider } from "../context/QueuesSelected/QueuesSelectedContext";
 import NotificationToast from "../components/NotificationToast";
+import ErrorBoundary from "../components/ErrorBoundary";
 
 // Vista "buena" con filtros Facebook, Instagram, WhatsApp; carga diferida para evitar error de inicialización
 const Atendimentos = lazy(() => import("../pages/Atendimentos"));
 const AtendimentosWithSuspense = (props) => (
-  <Suspense
-    fallback={
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh">
-        <CircularProgress />
-      </Box>
-    }
-  >
-    <Atendimentos {...props} />
-  </Suspense>
+  <ErrorBoundary>
+    <Suspense
+      fallback={
+        <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh">
+          <CircularProgress />
+        </Box>
+      }
+    >
+      <Atendimentos {...props} />
+    </Suspense>
+  </ErrorBoundary>
 );
 
 const Routes = () => {
