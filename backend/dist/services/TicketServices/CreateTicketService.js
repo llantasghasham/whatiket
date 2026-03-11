@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const AppError_1 = __importDefault(require("../../errors/AppError"));
+const sequelize_1 = require("sequelize");
 const GetDefaultWhatsApp_1 = __importDefault(require("../../helpers/GetDefaultWhatsApp"));
 const GetDefaultWhatsAppByUser_1 = __importDefault(require("../../helpers/GetDefaultWhatsAppByUser"));
 const Ticket_1 = __importDefault(require("../../models/Ticket"));
@@ -14,7 +15,7 @@ const CheckContactOpenTickets_1 = __importDefault(require("../../helpers/CheckCo
 const resolveLeadClientForContact_1 = __importDefault(require("./helpers/resolveLeadClientForContact"));
 const CreateLogTicketService_1 = __importDefault(require("./CreateLogTicketService"));
 const ShowTicketService_1 = __importDefault(require("./ShowTicketService"));
-const CreateTicketService = async ({ contactId, lid, status, userId, queueId, companyId, whatsappId = "" }) => {
+const CreateTicketService = async ({ contactId, lid, status, userId, queueId, companyId, whatsappId = "", reuseOpenTicket = true }) => {
     const io = (0, socket_1.getIO)();
     const { leadId, clientId } = await (0, resolveLeadClientForContact_1.default)(contactId, companyId);
     const contact = await (0, ShowContactService_1.default)(contactId, companyId);
@@ -30,8 +31,10 @@ const CreateTicketService = async ({ contactId, lid, status, userId, queueId, co
     }
     if (!defaultWhatsapp)
         defaultWhatsapp = await (0, GetDefaultWhatsApp_1.default)(whatsapp.id, companyId);
-    // console.log("defaultWhatsapp", defaultWhatsapp.id, defaultWhatsapp.channel)
-    await (0, CheckContactOpenTickets_1.default)(contactId, defaultWhatsapp.id, companyId);
+    // Solo validar ticket abierto si no se permite reutilizar (mensaje rápido)
+    if (!reuseOpenTicket) {
+        await (0, CheckContactOpenTickets_1.default)(contactId, defaultWhatsapp.id, companyId);
+    }
     const { isGroup } = contact;
     // Sempre que possível, reutiliza o último ticket do contato
     let ticket = await Ticket_1.default.findOne({
@@ -42,6 +45,24 @@ const CreateTicketService = async ({ contactId, lid, status, userId, queueId, co
         },
         order: [["updatedAt", "DESC"]]
     });
+    // Se reuseOpenTicket e não achou por whatsappId, busca qualquer ticket aberto do contato
+    if (!ticket && reuseOpenTicket) {
+        ticket = await Ticket_1.default.findOne({
+            where: {
+                contactId,
+                companyId,
+                status: { [sequelize_1.Op.or]: ["open", "pending", "group"] }
+            },
+            order: [["updatedAt", "DESC"]]
+        });
+        if (ticket) {
+            await ticket.update({
+                userId,
+                queueId: queueId ?? ticket.queueId,
+                status: isGroup ? "group" : ticket.status
+            });
+        }
+    }
     if (ticket && ["closed", "nps", "lgpd"].includes(ticket.status)) {
         await ticket.update({
             whatsappId: defaultWhatsapp.id,

@@ -180,7 +180,7 @@ const importFlow = async (req, res) => {
     const { companyId } = req.user;
     const importFile = req.file;
     if (!importFile) {
-        return res.status(400).json({ error: "Nenhum arquivo enviado" });
+        return res.status(400).json({ error: "Ningún archivo enviado" });
     }
     try {
         console.log(`Processando arquivo de importação: ${importFile.originalname}`);

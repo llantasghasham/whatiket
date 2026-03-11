@@ -209,8 +209,9 @@ const FindOrCreateTicketService = async (contact, whatsapp, unreadMessages, comp
             contactId: contact.id,
             companyId
         };
-        if (channel === "facebook" || channel === "instagram") {
+        if (channel === "facebook" || channel === "instagram" || channel === "telegram") {
             baseWhere.channel = channel;
+            baseWhere.whatsappId = whatsapp.id;
         }
         else {
             baseWhere.whatsappId = whatsapp.id;

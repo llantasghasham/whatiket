@@ -93,7 +93,7 @@ const CreateFinanceiroDespesaService = async ({ companyId, fornecedorId, categor
             transaction
         });
         if (!fornecedor) {
-            throw new AppError_1.default("Fornecedor não encontrado.");
+            throw new AppError_1.default("Proveedor no encontrado.");
         }
     }
     // Validar categoria
@@ -106,7 +106,7 @@ const CreateFinanceiroDespesaService = async ({ companyId, fornecedorId, categor
             transaction
         });
         if (!categoria) {
-            throw new AppError_1.default("Categoria não encontrada.");
+            throw new AppError_1.default("Categoría no encontrada.");
         }
         if (categoria.tipo !== "despesa") {
             throw new AppError_1.default("Categoria deve ser do tipo despesa.");

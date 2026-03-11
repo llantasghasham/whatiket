@@ -3,9 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.cleanupAll = exports.closeAll = exports.remove = exports.update = exports.showFromUUID = exports.showLog = exports.show = exports.setunredmsg = exports.store = exports.kanban = exports.report = exports.index = void 0;
+exports.transferBetweenConnections = exports.cleanupAll = exports.closeAll = exports.remove = exports.update = exports.showFromUUID = exports.showLog = exports.show = exports.setunredmsg = exports.store = exports.kanban = exports.report = exports.index = void 0;
+const sequelize_1 = require("sequelize");
 const socket_1 = require("../libs/socket");
 const Ticket_1 = __importDefault(require("../models/Ticket"));
+const Whatsapp_1 = __importDefault(require("../models/Whatsapp"));
 const CreateTicketService_1 = __importDefault(require("../services/TicketServices/CreateTicketService"));
 const DeleteTicketService_1 = __importDefault(require("../services/TicketServices/DeleteTicketService"));
 const ListTicketsService_1 = __importDefault(require("../services/TicketServices/ListTicketsService"));
@@ -159,15 +161,18 @@ const kanban = async (req, res) => {
 };
 exports.kanban = kanban;
 const store = async (req, res) => {
-    const { contactId, status, userId, queueId, whatsappId } = req.body;
+    const { contactId, status, userId, queueId, whatsappId, reuseOpenTicket } = req.body;
     const { companyId } = req.user;
+    // Por defecto true: permitir enviar mensaje aunque haya ticket abierto (mensaje rápido)
+    const allowReuse = reuseOpenTicket === false || reuseOpenTicket === "false" ? false : true;
     const ticket = await (0, CreateTicketService_1.default)({
         contactId,
         status,
         userId,
         companyId,
         queueId,
-        whatsappId
+        whatsappId,
+        reuseOpenTicket: allowReuse
     });
     const io = (0, socket_1.getIO)();
     io.of(String(companyId))
@@ -213,7 +218,12 @@ const showFromUUID = async (req, res) => {
     const { id: userId, companyId } = req.user;
     const ticket = await (0, ShowTicketFromUUIDService_1.default)(uuid, companyId);
     if (ticket.channel === "whatsapp" && ticket.whatsappId && ticket.unreadMessages > 0) {
-        (0, SetTicketMessagesAsRead_1.default)(ticket);
+        try {
+            await (0, SetTicketMessagesAsRead_1.default)(ticket);
+        }
+        catch (err) {
+            console.warn("[showFromUUID] SetTicketMessagesAsRead:", err);
+        }
     }
     await (0, CreateLogTicketService_1.default)({
         userId,
@@ -289,3 +299,36 @@ const cleanupAll = async (req, res) => {
     return res.status(200).json({ message: "All tickets for this company have been deleted" });
 };
 exports.cleanupAll = cleanupAll;
+const transferBetweenConnections = async (req, res) => {
+    const { companyId } = req.user;
+    const { sourceWhatsappId, destinationWhatsappId } = req.body;
+    if (!sourceWhatsappId || !destinationWhatsappId) {
+        return res.status(400).json({ error: "sourceWhatsappId and destinationWhatsappId are required" });
+    }
+    if (sourceWhatsappId === destinationWhatsappId) {
+        return res.status(400).json({ error: "Source and destination must be different" });
+    }
+    const [sourceWhatsapp, destWhatsapp] = await Promise.all([
+        Whatsapp_1.default.findOne({ where: { id: sourceWhatsappId, companyId } }),
+        Whatsapp_1.default.findOne({ where: { id: destinationWhatsappId, companyId } })
+    ]);
+    if (!sourceWhatsapp || !destWhatsapp) {
+        return res.status(404).json({ error: "One or both connections not found or not in your company" });
+    }
+    const [updatedCount] = await Ticket_1.default.update({ whatsappId: destinationWhatsappId }, {
+        where: {
+            companyId,
+            whatsappId: sourceWhatsappId,
+            status: { [sequelize_1.Op.ne]: "closed" }
+        }
+    });
+    const io = (0, socket_1.getIO)();
+    io.of(String(companyId)).emit(`company-${companyId}-ticket`, {
+        action: "refresh"
+    });
+    return res.status(200).json({
+        message: "Tickets transferred successfully",
+        transferredCount: updatedCount
+    });
+};
+exports.transferBetweenConnections = transferBetweenConnections;

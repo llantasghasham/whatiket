@@ -71,6 +71,7 @@ const ShowTicketUUIDService = async (uuid, companyId) => {
             {
                 model: Whatsapp_1.default,
                 as: "whatsapp",
+                required: false,
                 attributes: ["id", "name", "groupAsTicket", "greetingMediaAttachment", "facebookUserToken", "facebookUserId", "notificameHub"]
             },
             {
@@ -81,6 +82,7 @@ const ShowTicketUUIDService = async (uuid, companyId) => {
             {
                 model: QueueIntegrations_1.default,
                 as: "queueIntegration",
+                required: false,
                 attributes: ["id", "name"]
             }
         ]

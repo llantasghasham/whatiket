@@ -3861,16 +3861,14 @@ const handleMessage = async (msg, wbot, companyId, isImported = false) => {
             if (messageBuffer[ticket.id].timeout) {
                 clearTimeout(messageBuffer[ticket.id].timeout);
             }
-            // Define o novo timeout de 8 segundos
+            // Timeout 2 segundos (antes 8s) - respuesta más rápida
             messageBuffer[ticket.id].timeout = setTimeout(async () => {
                 try {
-                    // Junta todas as mensagens acumuladas
                     const combinedText = messageBuffer[ticket.id].texts.join(". ");
                     delete messageBuffer[ticket.id];
-                    // Clona a mensagem original e substitui o texto
                     const combinedMsg = JSON.parse(JSON.stringify(msg));
                     combinedMsg.message.conversation = combinedText;
-                    console.log(`🧠 Agrupando mensagens em 8s (FlowBuilder): ${combinedText}`);
+                    console.log(`🧠 Agrupando mensagens (FlowBuilder): ${combinedText}`);
                     // Chama a IA com o texto combinado
                     console.log(`OPENAI DIRETO: Chamando handleOpenAi com mensagem combinada`);
                     await (0, OpenAiService_1.handleOpenAi)(openAiSettings, combinedMsg, wbot, ticket, contact, mediaSent, ticketTraking);
@@ -3878,7 +3876,7 @@ const handleMessage = async (msg, wbot, companyId, isImported = false) => {
                 catch (error) {
                     console.error("❌ Erro ao processar mensagens agrupadas (FlowBuilder):", error);
                 }
-            }, 8000); // 8 segundos
+            }, 2000); // 2 segundos
             return;
         }
         // openai na conexão
@@ -3921,23 +3919,21 @@ const handleMessage = async (msg, wbot, companyId, isImported = false) => {
             if (messageBuffer[ticket.id].timeout) {
                 clearTimeout(messageBuffer[ticket.id].timeout);
             }
-            // Define o novo timeout de 8 segundos
+            // Timeout 2 segundos (antes 8s) - respuesta más rápida
             messageBuffer[ticket.id].timeout = setTimeout(async () => {
                 try {
-                    // Junta todas as mensagens acumuladas
                     const combinedText = messageBuffer[ticket.id].texts.join(". ");
                     delete messageBuffer[ticket.id];
-                    // Clona a mensagem original e substitui o texto
                     const combinedMsg = JSON.parse(JSON.stringify(msg));
                     combinedMsg.message.conversation = combinedText;
-                    console.log(`🧠 Agrupando mensagens em 8s (Conexão): ${combinedText}`);
+                    console.log(`🧠 Agrupando mensagens (Conexão): ${combinedText}`);
                     // Chama a IA com o texto combinado
                     await (0, OpenAiService_1.handleOpenAi)(prompt, combinedMsg, wbot, ticket, contact, mediaSent, ticketTraking);
                 }
                 catch (error) {
                     console.error("❌ Erro ao processar mensagens agrupadas (Conexão):", error);
                 }
-            }, 8000); // 8 segundos
+            }, 2000); // 2 segundos - respuesta más rápida
         }
         console.log("log... 4444", { ticket });
         //integraçao na conexao
@@ -3954,7 +3950,7 @@ const handleMessage = async (msg, wbot, companyId, isImported = false) => {
             await (0, exports.handleMessageIntegration)(msg, wbot, companyId, integrations, ticket, isMenu, whatsapp, contact, isFirstMsg);
             return;
         }
-        // integração flowbuilder
+        // integração flowbuilder (cuando no entró por el bloque anterior con isBot)
         if (!ticket.imported &&
             !msg.key.fromMe &&
             !ticket.isGroup &&
@@ -3963,7 +3959,7 @@ const handleMessage = async (msg, wbot, companyId, isImported = false) => {
             !(0, lodash_1.isNil)(whatsapp.integrationId) &&
             !ticket.useIntegration) {
             const integrations = await (0, ShowQueueIntegrationService_1.default)(whatsapp.integrationId, companyId);
-            await (0, exports.handleMessageIntegration)(msg, wbot, companyId, integrations, ticket, null, null, contact, null);
+            await (0, exports.handleMessageIntegration)(msg, wbot, companyId, integrations, ticket, isMenu, whatsapp, contact, isFirstMsg);
         }
         console.log("I - check typebot");
         console.log("Ticket.typebotSessionId: ", ticket.typebotSessionId);

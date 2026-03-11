@@ -58,7 +58,7 @@ const ListTicketsService = async ({ searchParam = "", pageNumber = "1", queueIds
         {
             model: User_1.default,
             as: "user",
-            attributes: ["id", "name"]
+            attributes: ["id", "name", "profileImage", "companyId"]
         },
         {
             model: Tag_1.default,
@@ -73,8 +73,8 @@ const ListTicketsService = async ({ searchParam = "", pageNumber = "1", queueIds
         {
             model: Message_1.default,
             as: "messages",
-            attributes: ["fromMe"],
-            limit: 1,
+            attributes: ["id", "body", "fromMe", "createdAt"],
+            limit: 3,
             order: [["createdAt", "DESC"]],
             separate: true
         }
@@ -471,7 +471,7 @@ const ListTicketsService = async ({ searchParam = "", pageNumber = "1", queueIds
                 return {
                     model: Message_1.default,
                     as: "messages",
-                    attributes: ["id", "body"],
+                    attributes: ["id", "body", "fromMe", "createdAt"],
                     where: {
                         body: (0, sequelize_1.where)((0, sequelize_1.fn)("LOWER", (0, sequelize_1.fn)('unaccent', (0, sequelize_1.col)("messages.body"))), "LIKE", `%${sanitizedSearchParam}%`),
                     },
@@ -601,13 +601,20 @@ const ListTicketsService = async ({ searchParam = "", pageNumber = "1", queueIds
                 groupAsTicket: null
             };
         }
-        // Adicionar campo lastMessageFromMe baseado na última mensagem
+        // Adicionar lastMessageFromMe y recentMessages (últimas 3) para preview en lista
         if (ticketJSON.messages && ticketJSON.messages.length > 0) {
+            const sorted = [...ticketJSON.messages].sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
             ticketJSON.lastMessageFromMe = ticketJSON.messages[0].fromMe;
-            delete ticketJSON.messages; // Remove messages do retorno para não sobrecarregar
+            ticketJSON.recentMessages = sorted.slice(-3).map((m) => ({
+                body: m.body,
+                fromMe: m.fromMe,
+                createdAt: m.createdAt
+            }));
+            delete ticketJSON.messages;
         }
         else {
             ticketJSON.lastMessageFromMe = null;
+            ticketJSON.recentMessages = [];
         }
         return ticketJSON;
     });

@@ -43,7 +43,7 @@ const validateAndFixPdfBuffer = (buffer) => {
     // Verificar se é um PDF válido
     if (!looksLikePdfBuffer(buffer)) {
         console.error("[pdfUtils] Buffer não parece ser um PDF válido");
-        throw new Error("Arquivo não é um PDF válido");
+        throw new Error("El archivo no es un PDF válido");
     }
     // Verificar tamanho mínimo (PDFs muito pequenos podem estar corrompidos)
     if (buffer.length < 100) {

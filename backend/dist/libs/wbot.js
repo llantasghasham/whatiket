@@ -60,6 +60,7 @@ const loggerBaileys = logger_2.default.child({});
 loggerBaileys.level = "error";
 const sessions = [];
 const retriesQrCodeMap = new Map();
+const reconnectAttemptsMap = new Map();
 function msg() {
     return {
         get: (key) => {
@@ -311,8 +312,20 @@ const initWASocket = async (whatsapp) => {
                     if (connection === "close") {
                         console.log("DESCONECTOU", JSON.stringify(lastDisconnect, null, 2));
                         logger_1.default.info(`Socket  ${name} Connection Update ${connection || ""} ${lastDisconnect ? lastDisconnect.error.message : ""}`);
-                        if (lastDisconnect?.error?.output?.statusCode === 403) {
-                            await whatsapp.update({ status: "PENDING", session: "" });
+                        const statusCode = lastDisconnect?.error?.output?.statusCode;
+                        if (statusCode === 440) {
+                            await whatsapp.update({ status: "DISCONNECTED", qrcode: "" });
+                            io.of(String(companyId))
+                                .emit(`company-${whatsapp.companyId}-whatsappSession`, {
+                                action: "update",
+                                session: whatsapp
+                            });
+                            (0, exports.removeWbot)(id, false);
+                            logger_1.default.warn(`[WhatsApp] Conflict (replaced) - ${name}. Mismo número en otra sesión. No reinicio automático. Ver WHATSAPP-CONFLICT-REPLACED.md`);
+                            return;
+                        }
+                        if (statusCode === 403) {
+                            await whatsapp.update({ status: "PENDING", session: "", qrcode: "" });
                             await (0, DeleteBaileysService_1.default)(whatsapp.id);
                             await cache_1.default.delFromPattern(`sessions:${whatsapp.id}:*`);
                             io.of(String(companyId))
@@ -322,13 +335,16 @@ const initWASocket = async (whatsapp) => {
                             });
                             (0, exports.removeWbot)(id, false);
                         }
-                        if (lastDisconnect?.error?.output?.statusCode !==
-                            DisconnectReason.loggedOut) {
+                        if (statusCode !== DisconnectReason.loggedOut) {
                             (0, exports.removeWbot)(id, false);
-                            setTimeout(() => (0, StartWhatsAppSession_1.StartWhatsAppSession)(whatsapp, whatsapp.companyId), 2000);
+                            const attempts = (reconnectAttemptsMap.get(id) || 0) + 1;
+                            reconnectAttemptsMap.set(id, attempts);
+                            const delayMs = Math.min(5000 + 5000 * attempts, 30000);
+                            logger_1.default.info(`[WhatsApp] Reintento ${attempts} en ${delayMs / 1000}s - ${name}`);
+                            setTimeout(() => (0, StartWhatsAppSession_1.StartWhatsAppSession)(whatsapp, whatsapp.companyId), delayMs);
                         }
                         else {
-                            await whatsapp.update({ status: "PENDING", session: "" });
+                            await whatsapp.update({ status: "PENDING", session: "", qrcode: "" });
                             await (0, DeleteBaileysService_1.default)(whatsapp.id);
                             await cache_1.default.delFromPattern(`sessions:${whatsapp.id}:*`);
                             io.of(String(companyId))
@@ -337,10 +353,15 @@ const initWASocket = async (whatsapp) => {
                                 session: whatsapp
                             });
                             (0, exports.removeWbot)(id, false);
-                            setTimeout(() => (0, StartWhatsAppSession_1.StartWhatsAppSession)(whatsapp, whatsapp.companyId), 2000);
+                            const attempts = (reconnectAttemptsMap.get(id) || 0) + 1;
+                            reconnectAttemptsMap.set(id, attempts);
+                            const delayMs = Math.min(5000 + 5000 * attempts, 30000);
+                            logger_1.default.info(`[WhatsApp] Reintento ${attempts} en ${delayMs / 1000}s (loggedOut) - ${name}`);
+                            setTimeout(() => (0, StartWhatsAppSession_1.StartWhatsAppSession)(whatsapp, whatsapp.companyId), delayMs);
                         }
                     }
                     if (connection === "open") {
+                        reconnectAttemptsMap.set(id, 0);
                         await whatsapp.update({
                             status: "CONNECTED",
                             qrcode: "",

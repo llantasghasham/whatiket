@@ -521,11 +521,12 @@ const handleMessage = async (token, webhookEvent, channel, companyId) => {
                             (0, lodash_1.isNil)(ticket.lgpdSendMessageAt) &&
                             ticket.amountUsedBotQueues <= getSession.maxUseBotQueues &&
                             !(0, lodash_1.isNil)(settings?.lgpdMessage)) {
+                            const msgToStoreLgpd = { ...message, sender: webhookEvent.sender, recipient: webhookEvent.recipient };
                             if (message.attachments) {
-                                await (0, exports.verifyMessageMedia)(message, ticket, contact);
+                                await (0, exports.verifyMessageMedia)(msgToStoreLgpd, ticket, contact);
                             }
                             else {
-                                await (0, exports.verifyMessageFace)(message, message.text, ticket, contact);
+                                await (0, exports.verifyMessageFace)(msgToStoreLgpd, message.text, ticket, contact);
                             }
                             if (!(0, lodash_1.isNil)(settings?.lgpdMessage) &&
                                 settings.lgpdMessage !== "") {
@@ -559,11 +560,13 @@ const handleMessage = async (token, webhookEvent, channel, companyId) => {
             catch (e) {
                 throw new Error(e);
             }
+            // Incluir sender/recipient en dataJson para que getPsidFromMessages pueda recuperar el PSID
+            const msgToStore = fromMe ? message : { ...message, sender: webhookEvent.sender, recipient: webhookEvent.recipient };
             if (message.attachments) {
-                await (0, exports.verifyMessageMedia)(message, ticket, contact);
+                await (0, exports.verifyMessageMedia)(msgToStore, ticket, contact);
             }
             else {
-                await (0, exports.verifyMessageFace)(message, message.text, ticket, contact);
+                await (0, exports.verifyMessageFace)(msgToStore, message.text, ticket, contact);
             }
             const flow = await FlowBuilder_1.FlowBuilderModel.findOne({
                 where: {

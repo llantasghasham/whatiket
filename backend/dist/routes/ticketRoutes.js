@@ -42,4 +42,5 @@ ticketRoutes.put("/tickets/:ticketId", isAuth_1.default, TicketController.update
 ticketRoutes.delete("/tickets/:ticketId", isAuth_1.default, TicketController.remove);
 ticketRoutes.post("/tickets/closeAll", isAuth_1.default, TicketController.closeAll);
 ticketRoutes.post("/tickets/cleanup", isAuth_1.default, TicketController.cleanupAll);
+ticketRoutes.post("/tickets/transfer-between-connections", isAuth_1.default, TicketController.transferBetweenConnections);
 exports.default = ticketRoutes;

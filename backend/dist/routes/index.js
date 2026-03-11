@@ -110,6 +110,8 @@ const contactSettingsRoutes_1 = __importDefault(require("./contactSettingsRoutes
 const contactAnalyticsRoutes_1 = __importDefault(require("./contactAnalyticsRoutes"));
 const notificationRoutes_1 = __importDefault(require("./notificationRoutes"));
 const callRecordRoutes_1 = __importDefault(require("./callRecordRoutes"));
+const twilioRoutes_1 = __importDefault(require("./twilioRoutes"));
+const telegramRoutes_1 = __importDefault(require("./telegramRoutes"));
 const translationRoutes_1 = __importDefault(require("./translationRoutes"));
 const serviceOrderRoutes_1 = __importDefault(require("./serviceOrderRoutes"));
 const financeiroCategoriaRoutes_1 = __importDefault(require("./financeiroCategoriaRoutes"));
@@ -233,6 +235,10 @@ routes.use(contactAnalyticsRoutes_1.default);
 routes.use("/notifications", notificationRoutes_1.default);
 // Histórico de Chamadas
 routes.use(callRecordRoutes_1.default);
+// Twilio Voice (Llamadas en Vivo)
+routes.use(twilioRoutes_1.default);
+// Telegram
+routes.use(telegramRoutes_1.default);
 // Traduções
 routes.use(translationRoutes_1.default);
 // Ordem de Serviço

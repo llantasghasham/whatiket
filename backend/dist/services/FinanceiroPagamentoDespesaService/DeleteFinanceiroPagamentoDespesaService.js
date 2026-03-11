@@ -14,7 +14,7 @@ const DeleteFinanceiroPagamentoDespesaService = async (id, companyId) => {
             }
         });
         if (!record) {
-            throw new AppError_1.default("Pagamento não encontrado", 404);
+            throw new AppError_1.default("Pago no encontrado", 404);
         }
         await record.destroy();
         // Emitir evento via socket.io

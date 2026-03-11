@@ -48,6 +48,8 @@ const SendWhatsAppMessage_1 = __importDefault(require("../services/WbotServices/
 const CreateMessageService_1 = __importDefault(require("../services/MessageServices/CreateMessageService"));
 const sendFacebookMessageMedia_1 = require("../services/FacebookServices/sendFacebookMessageMedia");
 const sendFacebookMessage_1 = __importDefault(require("../services/FacebookServices/sendFacebookMessage"));
+const sendTelegramMessage_1 = __importDefault(require("../services/TelegramServices/sendTelegramMessage"));
+const sendTelegramMedia_1 = __importDefault(require("../services/TelegramServices/sendTelegramMedia"));
 const ShowPlanCompanyService_1 = __importDefault(require("../services/CompanyService/ShowPlanCompanyService"));
 const ListMessagesServiceAll_1 = __importDefault(require("../services/MessageServices/ListMessagesServiceAll"));
 const ShowContactService_1 = __importDefault(require("../services/ContactServices/ShowContactService"));
@@ -496,11 +498,24 @@ const store = async (req, res) => {
     const medias = req.files;
     const { companyId } = req.user;
     const userId = Number(req.user.id);
-    const ticket = await (0, ShowTicketService_1.default)(ticketId, companyId, userId);
-    if (ticket.channel === "whatsapp" && ticket.whatsappId) {
-        (0, SetTicketMessagesAsRead_1.default)(ticket);
-    }
     try {
+        const ticket = await (0, ShowTicketService_1.default)(ticketId, companyId, userId);
+        // Permitir siempre responder: si el ticket está cerrado, reabrirlo automáticamente
+        if (ticket.status === "closed" || ticket.status === "nps") {
+            await (0, UpdateTicketService_1.default)({
+                ticketId: ticket.id,
+                ticketData: {
+                    status: ticket.isGroup && ticket.channel === "whatsapp" ? "group" : "open",
+                    userId
+                },
+                companyId
+            });
+            ticket.status = "open";
+            ticket.userId = userId;
+        }
+        if (ticket.channel === "whatsapp" && ticket.whatsappId) {
+            (0, SetTicketMessagesAsRead_1.default)(ticket);
+        }
         if (medias) {
             await Promise.all(medias.map(async (media, index) => {
                 if (ticket.channel === "whatsapp") {
@@ -518,6 +533,40 @@ const store = async (req, res) => {
                     }
                     catch (error) {
                         console.log(error);
+                    }
+                }
+                if (ticket.channel === "telegram") {
+                    try {
+                        const conn = await Whatsapp_1.default.findByPk(ticket.whatsappId, {
+                            attributes: ["id", "name", "token", "channel"]
+                        });
+                        if (conn?.token) {
+                            const sent = await (0, sendTelegramMedia_1.default)({
+                                media,
+                                ticket,
+                                body: Array.isArray(body) ? body[index] : body,
+                                connection: conn
+                            });
+                            const caption = Array.isArray(body) ? body[index] : body || "";
+                            const messageData = {
+                                wid: `tg-${sent?.message_id || Date.now()}-${index}`,
+                                ticketId: ticket.id,
+                                contactId: undefined,
+                                body: caption,
+                                fromMe: true,
+                                read: true,
+                                ack: 3,
+                                mediaType: media.mimetype?.split("/")[0] || "document",
+                                mediaUrl: media.filename,
+                                dataJson: JSON.stringify(sent || {}),
+                                channel: "telegram"
+                            };
+                            await (0, CreateMessageService_1.default)({ messageData, companyId: ticket.companyId });
+                        }
+                    }
+                    catch (error) {
+                        console.error("[MessageController] Telegram media error:", error);
+                        throw error;
                     }
                 }
                 //limpar arquivo nao utilizado mais após envio
@@ -556,15 +605,37 @@ const store = async (req, res) => {
             }
             else if (["facebook", "instagram"].includes(ticket.channel)) {
                 const sendText = await (0, sendFacebookMessage_1.default)({ body, ticket, quotedMsg });
-                // Registrar texto enviado no histórico do ticket para ambos os canais
                 await (0, facebookMessageListener_1.verifyMessageFace)(sendText, body, ticket, ticket.contact, true);
+            }
+            else if (ticket.channel === "telegram") {
+                const conn = await Whatsapp_1.default.findByPk(ticket.whatsappId, {
+                    attributes: ["id", "name", "token", "channel"]
+                });
+                if (!conn?.token) {
+                    throw new AppError_1.default("ERR_TELEGRAM: Conexión sin token de bot.", 400);
+                }
+                const sent = await (0, sendTelegramMessage_1.default)({ body, ticket, quotedMsg, connection: conn });
+                const messageData = {
+                    wid: `tg-${sent?.message_id || Date.now()}`,
+                    ticketId: ticket.id,
+                    contactId: undefined,
+                    body,
+                    fromMe: true,
+                    read: true,
+                    ack: 3,
+                    dataJson: JSON.stringify(sent || {}),
+                    channel: "telegram"
+                };
+                await (0, CreateMessageService_1.default)({ messageData, companyId: ticket.companyId });
             }
         }
         return res.send();
     }
     catch (error) {
-        console.log(error);
-        return res.status(400).json({ error: error.message });
+        console.error("[MessageController.store] Error:", error?.message || error);
+        const statusCode = error?.statusCode || 400;
+        const message = error?.message || "Error al enviar mensaje. Intente de nuevo.";
+        return res.status(statusCode).json({ error: message });
     }
 };
 exports.store = store;
@@ -693,7 +764,7 @@ const send = async (req, res) => {
         const sendMessageWithExternalApi = company.plan.useExternalApi;
         if (sendMessageWithExternalApi) {
             if (!whatsapp) {
-                throw new Error("Não foi possível realizar a operação");
+                throw new Error("No se pudo realizar la operación");
             }
             if (messageData.number === undefined) {
                 throw new Error("O número é obrigatório");
@@ -728,7 +799,7 @@ const send = async (req, res) => {
     catch (err) {
         console.log(err);
         if (Object.keys(err).length === 0) {
-            throw new AppError_1.default("Não foi possível enviar a mensagem, tente novamente em alguns instantes");
+            throw new AppError_1.default("No se pudo enviar el mensaje, intente de nuevo en unos instantes");
         }
         else {
             throw new AppError_1.default(err.message);
@@ -765,7 +836,7 @@ const sendMessageFlow = async (whatsappId, body, req, files) => {
     try {
         const whatsapp = await Whatsapp_1.default.findByPk(whatsappId);
         if (!whatsapp) {
-            throw new Error("Não foi possível realizar a operação");
+            throw new Error("No se pudo realizar la operación");
         }
         if (messageData.number === undefined) {
             throw new Error("O número é obrigatório");
@@ -796,11 +867,11 @@ const sendMessageFlow = async (whatsappId, body, req, files) => {
                 }
             }, { removeOnComplete: false, attempts: 3 });
         }
-        return "Mensagem enviada";
+        return "Mensaje enviado";
     }
     catch (err) {
         if (Object.keys(err).length === 0) {
-            throw new AppError_1.default("Não foi possível enviar a mensagem, tente novamente em alguns instantes");
+            throw new AppError_1.default("No se pudo enviar el mensaje, intente de nuevo en unos instantes");
         }
         else {
             throw new AppError_1.default(err.message);

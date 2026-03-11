@@ -17,7 +17,7 @@ const ShowCompanyIntegrationService = async ({ id, companyId }) => {
         ]
     });
     if (!record) {
-        throw new AppError_1.default("Integração não encontrada.", 404);
+        throw new AppError_1.default("Integración no encontrada.", 404);
     }
     return record;
 };

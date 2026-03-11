@@ -80,7 +80,7 @@ const sendMessageLink = async (wbot, contact, ticket, url, caption) => {
     }
     catch (error) {
         sentMessage = await wbot.sendMessage(`${contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`, {
-            text: (0, Mustache_1.default)('\u200eNão consegui enviar o PDF, tente novamente!', ticket)
+            text: (0, Mustache_1.default)('\u200eNo se pudo enviar el PDF, intente de nuevo.', ticket)
         });
     }
     await (0, wbotMessageListener_1.verifyMessage)(sentMessage, ticket, contact);
@@ -97,7 +97,7 @@ const sendMessageImage = async (wbot, contact, ticket, url, caption) => {
     }
     catch (error) {
         sentMessage = await wbot.sendMessage(`${contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`, {
-            text: (0, Mustache_1.default)('Não consegui enviar o PDF, tente novamente!', ticket)
+            text: (0, Mustache_1.default)('No se pudo enviar el PDF, intente de nuevo.', ticket)
         });
     }
     await (0, wbotMessageListener_1.verifyMessage)(sentMessage, ticket, contact);

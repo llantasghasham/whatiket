@@ -10,7 +10,7 @@ const lodash_1 = require("lodash");
 const Tag_1 = __importDefault(require("../../models/Tag"));
 const remove_accents_1 = __importDefault(require("remove-accents"));
 const WHATSAPP_CHANNELS = ["whatsapp", "whatsappapi", "whatsappbusiness"];
-const ListContactsService = async ({ searchParam = "", pageNumber = "1", companyId, tagsIds, isGroup, userId, limit = 100 }) => {
+const ListContactsService = async ({ searchParam = "", pageNumber = "1", companyId, tagsIds, isGroup, userId, limit = 100, channel }) => {
     let whereCondition;
     if (searchParam) {
         // console.log("searchParam", searchParam)
@@ -56,13 +56,25 @@ const ListContactsService = async ({ searchParam = "", pageNumber = "1", company
         };
     }
     const baseCondition = whereCondition || {};
-    const channelVisibilityFilter = {
-        [sequelize_1.Op.or]: [
-            { channel: { [sequelize_1.Op.is]: null } },
-            { channel: "" },
-            { channel: { [sequelize_1.Op.in]: WHATSAPP_CHANNELS } }
-        ]
-    };
+    let channelVisibilityFilter;
+    if (channel === "facebook") {
+        channelVisibilityFilter = { channel: "facebook" };
+    }
+    else if (channel === "instagram") {
+        channelVisibilityFilter = { channel: "instagram" };
+    }
+    else if (channel === "telegram") {
+        channelVisibilityFilter = { channel: "telegram" };
+    }
+    else {
+        channelVisibilityFilter = {
+            [sequelize_1.Op.or]: [
+                { channel: { [sequelize_1.Op.is]: null } },
+                { channel: "" },
+                { channel: { [sequelize_1.Op.in]: WHATSAPP_CHANNELS } }
+            ]
+        };
+    }
     whereCondition = {
         [sequelize_1.Op.and]: [
             baseCondition,

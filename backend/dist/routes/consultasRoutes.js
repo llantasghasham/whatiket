@@ -53,7 +53,7 @@ router.post("/consultas", isAuth_1.default, async (req, res) => {
         if (!apiKey) {
             return res.status(401).json({
                 status: "erro",
-                mensagem: "Token de autenticação não fornecido"
+                mensagem: "Token de autenticación no proporcionado"
             });
         }
         // Fazer requisição para API externa
@@ -181,7 +181,7 @@ router.post("/fipe", async (req, res) => {
         if (!apiKey) {
             return res.status(401).json({
                 status: "erro",
-                mensagem: "Token de autenticação não fornecido"
+                mensagem: "Token de autenticación no proporcionado"
             });
         }
         // Fazer requisição para API externa

@@ -60,9 +60,11 @@ const store = async (req, res) => {
     console.log("================ WhatsAppController ==============");
     console.log(req.body);
     console.log("==================================================");
+    const channelParam = req.body.channel || "whatsapp";
     const { whatsapp, oldDefaultWhatsapp } = await (0, CreateWhatsAppService_1.default)({
         name,
-        status,
+        status: channelParam === "telegram" ? "CONNECTED" : status,
+        channel: channelParam,
         isDefault,
         greetingMessage,
         complationMessage,
@@ -98,7 +100,9 @@ const store = async (req, res) => {
         flowIdNotPhrase,
         flowIdWelcome
     });
-    (0, StartWhatsAppSession_1.StartWhatsAppSession)(whatsapp, companyId);
+    if (channelParam !== "telegram") {
+        (0, StartWhatsAppSession_1.StartWhatsAppSession)(whatsapp, companyId);
+    }
     const io = (0, socket_1.getIO)();
     io.of(String(companyId))
         .emit(`company-${companyId}-whatsapp`, {

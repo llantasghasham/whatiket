@@ -43,7 +43,7 @@ const SendWhatsAppMessage = async ({ body, ticket, quotedMsg, msdelay, vCard, is
     /// verificar se a mensagem é vazia, para não enviar mensagem vazia
     if (body === "" || body === undefined || (0, Mustache_1.default)(body, ticket) === "") {
         console.log("== BODY SEND MESSAGE == vazio");
-        console.log("Mensagem vazia, não enviar");
+        console.log("Mensaje vacío, no enviar");
         return {};
     }
     if (contactNumber.remoteJid &&

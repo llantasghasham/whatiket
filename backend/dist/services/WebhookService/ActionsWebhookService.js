@@ -321,7 +321,12 @@ const ActionsWebhookService = async (whatsappId, idFlowDb, companyId, nodes, con
                 }
                 console.log("Array options:", nodeSelected.data.arrayOption);
                 if (pressKey) {
-                    const selectedOption = nodeSelected.data.arrayOption.find(option => option.number == pressKey);
+                    // Normalizar: aceptar número (1,2,3,4) O nombre de sucursal (liberia, santa cruz, etc.)
+                    let normalizedKey = String(pressKey).trim().toLowerCase();
+                    const byValue = nodeSelected.data.arrayOption.find(opt => String(opt.value || "").toLowerCase() === normalizedKey);
+                    if (byValue)
+                        normalizedKey = String(byValue.number);
+                    const selectedOption = nodeSelected.data.arrayOption.find(option => option.number == normalizedKey);
                     if (selectedOption) {
                         console.log("Opção selecionada:", selectedOption);
                         next = selectedOption.next;
@@ -329,7 +334,7 @@ const ActionsWebhookService = async (whatsappId, idFlowDb, companyId, nodes, con
                         // Se next não estiver definido, usar as conexões do flow
                         if (!next && connects) {
                             console.log("Next undefined, buscando nas conexões...");
-                            const optionIndex = nodeSelected.data.arrayOption.findIndex(opt => opt.number == pressKey);
+                            const optionIndex = nodeSelected.data.arrayOption.findIndex(opt => opt.number == normalizedKey);
                             const sourceHandle = `a${optionIndex + 1}`;
                             const connection = connects.find(conn => conn.source === nodeSelected.id && conn.sourceHandle === sourceHandle);
                             if (connection) {
@@ -2287,8 +2292,13 @@ const ActionsWebhookService = async (whatsappId, idFlowDb, companyId, nodes, con
             if (nodeSelected.type === "menu") {
                 console.log(650, "menu");
                 if (pressKey) {
+                    // Normalizar: aceptar número O nombre (liberia -> 1, santa cruz -> 2, etc.)
+                    let menuKey = String(pressKey).trim().toLowerCase();
+                    const byVal = nodeSelected.data?.arrayOption?.find(opt => String(opt.value || "").toLowerCase() === menuKey);
+                    if (byVal)
+                        menuKey = String(byVal.number);
                     const filterOne = connectStatic.filter(confil => confil.source === next);
-                    const filterTwo = filterOne.filter(filt2 => filt2.sourceHandle === "a" + pressKey);
+                    const filterTwo = filterOne.filter(filt2 => filt2.sourceHandle === "a" + menuKey);
                     if (filterTwo.length > 0) {
                         execFn = filterTwo[0].target;
                     }

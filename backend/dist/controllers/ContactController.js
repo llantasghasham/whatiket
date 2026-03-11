@@ -142,9 +142,8 @@ const deleteContactFile = async (req, res) => {
 };
 exports.deleteContactFile = deleteContactFile;
 const index = async (req, res) => {
-    const { searchParam, pageNumber, contactTag: tagIdsStringified, isGroup } = req.query;
+    const { searchParam, pageNumber, contactTag: tagIdsStringified, isGroup, channel } = req.query;
     const { id: userId, companyId } = req.user;
-    console.log("index", { companyId, userId, searchParam });
     let tagsIds = [];
     if (tagIdsStringified) {
         tagsIds = JSON.parse(tagIdsStringified);
@@ -155,7 +154,8 @@ const index = async (req, res) => {
         companyId,
         tagsIds,
         isGroup,
-        userId: Number(userId)
+        userId: Number(userId),
+        channel
     });
     return res.json({ contacts, count, hasMore });
 };

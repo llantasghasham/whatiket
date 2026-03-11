@@ -35,7 +35,7 @@ const ListTicketsServiceKanban = async ({ searchParam = "", pageNumber = "1", qu
         {
             model: User_1.default,
             as: "user",
-            attributes: ["id", "name"]
+            attributes: ["id", "name", "profileImage", "companyId"]
         },
         {
             model: Tag_1.default,
