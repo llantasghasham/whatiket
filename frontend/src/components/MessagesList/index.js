@@ -532,6 +532,14 @@ const MessagesList = ({
         }
         if (isNil(ticketId)) return;
         try {
+          const debugAtendimentos = window?.localStorage?.getItem("debugAtendimentos") === "true";
+          if (debugAtendimentos) {
+            console.log("[MessagesList] Cargando mensajes", {
+              routeTicketId: ticketId,
+              pageNumber,
+              selectedQueuesMessage
+            });
+          }
           const { data } = await api.get("/messages/" + ticketId, {
             params: { pageNumber, selectedQueues: JSON.stringify(selectedQueuesMessage) },
           });

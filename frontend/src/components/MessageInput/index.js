@@ -675,10 +675,22 @@ const MessageInput = ({ ticketId, ticketStatus, droppedFiles, contactId, ticketC
     };
 
    try {
+      const debugAtendimentos = window?.localStorage?.getItem("debugAtendimentos") === "true";
+      if (debugAtendimentos) {
+        console.log("[MessageInput] Enviando mensaje", {
+          ticketId,
+          ticketChannel,
+          notificameHub,
+          editingMessageId: editingMessage?.id ?? null,
+          isPrivate: message.isPrivate,
+          hasQuotedMsg: Boolean(message.quotedMsg)
+        });
+      }
       if (editingMessage !== null) {
         await api.post(`/messages/edit/${editingMessage.id}`, message);
       } else {
-        if (notificameHub) {
+        // notificameHub solo aplica al flujo Hub/WhatsApp, no a Facebook/Instagram/Telegram
+        if (notificameHub && ticketChannel === "whatsapp") {
           await api.post(`/hub-message/${ticketId}`, message);
         } else {
           await api.post(`/messages/${ticketId}`, message);

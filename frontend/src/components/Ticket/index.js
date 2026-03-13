@@ -90,6 +90,10 @@ const Ticket = () => {
 
           if (!isNil(ticketId) && ticketId !== "undefined") {
 
+            const debugAtendimentos = window?.localStorage?.getItem("debugAtendimentos") === "true";
+            if (debugAtendimentos) {
+              console.log("[Ticket] Cargando ticket por uuid/route param", { routeTicketId: ticketId });
+            }
             const { data } = await api.get("/tickets/u/" + ticketId);
 
             setContact(data.contact || {});
@@ -101,7 +105,6 @@ const Ticket = () => {
             setLoading(false);
           }
         } catch (err) {
-          history.push("/tickets"); 
           setLoading(false);
           toastError(err);
         }

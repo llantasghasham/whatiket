@@ -288,6 +288,16 @@ const TicketsListCustom = (props) => {
             ticket.queueId && selectedQueueIds.indexOf(ticket.queueId) === -1;
 
         const onCompanyTicketTicketsList = (data) => {
+            const debugAtendimentos = window?.localStorage?.getItem("debugAtendimentos") === "true";
+            if (debugAtendimentos) {
+                console.log("[TicketsListCustom] company-ticket", {
+                    action: data.action,
+                    statusTab: status,
+                    ticketId: data.ticket?.id ?? data.ticketId ?? null,
+                    ticketStatus: data.ticket?.status ?? null,
+                    ticketChannel: data.ticket?.channel ?? null
+                });
+            }
             // console.log("onCompanyTicketTicketsList", data)
             if (data.action === "updateUnread") {
                 dispatch({
@@ -331,6 +341,17 @@ const TicketsListCustom = (props) => {
         };
 
         const onCompanyAppMessageTicketsList = (data) => {
+            const debugAtendimentos = window?.localStorage?.getItem("debugAtendimentos") === "true";
+            if (debugAtendimentos) {
+                console.log("[TicketsListCustom] company-appMessage", {
+                    action: data.action,
+                    statusTab: status,
+                    ticketId: data.ticket?.id ?? null,
+                    ticketStatus: data.ticket?.status ?? null,
+                    messageId: data.message?.id ?? null,
+                    messageFromMe: data.message?.fromMe ?? null
+                });
+            }
             if (data.action === "create" &&
                 shouldUpdateTicket(data.ticket) && data.ticket.status === status) {
                 dispatch({

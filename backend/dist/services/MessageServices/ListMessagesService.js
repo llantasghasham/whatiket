@@ -13,21 +13,38 @@ const isQueueIdHistoryBlocked_1 = __importDefault(require("../UserServices/isQue
 const Contact_1 = __importDefault(require("../../models/Contact"));
 const Queue_1 = __importDefault(require("../../models/Queue"));
 const ListMessagesService = async ({ pageNumber = "1", ticketId, companyId, queues = [], user }) => {
+    const rawTicketId = ticketId;
+    let ticket = null;
+    // Aceptar tanto ID numérico como UUID sin romper
     if (!isNaN(Number(ticketId))) {
-        const uuid = await Ticket_1.default.findOne({
+        ticket = await Ticket_1.default.findOne({
             where: {
-                id: ticketId,
+                id: Number(ticketId),
                 companyId
-            },
-            attributes: ["uuid"]
+            }
         });
-        ticketId = uuid.uuid;
     }
-    const ticket = await Ticket_1.default.findOne({
-        where: {
-            uuid: ticketId,
+    if (!ticket) {
+        ticket = await Ticket_1.default.findOne({
+            where: {
+                uuid: ticketId,
+                companyId
+            }
+        });
+    }
+    if (!ticket) {
+        console.warn("[ListMessagesService] Ticket no encontrado", {
+            rawTicketId,
             companyId
-        }
+        });
+        throw new AppError_1.default("ERR_NO_TICKET_FOUND", 404);
+    }
+    console.log("[ListMessagesService] Cargando mensajes", {
+        rawTicketId,
+        resolvedTicketId: ticket.id,
+        resolvedTicketUuid: ticket.uuid,
+        companyId,
+        pageNumber
     });
     const ticketsFilter = [];
     const isAllHistoricEnabled = await (0, isQueueIdHistoryBlocked_1.default)({ userRequest: user.id });

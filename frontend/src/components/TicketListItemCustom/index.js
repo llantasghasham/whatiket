@@ -680,9 +680,14 @@ const TicketListItemCustom = ({ setTabOpen, ticket }) => {
     if (isIconClick) return;
 
     handleSelectTicket(ticket);
-    history.push(`/atendimentos/${ticket.uuid || ticket.id}`);
+    if (ticket.uuid) {
+      history.push(`/atendimentos/${ticket.uuid}`);
+    } else {
+      console.warn("[Atendimentos] Ticket sin uuid, usando id en URL:", ticket.id);
+      history.push(`/atendimentos/${ticket.id}`);
+    }
   }}
-  selected={ticketId && ticketId === ticket.uuid}
+  selected={Boolean(ticketId) && (ticketId === ticket.uuid || ticketId === String(ticket.id))}
   className={clsx(classes.ticket, {
     [classes.pendingTicket]: ticket.status === "pending",
     [classes.ticketUnread]: hasUnread,

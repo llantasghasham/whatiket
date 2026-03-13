@@ -500,6 +500,13 @@ const store = async (req, res) => {
     const userId = Number(req.user.id);
     try {
         const ticket = await (0, ShowTicketService_1.default)(ticketId, companyId, userId);
+        console.log("[MessageController.store] send request", {
+            ticketId: ticket.id,
+            channel: ticket.channel,
+            isGroup: ticket.isGroup,
+            hasMedias: Boolean(medias && medias.length),
+            isPrivate
+        });
         // Permitir siempre responder: si el ticket está cerrado, reabrirlo automáticamente
         if (ticket.status === "closed" || ticket.status === "nps") {
             await (0, UpdateTicketService_1.default)({
@@ -604,6 +611,12 @@ const store = async (req, res) => {
                 await (0, NotificationController_1.notifyNewMessage)(message);
             }
             else if (["facebook", "instagram"].includes(ticket.channel)) {
+                console.log("[MessageController.store] sending facebook/instagram", {
+                    ticketId: ticket.id,
+                    channel: ticket.channel,
+                    whatsappId: ticket.whatsappId,
+                    hasFacebookToken: Boolean(ticket.whatsapp?.facebookUserToken)
+                });
                 const sendText = await (0, sendFacebookMessage_1.default)({ body, ticket, quotedMsg });
                 await (0, facebookMessageListener_1.verifyMessageFace)(sendText, body, ticket, ticket.contact, true);
             }
@@ -632,7 +645,10 @@ const store = async (req, res) => {
         return res.send();
     }
     catch (error) {
-        console.error("[MessageController.store] Error:", error?.message || error);
+        console.error("[MessageController.store] Error:", error?.message || error, {
+            ticketId,
+            companyId
+        });
         const statusCode = error?.statusCode || 400;
         const message = error?.message || "Error al enviar mensaje. Intente de nuevo.";
         return res.status(statusCode).json({ error: message });
