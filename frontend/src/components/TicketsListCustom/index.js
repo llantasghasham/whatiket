@@ -284,9 +284,6 @@ const TicketsListCustom = (props) => {
             return canSeeTicket && belongsToQueue;
         }
 
-        const notBelongsToUserQueues = (ticket) =>
-            ticket.queueId && selectedQueueIds.indexOf(ticket.queueId) === -1;
-
         const onCompanyTicketTicketsList = (data) => {
             const debugAtendimentos = window?.localStorage?.getItem("debugAtendimentos") === "true";
             if (debugAtendimentos) {
@@ -318,19 +315,6 @@ const TicketsListCustom = (props) => {
                 });
             }
 
-            // else if (data.action === "update" && shouldUpdateTicketUser(data.ticket) && data.ticket.status === status) {
-            //     dispatch({
-            //         type: "UPDATE_TICKET",
-            //         payload: data.ticket,
-            //     });
-            // }
-            if (data.action === "update" && notBelongsToUserQueues(data.ticket)) {
-                dispatch({
-                    type: "DELETE_TICKET", payload: data.ticket?.id, status: status,
-                    sortDir: sortTickets
-                });
-            }
-
             if (data.action === "delete") {
                 dispatch({
                     type: "DELETE_TICKET", payload: data?.ticketId, status: status,
@@ -353,7 +337,7 @@ const TicketsListCustom = (props) => {
                 });
             }
             if (data.action === "create" &&
-                shouldUpdateTicket(data.ticket) && data.ticket.status === status) {
+                shouldUpdateTicket(data.ticket)) {
                 dispatch({
                     type: "UPDATE_TICKET_UNREAD_MESSAGES",
                     payload: data.ticket,
