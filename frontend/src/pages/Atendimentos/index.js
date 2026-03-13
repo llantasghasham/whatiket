@@ -1298,46 +1298,6 @@ useEffect(() => {
 	return () => cancelAnimationFrame(raf);
 }, [messages, selectedTicket?.id]);
 
-	const handleQuickReplyKeyDown = useCallback((e) => {
-		if (!showQuickReplies) return false;
-
-		switch (e.key) {
-			case "ArrowDown":
-				e.preventDefault();
-				setSelectedQuickIndex(prev => {
-					const next = prev + 1;
-					return next >= filteredQuickMessages.length ? 0 : next;
-				});
-				return true;
-			case "ArrowUp":
-				e.preventDefault();
-				setSelectedQuickIndex(prev => {
-					const prevIndex = prev - 1;
-					return prevIndex < 0 ? filteredQuickMessages.length - 1 : prevIndex;
-				});
-				return true;
-			case "Enter":
-				e.preventDefault();
-				if (selectedQuickIndex >= 0 && filteredQuickMessages[selectedQuickIndex]) {
-					handleSelectQuickReply(filteredQuickMessages[selectedQuickIndex].message);
-				} else if (inputMessage.trim()) {
-					setShowQuickReplies(false);
-					setFilteredQuickMessages([]);
-					setSelectedQuickIndex(-1);
-					handleSendMessage();
-				}
-				return true;
-			case "Escape":
-				e.preventDefault();
-				setShowQuickReplies(false);
-				setFilteredQuickMessages([]);
-				setSelectedQuickIndex(-1);
-				return true;
-			default:
-				return false;
-		}
-	}, [showQuickReplies, filteredQuickMessages, selectedQuickIndex, handleSelectQuickReply, inputMessage, handleSendMessage]);
-
 	// Solicitar permissão para notificações ao carregar
 	useEffect(() => {
 		if ("Notification" in window && Notification.permission === "default") {
@@ -2299,6 +2259,46 @@ useEffect(() => {
 			setIsSendingMessage(false);
 		}
 	}, [inputMessage, selectedTicket, signMessage, user.name, replyingTo, handlePermissionDenied]);
+
+	const handleQuickReplyKeyDown = useCallback((e) => {
+		if (!showQuickReplies) return false;
+
+		switch (e.key) {
+			case "ArrowDown":
+				e.preventDefault();
+				setSelectedQuickIndex(prev => {
+					const next = prev + 1;
+					return next >= filteredQuickMessages.length ? 0 : next;
+				});
+				return true;
+			case "ArrowUp":
+				e.preventDefault();
+				setSelectedQuickIndex(prev => {
+					const prevIndex = prev - 1;
+					return prevIndex < 0 ? filteredQuickMessages.length - 1 : prevIndex;
+				});
+				return true;
+			case "Enter":
+				e.preventDefault();
+				if (selectedQuickIndex >= 0 && filteredQuickMessages[selectedQuickIndex]) {
+					handleSelectQuickReply(filteredQuickMessages[selectedQuickIndex].message);
+				} else if (inputMessage.trim()) {
+					setShowQuickReplies(false);
+					setFilteredQuickMessages([]);
+					setSelectedQuickIndex(-1);
+					handleSendMessage();
+				}
+				return true;
+			case "Escape":
+				e.preventDefault();
+				setShowQuickReplies(false);
+				setFilteredQuickMessages([]);
+				setSelectedQuickIndex(-1);
+				return true;
+			default:
+				return false;
+		}
+	}, [showQuickReplies, filteredQuickMessages, selectedQuickIndex, handleSelectQuickReply, inputMessage, handleSendMessage]);
 
 	const handleInputKeyDown = useCallback((e) => {
 		const handledQuickReply = handleQuickReplyKeyDown(e);
