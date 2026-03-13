@@ -6,6 +6,7 @@ import { useTheme } from "@material-ui/core/styles";
 import LoggedInLayout from "../layout";
 import Dashboard from "../pages/Painel";
 import TicketResponsiveContainer from "../pages/TicketResponsiveContainer";
+import Atendimentos from "../pages/Atendimentos";
 import Cadastro from "../pages/Cadastro";
 import Login from "../pages/Login";
 import MobileLogin from "../pages/MobileLogin";
@@ -165,8 +166,7 @@ const Routes = () => {
                 <ProtectedRoute exact path="/painel" component={Dashboard} />
                 <ProtectedRoute exact path="/tickets/:ticketId?" component={TicketResponsiveContainer} />
                 <ProtectedRoute exact path="/conversas/:ticketId?" component={TicketResponsiveContainer} />
-                {/* /atendimentos usa TicketResponsiveContainer (mismo que tickets) hasta resolver error "Mo" en Atendimentos */}
-                <ProtectedRoute exact path="/atendimentos/:ticketId?" component={TicketResponsiveContainer} />
+                <ProtectedRoute exact path="/atendimentos/:ticketId?" component={Atendimentos} />
                 <ProtectedRoute exact path="/atendimentomobile/:ticketId?" component={AtendimentosMobile} />
                 <ProtectedRoute exact path="/connections" component={Canais} />
                 <ProtectedRoute exact path="/canais" component={Canais} />
